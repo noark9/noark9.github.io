@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="斯坦福第一课里面MVC通信方式整理"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">斯坦福第一课里面MVC通信方式整理</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Jan 28 2014</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/iOS/">#iOS</a> <a class="tag" href="/tags/cocoa/">#cocoa</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>前些天在iTunes U里面看到今年斯坦福更新了iOS7的课程，以前也看了部分不过也是由于各种原因，没有全部看完，所以打算这次顺着当美剧追了:P。</p>
+<p>Cocoa Drawing Guide那个也还在长线更新着，只是最近项目有点紧张（奇葩吧年前居然还紧张了）哈哈，大坑还是要自己填，不过还是短线写点东西了，表示我还健在XDDDD</p>
+<p>在cocoa上开发了一段时间以后对于第一课里面MVC涉及到的通信方法都有了一定的了解，刚好顺便就总结下了。</p>
+<a id="more"></a>
+<h1 id="涉及到的通信模式"><a href="#涉及到的通信模式" class="headerlink" title="涉及到的通信模式"></a>涉及到的通信模式</h1><p>我们根据ppt的顺序来顺着理下MVC之间到底怎么通信的。</p>
+<h2 id="C→M"><a href="#C→M" class="headerlink" title="C→M"></a>C→M</h2><p><img src="/img/codesOfLesson1/C2M.jpg" alt="Controller to Model"></p>
+<p>Controller到Model的话，那就是直接通信了，Controller是知道Model的所有东西的，所以Controller是可以直接跟Model通信的。这个就不列代码了，跟普通类用法是一样的。</p>
+<h2 id="C→V——Outlet"><a href="#C→V——Outlet" class="headerlink" title="C→V——Outlet"></a>C→V——Outlet</h2><p><img src="/img/codesOfLesson1/C2V.jpg" alt="Controller to View"></p>
+<p>跟Controller和Model类似，Controller可以直接与View进行通信的，这个通信是通过Outlet来实现的，这个在使用的时候经常使用Control拖拽实现在Controller中创建Outlet，Controller可以直接操作Outlet。</p>
+<pre><code>@property (weak) IBOutlet NSTextField *textField;
+</code></pre><p>上面的代码在.h文件中创建了一个NSTextField的Outlet，通过Interface Builder关联到UI上的一个NSTextField以后，就可以对他进行操作了。</p>
+<h2 id="V→C——Target-Action"><a href="#V→C——Target-Action" class="headerlink" title="V→C——Target-Action"></a>V→C——Target-Action</h2><p><img src="/img/codesOfLesson1/V2C.jpg" alt="View to Controller"></p>
+<p>View到Controller的通信就有点不一样了，因为View是不知道到底它的Controller是啥的，但是这样的话，View需要通知他的Controller事件的发生的时候（点击事件之类的）怎么办呢？这就要用到Target-Action了。</p>
+<p>Target-Action就是Controller在自己身上设了一个Target，让View需要通知Controller的时候，向他发送Action。</p>
+<p>Target-Action平时用的比较多的也是在Interface Builder中Control拖拽，在Controller中创建。另外一种是通过<code>setTarget:</code>和<code>setAction:</code>方法来设置，例如：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">id</span>)init</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        [<span class="keyword">self</span>.menuItem setTarget:<span class="keyword">self</span>];</span><br><span class="line">        [<span class="keyword">self</span>.menuItem setAction:<span class="keyword">@selector</span>(myAction:)];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)myAction:(<span class="keyword">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="delegate"><a href="#delegate" class="headerlink" title="delegate"></a>delegate</h2><p><img src="/img/codesOfLesson1/delegate.jpg" alt="delegate"></p>
+<p>因为View不拥有他自己显示的数据，所以View需要从Controller中获取信息，这时候需要用到delegate，Controller自己是View的delegate，负责告诉View如何显示数据，这时候，Controller作为View的数据源，格式化Model中的数据给View进行显示。</p>
+<p>Delegate就是把View要做的事情，委托给了他的delegate，也就是他的Controller，例如一个TableView在发生选中事件了，那他要怎么办，这时候他就会去问问他的delegate的意见了，另一种是DataSource类型的delegate，他会向View提供数据源，同样是TableView，他想要知道他有多少行数据，第XX行数据显示啥，这时候，TableView也会问他的delegate。</p>
+<h2 id="M→C——Notification-amp-KVO"><a href="#M→C——Notification-amp-KVO" class="headerlink" title="M→C——Notification &amp; KVO"></a>M→C——Notification &amp; KVO</h2><p><img src="/img/codesOfLesson1/M2C.jpg" alt="Model to Controller"></p>
+<p>那最后如果Model发生了变化，他需要通知Controller他变化了，这时候要怎么办呢？因为我们的Model是完全不知道他的Controller是啥的，并且也不知道到底有多少个Controller在使用他，这时候，我们用通知或者KVO来实现对Controller的通知。</p>
+<p>Notification和KVO的通信方式是，Model自己架了一个电台，然后如果需要知道变化的Controller都可以自己支个收音机来收听Model的电台。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 发送广播</span></span><br><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] postNotificationName:电台的名字 object:<span class="literal">nil</span> userInfo:广播内容];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 开收音机</span></span><br><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(响应广播内容的方法:) name:电台的名字 object:收听谁的电台（<span class="literal">nil</span>表示所有人的这个电台我都收听）];</span><br><span class="line"><span class="comment">// 注意每次执行上面的代码，Controller都会开个收音机放着，如果执行了多次，那么每次收到通知，就会响应多次</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 另外在不需要收听的时候需要通过下面的代码关掉收音机，否则可能会引起程序crash，因为在[NSNotificationCenter defaultCenter]里面对每个收听者都有一个unsafe retian的引用，如果没关，到时候他还是会向你的对象发送消息，然后程序就挂掉了</span></span><br><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] removeObserver:<span class="keyword">self</span>];</span><br></pre></td></tr></table></figure>
+<p>KVO使用<code>addObserver:forKeyPath:options:context:</code>和<code>removeObserver:forKeyPath:</code>方法来对Model的某个属性设置或者移除监听的对象。</p>
+<h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>以前一开始看到的时候都对MVC里面这些概念挺模糊的，现在再看的话，老头一说马上就知道用的是啥了，也就顺手整理下了，也方便以后自己看:P</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

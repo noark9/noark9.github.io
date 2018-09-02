@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="把NSImage画在圆圈里面"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">把NSImage画在圆圈里面</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Feb 1 2014</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/cocoa/">#cocoa</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>新年快乐啊，虽然在努力码cocoa drawing guide part4，不过短线更新个小的，怎么把<code>NSImage</code>画到圆圈里面。</p>
+<p>我们都知道，<code>NSImageView</code>是四四方方的，丑死了。。。为了让我们的UI好看点，大家必定是下了很多苦功夫的啊，所以今天就分享一个非常普通而又实用的东西，把<code>NSImage</code>画到一个圆里面。其实之前google了好会儿了，觉得网上大家的方法都很麻烦，所以还是决定自己DIY了:)</p>
+<p>效果如下：</p>
+<p><img src="/img/circleImage.png" alt="圆形"></p>
+<p>这一篇的内容就刚好用到了drawing guide part4——图像的内容，我会告诉我我也参考了下PaintCode么:P</p>
+<a id="more"></a>
+<h1 id="怎么做"><a href="#怎么做" class="headerlink" title="怎么做"></a>怎么做</h1><p>一开始是想集成ImageView，然后在<code>drawRect:</code>方法里面把我想要的东西实现起来的，后来想想，这么做好麻烦的来，而且有点小题大做的感觉了，最后决定，创建一个<code>NSImage</code>然后把我们的图像绘制在圆圈里面。</p>
+<p>那么，我们来看代码解析把</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 根据我们ImageView的大小创建一个NSImage来保存绘制后的图像</span></span><br><span class="line"><span class="built_in">NSImage</span> *circleImage = [[<span class="built_in">NSImage</span> alloc] initWithSize:<span class="keyword">self</span>.imageView.frame.size];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 告诉cocoa，我要用这个image开刀了，让他准备好接收绘图命令</span></span><br><span class="line">[circleImage lockFocus];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 画个圆</span></span><br><span class="line"><span class="built_in">NSBezierPath</span> *circlePath = [<span class="built_in">NSBezierPath</span> bezierPathWithOvalInRect:<span class="built_in">NSMakeRect</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="keyword">self</span>.imageView.frame.size.width, <span class="keyword">self</span>.imageView.frame.size.height)];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 因为后面我们就要对当前的图形上下文做操作了，所以先保存当前的图形状态</span></span><br><span class="line">[<span class="built_in">NSGraphicsContext</span> saveGraphicsState];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 把我们刚刚画的那个圆添加到截取区域中，作为绘图的区域</span></span><br><span class="line">[circlePath addClip];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 下面两段drawInRect的代码只用取一段就可以了</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 绘制目标图像，使用NSCompositeSourceOver作为合成选项</span></span><br><span class="line"><span class="comment">// 也就是绘制结果是源图片（刚刚我们画的那个圈的区域）不透明的叠加在我们的image上，这样结果就是image被一个圈圈罩住了，圈里面看得见，全外面没了</span></span><br><span class="line">[image drawInRect:<span class="built_in">NSMakeRect</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="keyword">self</span>.imageView.frame.size.width, <span class="keyword">self</span>.imageView.frame.size.height) fromRect:<span class="built_in">NSZeroRect</span> operation:<span class="built_in">NSCompositeSourceOver</span> fraction:<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 其实这里这样也可以，因为我们之前已经画了个圈作为截取区域了，那也就是说我们绘制的区域只有个圈了，不需要进行叠加也是可以的</span></span><br><span class="line">[image drawInRect:<span class="built_in">NSMakeRect</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="keyword">self</span>.imageView.frame.size.width, <span class="keyword">self</span>.imageView.frame.size.height)];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 图形上下文操作结束，那么自然回复我们修改之前的图形上下文</span></span><br><span class="line">[<span class="built_in">NSGraphicsContext</span> restoreGraphicsState];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 告诉cocoa我们画完了</span></span><br><span class="line">[circleImage unlockFocus];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置图片</span></span><br><span class="line"><span class="keyword">self</span>.imageView.image = circleImage;</span><br></pre></td></tr></table></figure>
+<p>就这样和谐的圆形头像就有了，如果要画在其他形状里面，只需要替换下上面代码中的circlePath，我们的路径是啥样的，这段代码就会把image画到啥样的形状里面。</p>
+<h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>自觉短小实用，特别是对我们这些初学者来说XDDDDD，上面用到了一些drawing guide part4的内容，当然也有前面几讲的内容，除了看Guide以外，多实验才是最有效的码农能力提高手段啊:)</p>
+<p>ps.虽然以前想过有了PaintCode就可以搞定EveryThing了，不过看着他生成出来的代码还是想一行一行搞懂他到底在干什么，发现果然是知其所以然才更有意思。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

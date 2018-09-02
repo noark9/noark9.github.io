@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="iOS Autolayout 介绍 2 Interface Builder 技巧"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">iOS Autolayout 介绍 2 Interface Builder 技巧</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Jul 8 2016</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/iOS/">#iOS</a> <a class="tag" href="/tags/AutoLayout/">#AutoLayout</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>上一期，介绍了一下 Autolayout 的一些基本做法，以及 iOS 上 AutoLayout 的思想和简单的原理介绍，有同学给我建议继续出下一期，这里，我们就来继续第二期吧，这一期我们依然停留在 Interface Builder（后面简写 IB）上，介绍我在工作中遇到的一些问题，以及依赖 IB 是如何解决的，也不会涉及很多代码。</p>
+<h1 id="小技巧篇"><a href="#小技巧篇" class="headerlink" title="小技巧篇"></a>小技巧篇</h1><h2 id="预览功能"><a href="#预览功能" class="headerlink" title="预览功能"></a>预览功能</h2><p>有时候，我们在拖拽完成布局后，总想看看效果怎么办呢？IB 给我们提供了预览功能，在 Assistant 编辑器中文件选择 preview 就可以看到 IB 布局后界面的预览效果了，而且可以添加多个设备，以及添加横屏和竖屏的效果。</p>
+<p><img src="/img/al2/al2.IB.preview.png" alt="选择预览"></p>
+<a id="more"></a>
+<h2 id="等宽-View-怎么做"><a href="#等宽-View-怎么做" class="headerlink" title="等宽 View 怎么做"></a>等宽 View 怎么做</h2><p>有时候会遇到这样的问题，我的 View 要平均分布在界面上怎么办，比如下图的界面，我想让那五个 view 平均的分布在视图上怎么办呢？</p>
+<p><img src="/img/al2/al2.equal.width.png" alt="想要等宽"></p>
+<p>做法其实大家可能已经想到了，那就是设置每个 View 宽度相等，并且间距为0。</p>
+<p><img src="/img/al2/al2.equal.width.result.png" alt="等宽"></p>
+<p>这么看好像没啥用啊，除了红蓝红蓝相间以外，那么在平时使用过程中可以实现下面的布局效果：</p>
+<ul>
+<li>在每个 View 中间放上按钮，那么就实现了按钮平均分布在界面（比如下面的分享界面）</li>
+</ul>
+<p><img src="/img/al2/al2.equal.width.shareview.png" alt="分享界面"></p>
+<ul>
+<li>在上图两块蓝色 View 放上按钮，红色 View 设置透明，那么就可以实现按钮在 View 上左右间隔相同的布局（比如下面多看界面的顶部，虽然他们不一定是这么实现的，但是这样可以实现这里只是举个例子）</li>
+</ul>
+<p><img src="/img/al2/al2.equal.width.shareview.png" alt="多看界面"></p>
+<h2 id="高度可以隐藏的-UILabel"><a href="#高度可以隐藏的-UILabel" class="headerlink" title="高度可以隐藏的 UILabel"></a>高度可以隐藏的 UILabel</h2><p>其实在没有内容的情况下 UILabel 的大小会变成0，这是因为，UILabel 是由 Content 决定大小的 View，所以在没有文字的时候，他的大小就变成0了，可以利用这点来简单实现布局时，如果有标题那么显示标题，如果没标题，那么减少空隙的效果。</p>
+<p><img src="/img/al2/al2.hide.label.png" alt="没内容的 UILabel"></p>
+<h2 id="使用-UIScrollView"><a href="#使用-UIScrollView" class="headerlink" title="使用 UIScrollView"></a>使用 UIScrollView</h2><p>好多同学很不喜欢在 IB 里面用 ScrollView，原因是 SrollView 的大小，和他的 ContentView 的大小，很不好通过 IB 来决定，之后经过一段时间的研究找到了一个前辈通过代码添加新的约束来解决的方法-&gt;<a href="http://andyyou.logdown.com/posts/218193-ios-use-uiscrollview-autolayout" target="_blank" rel="noopener">UIScrollView 使用 Autolayout</a>&lt;-看的时候，估计要自带梯子，回到正题，既然本篇是 IB 技巧，那么我们就会用最少量的代码来解决问题，对于这个问题，经过一段时间的研究后，其实是不需要代码的我们来继续。</p>
+<p>ScrollView 的大小是非常容易确定的，但是 ContentView 的大小就不好确定了，所以我们的目标就是在 IB 中确定 ContentView 的大小，这样就不需要再通过代码添加约束来设定 ContentView 的大小了</p>
+<p>这里通过 IB 确定 ContentView 大小的额方法有两个，第一个是确定 ContentView 里面所有 View 的大小，来支撑 ContentView 的大小，这个方法应该是很常用了，我们来讲第二个方法，直接通过 ScrollView 的大小来确定 ContentView 的大小，这里假设我们需要 ContentView 和 ScrollView 一样大，跟着 View 的大小变化而变化，以适应不同的屏幕大小</p>
+<p><img src="/img/al2/al2.scrollview.png" alt="ScrollView"></p>
+<p>如图，一般我们使用 ScrollView 的时候是通过在 ScrollView 内部增加一个 View 并把 View 到 ScrollView 上下左右的距离设置为0，这样可以让 View 上下左右紧贴 ScrollView，但是这个时候是不满足约束条件的，因为这样是没办法确定 ContentView 大小的，那么接下来怎么办呢。</p>
+<p><img src="/img/emoji/e.zhuangbi.jpeg" alt=""></p>
+<p>这里，有一个思维的局限，总觉的已经让 ContentView 的上下左右贴着 ScrollView 四边了，没办法继续做什么了。</p>
+<p><img src="/img/al2/al2.ib.scrollview.png" alt="ScrollView"></p>
+<p>就像上图操作就可以了，那么思维局限在那里呢，因为我们选中了 ContentView 再按着 Command 或者 Shift 是没办法在 IB 中同时选中 View 和他的父 View，或是跨层级选中 View 的，但是在 Outline View 中就可以，这样其实在 Outline View 中选中了 ContentView 和 ScrollView，使用 Pin 菜单（什么你不知道 Pin 菜单，速速戳这里看上期-&gt;<a href="http://noark9.github.io/2016/06/04/autolayout-1/" target="_blank" rel="noopener">戳我戳我</a>&lt;-）中的等宽等高也能实现相同的效果。</p>
+<p>前两天和以前公司小伙伴聊天的时候，他说最后他用只有一行的 TableView 来解决这样的问题，那么他只需要决定 Cell 的大小就行了，并且在 iOS 8 以后，可以通过 Cell 的布局自动获得 Cell 的大小，这又是另一个解法了，对于 UI 来说只有想不到，没有做不到。</p>
+<h2 id="非-Prototype-类型的-TableView-的作用"><a href="#非-Prototype-类型的-TableView-的作用" class="headerlink" title="非 Prototype 类型的 TableView 的作用"></a>非 Prototype 类型的 TableView 的作用</h2><p>如果我们使用 Storyboard 的话，会有另外一个很方便的东西，那就是 Content 类型为 Static Cell 的 TableView，使用 Static Cell 的 TableView，我们可以快速的拖拽一个可以上下滚动的登录界面，设置界面，选项界面等等等等……就像这样。</p>
+<p><img src="/img/al2/al2.static.tableview.png" alt="TableView"></p>
+<h2 id="UINibWrapper"><a href="#UINibWrapper" class="headerlink" title="UINibWrapper"></a>UINibWrapper</h2><p>在 View 比较复杂，并且部分 View 是可以重用的时候，我们这时候一般会通过把可以重用的 View 创建和事件处理都包装到子 View 中去创建，代码上似乎很容易理解，在 IB 中其实也有一样的方法，那就是通过指定 View 的 Class 来实现，但是如果我们要用 xib 创建和布局的 View 的话，方法就是在那个 View 的类中，初始化时加载对应的 xib 文件，但是每次都要写这个，好麻烦怎么办，有人把这个过程做了一下封装那就是-&gt;<a href="https://github.com/mobilejazz/NibWrapper" target="_blank" rel="noopener">UINibWraper</a>&lt;-。</p>
+<p><img src="/img/al2/al2.ib.nibwrapper.png" alt="UINibWraper"></p>
+<p>就像上面，我有一个 View 是很多不同类型的 Cell 都需要的一个操作类型的 View，上面提供了点赞，评论，分享等功能，如果每个 Cell 都画上去的话，每次改的话，每个 Cell 都需要修改，这就不符合我们懒惰程序员的性格了，所以我创建了一个 View 提供这些功能，集成到所有的 Cell 上去。</p>
+<h2 id="IB-上的-Object"><a href="#IB-上的-Object" class="headerlink" title="IB 上的 Object"></a>IB 上的 Object</h2><p>IB 其实是我们拖拽对象的地方，也就是所有在 IB 上的东西都是对象，那么这里我放个平时我们很少用到的一个东西 NSObject，也就是截图下面这货：</p>
+<p><img src="/img/al2/al2.nsobject.png" alt="NSObject"></p>
+<p>这其实是为 IB 上的对象，添加一个对象用的占位符，也就是我们可以在我们的 ViewController 中通过 IB 来添加对象，我们可以给 TableView 一个单独的 Delegate，指定一个特定的对象，通过设置对象的 Class 和 Value 来实现不同的 TableView 在不同的对象中获取数据，这样代码里面就不用看到一个 ViewController 中有一堆的 TableView 的 Delegate 方法，让 ViewController 键减肥。</p>
+<h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>对于 UI 来说，只有想不到，没有做不到，很多方法都是聪明的码农们想出来的，欢迎大家丢砖。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

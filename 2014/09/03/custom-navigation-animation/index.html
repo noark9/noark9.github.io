@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="自定义iOS导航动画"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">自定义iOS导航动画</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Sep 3 2014</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/iOS/">#iOS</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>冒个泡，体现下存在感，哈哈哈哈，最近发现iOS自带的动画效果总是困扰着我-，-比如，iOS7上返回时，会自动加一个半透明的层做渐变感，比如返回的时候，总是整个view一起动的，动画过程中，我需要隐藏和显示导航栏等这些要求，原生的动画总是无法满足这些小小的要求!(ﾉ｀□´)ﾉ⌒┻┻</p>
+<p>经过数小时上网找资料，发现大神们要不就是一笔带过，要不就是懒得讲很多，于是，发现还是自己写比较科学啊┓(￣∇￣)┏，下面我们来尝试做一个</p>
+<h1 id="做的方法"><a href="#做的方法" class="headerlink" title="做的方法"></a>做的方法</h1><p>制作方法还是按照古法炮制，继承一个<code>NSNavigationController</code>然后重写其中的pop和push方法以达到我们的目的，在我的理解，导航控件他的pop和push方法，实现了在他自己的控制器栈中实现不断的出栈和入栈的操作，然后播放一小段动画，愉悦下大家，那么我们要做的事情就是去掉原来的动画，做pop，push的动作，然后播放我们自己的动画</p>
+<h2 id="截图工具"><a href="#截图工具" class="headerlink" title="截图工具"></a>截图工具</h2><p>做动画之前，必须要有的一个东西就是，我们要让什么东西来动呢，那导航上必然是两个ViewController中的View的内容喽，那么我们就需要对<code>UIView</code>进行扩充，实现获取View中的内容。<br><a id="more"></a><br>根据观察研究，发现有4个函数能够满足我们的需求，他们分别是：</p>
+<ul>
+<li><code>- (void)renderInContext:(CGContextRef)ctx</code></li>
+<li><code>- (BOOL)drawViewHierarchyInRect:(CGRect)rect afterScreenUpdates:(BOOL)afterUpdates</code></li>
+<li><code>- (UIView *)snapshotViewAfterScreenUpdates:(BOOL)afterUpdates</code></li>
+<li><code>- (UIView *)resizableSnapshotViewFromRect:(CGRect)rect afterScreenUpdates:(BOOL)afterUpdates withCapInsets:(UIEdgeInsets)capInsets</code></li>
+</ul>
+<p>这两个方法都是<code>UIView</code>提供的方法，第二个以后的方法都是iOS7以后提供的方法，第一个方法，由于对于毛玻璃等高端酷炫的效果支持不太好（容易出现黑块）并且我们都面向iOS7吧，所以就不用了。后面两个snapshot的方法，会根据当前的视图创建一个snapshot的视图（静态的，啥也不能操作）但是这两个方法没办法处理正在进行中的动画和比较复杂的效果（其实就是毛玻璃啦）。</p>
+<p>所以，我就用<code>drawViewHierarchyInRect:afterScreenUpdates</code>这个方法喽。</p>
+<p>嘛，为了各种模块化啊，方便啊，之类的，我们就做一个category啦，就像下面的样子</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UIView</span> (<span class="title">Snapshot</span>)</span></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">UIImage</span> *)snapshot</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGSize</span> size = <span class="keyword">self</span>.size;</span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(size, <span class="literal">NO</span>, [<span class="built_in">UIScreen</span> mainScreen].scale);</span><br><span class="line">    [<span class="keyword">self</span> drawViewHierarchyInRect:<span class="keyword">self</span>.frame afterScreenUpdates:<span class="literal">YES</span>];</span><br><span class="line">    <span class="built_in">UIImage</span> *snap = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    <span class="built_in">CGSize</span> size2 = <span class="keyword">self</span>.size;</span><br><span class="line">    <span class="comment">// 看这里，看这里</span></span><br><span class="line">    <span class="keyword">if</span> (fabs(size.height - size2.height) &gt; <span class="number">0.0001</span> || fabs(size.width - size2.width) &gt; <span class="number">0.0001</span>) &#123;</span><br><span class="line">        <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(size2, <span class="literal">NO</span>, [<span class="built_in">UIScreen</span> mainScreen].scale);</span><br><span class="line">        [<span class="keyword">self</span> drawViewHierarchyInRect:<span class="keyword">self</span>.frame afterScreenUpdates:<span class="literal">YES</span>];</span><br><span class="line">        snap = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">        <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> snap;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>上面『看这里，看这里』后面的那一段大家会觉得比较奇怪吧，为啥要多截取一次呢。。。</p>
+<p>原因是，发现如果view还未显示，也就是将要push的view，他的size是错误的，只有在完成了<code>drawViewHierarchyInRect:afterScreenUpdates</code>方法调用后，才会得到正确的大小，如果用错误的大小渲染的话，得到的结果往往是拉伸的截图。所以在这里，截取第一次以后，发现view的size发生变化的话，就重新再截取一次。</p>
+<p>尝试过调用<code>viewDidLoad</code>，<code>layoutSubviews</code>，<code>needLayoutSubviews</code>之类的方法，但是都没有效果，所以这里只是一种替代的方法了，如果大家有更好的方法，也可以告诉我怎么来做。</p>
+<h2 id="视图的切换"><a href="#视图的切换" class="headerlink" title="视图的切换"></a>视图的切换</h2><p>OK既然截图的工具有了，那么下一步就是完成视图切换的动作了，我们要做的是，截图-&gt;切换-&gt;截图-&gt;放动画，那么顺着来吧</p>
+<h2 id="实现切换"><a href="#实现切换" class="headerlink" title="实现切换"></a>实现切换</h2><p>下面的内容将把<code>pushViewController:animated:</code>方法完全拆开，一步一步告诉大家怎么来做</p>
+<p>第一步，如果这个导航操作本来就不需要动画，那就直接跳过了，这一步push和pop的行为都是一样的</p>
+<pre><code>if (!animated) {
+    [super pushViewController:viewController animated:animated];
+    return;
+}
+</code></pre><p>接下来，我们在切换之前需要对当前的视图进行截图，用来做动画的素材</p>
+<pre><code>UIViewController *currentVC = self.topViewController;
+UIImage *topImage = [currentVC.view snapshot];
+</code></pre><p>完成了之后，我们就悄悄的完成我们的push操作，为啥是悄悄的呢-，-因为我们是不用动画的push</p>
+<pre><code>[super pushViewController:viewController animated:NO];
+</code></pre><p>这样就完成了push的动作，完成push的动作后，下一步自然是截取新的截图</p>
+<pre><code>UIImage *nextImage = [self.topViewController.view snapshot];
+self.topViewController.view.hidden = YES;
+</code></pre><p>上面hidden刚push的view是非常必要的，因为我们在调用<code>super</code>的<code>pushViewController:animated:</code>方法后，新的view可以说已经是在屏幕显示的时候就绘制好了，这样他还一直显示着的话，会在我们的动画背景下面显示个他自己，所以这里我先把它隐藏了，等动画放完了，再显示</p>
+<p>完成了动画素材的准备，接下来，我们就放动画愉悦下观众们了，这里我的动画就非常简单粗糙了，就准备左右移动下啦，哈哈哈哈，毕竟我写的动画太丑太low了┓(￣∇￣)┏以及我的动画过程也很丑，这里是大家发挥自己想象力的地方了</p>
+<pre><code>UIImageView *topImageView = [[UIImageView alloc] initWithImage:topImage];
+UIImageView *nextImageView = [[UIImageView alloc] initWithImage:nextImage];
+[self.view addSubview:topImageView];
+[self.view addSubview:nextImageView];
+CGRect frame = nextImageView.frame;
+frame.origin.x += frame.size.width;
+nextImageView.frame = frame;
+
+CGRect frameTopPos2 = topImageView.frame;
+frameTopPos2.origin.x -= frame.size.width;
+
+CGRect frameNextPos2 = nextImageView.frame;
+frameNextPos2.origin.x = 0.0f;
+
+[UIView animateWithDuration:2 animations:^{
+    topImageView.frame = frameTopPos2;
+    nextImageView.frame = frameNextPos2;
+} completion:^(BOOL finished) {
+    self.topViewController.view.hidden = NO;
+    [topImageView removeFromSuperview];
+    [nextImageView removeFromSuperview];
+}];
+</code></pre><p>嗯嗯，这丑到爆的动画就完成了，希望大家多画点花在自己的切换动画上ヾ(´▽｀; )ﾉ</p>
+<p>pop的方法也比较类似这里就不浪费大家时间了，只是需要注意的是，pop出来的ViewController需要作为pop方法的返回值</p>
+<h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>有始有终，发现好久没写了，刚好把最近开发遇到的种种奇葩和悲剧的替代方案都拿出来讲讲了，画图那个-，-慢慢写喽，就酱</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="在NSTextField外面画个圆角矩形做背景"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">在NSTextField外面画个圆角矩形做背景</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Dec 24 2013</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/cocoa/">#cocoa</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <p>一直看qq之类的高大上的应用里面，他们的TableView上面右边消息数量总有个小红色的椭圆在外面，一直觉得这个高端大气上档次啊，如图：</p>
+<p><img src="/img/QQInforImage.png" alt="QQ消息数量"></p>
+<h1 id="怎么画"><a href="#怎么画" class="headerlink" title="怎么画"></a>怎么画</h1><p>而且觉得挺好看的，一直想要弄了来试试看，结果一直没实现，google也似乎没得结果，总以为是字体啊，神马的设置，后来最近开始慢慢看Cocoa Drawing Guide的时候（后面补个学习笔记or心得or读后感XDDD），想了想有招了。<br><a id="more"></a><br>就是在<code>drawRect:</code>的时候应该就能在绘图之前就能把矩形花上去了把，那我们试试看喽。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)drawRect:(<span class="built_in">NSRect</span>)dirtyRect</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//设置下填充色，这里就用灰色啦，不那么抢眼</span></span><br><span class="line">    [[<span class="built_in">NSColor</span> colorWithCalibratedWhite:<span class="number">0.6</span> alpha:<span class="number">1</span>] setFill];</span><br><span class="line">    <span class="comment">//根据view的框框，画个圆角矩形出来</span></span><br><span class="line">    <span class="built_in">NSBezierPath</span> *path = [<span class="built_in">NSBezierPath</span> bezierPathWithRoundedRect:dirtyRect</span><br><span class="line">                                                         xRadius:<span class="number">8</span></span><br><span class="line">                                                         yRadius:<span class="number">8</span>];</span><br><span class="line">    <span class="comment">//填充颜色</span></span><br><span class="line">	[path fill];</span><br><span class="line"></span><br><span class="line">    [<span class="keyword">super</span> drawRect:dirtyRect];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有童鞋会问了，为啥<code>[super drawRect:dirtyRect];</code>要放在最后啊，重写方法的时候，不是要的话要把super的操作放在前面么？这是因为啊cocoa绘图的时候，会按照顺序来进行绘图，后面的代码绘制的图形会叠加在画布的上面，其实很好理解，就跟画画一样，后画在画布上的东西，肯定是盖住了之前画的东西吧（传说有的名画就是两层的Orz）</p>
+<p>那在这里如果<code>[super drawRect:dirtyRect];</code>放在前了，那么就会先把文字花上去，之后，再用圆角矩形填充的时候，就会把文字的内容覆盖了。</p>
+<p>我们来看看效果如何：</p>
+<p><img src="/img/TextWithRect.png" alt="Result"></p>
+<p>yes，就是这样～</p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>再次证明了有问题一定是Apple的Guide没看仔细，好好看看的话很多东西，都能做的出来，水果公司还是给大家做了个很好使的积木了。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

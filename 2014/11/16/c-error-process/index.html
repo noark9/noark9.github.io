@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="巧用goto语句来进行C语言中的错误处理"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">巧用goto语句来进行C语言中的错误处理</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Nov 16 2014</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/c/">#c</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>很多人不喜欢goto，认为goto为代码结构带来了很多灾难，但是用的好的话，其实goto同样能够优雅的解决很多问题，比如下面说的这个</p>
+<p>这个算是最近看的代码之髓第六章的一个读书扩展了，对于C里面，如何更好的处理错误，其中提到了一点Linux内核编码风格里面提到可以用goto来更好的集中处理错误，减少冗余代码，详情可以看<a href="https://www.kernel.org/doc/Documentation/CodingStyle" target="_blank" rel="noopener">Linux内核编码风格</a>中的第七章——集中处理函数的退出</p>
+<h1 id="怎么做"><a href="#怎么做" class="headerlink" title="怎么做"></a>怎么做</h1><h2 id="内核编码风格第七章"><a href="#内核编码风格第七章" class="headerlink" title="内核编码风格第七章"></a>内核编码风格第七章</h2><p>第七章原文大意是这么说的</p>
+<p>尽管有的人不喜欢goto，但是呢其实编译器里面还是一直用着无条件跳转这一和goto等价的东西。在一个函数里面如果有多个地方都需要进行清理和提交任务的时候，goto的好处就显现出来了。</p>
+<a id="more"></a>
+<p>为什么呢？下面列了四条：</p>
+<ul>
+<li>无条件跳转的语句，很容易的理解和跟踪</li>
+<li>减少了嵌套</li>
+<li>避免了修改代码后没有修改每一个退出点的清理代码而导致的错误</li>
+<li>减轻了编译器去除冗余代码的优化工作</li>
+</ul>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>简单写了个例子，打开三个文本文件，并把其中的内容合并到一个文件中去，如果中间出现了错误，那么就不进行合并</p>
+<p>思路，我们使用一种笨拙的方式</p>
+<ol>
+<li>顺序打开4个文件</li>
+<li>如果其中一个出错，那么终止文件的打开并结束函数的处理并返回错误信息和代码，否则继续打开下一个文件并合并</li>
+</ol>
+<p>下面我们用笨拙（主要是我比较笨拙）的写法和goto优化的写法分别来完成这个函数，函数内容只包括了打开文件的部分代码，主要是觉得这部分代码足够示例了</p>
+<h3 id="常规的写法"><a href="#常规的写法" class="headerlink" title="常规的写法"></a>常规的写法</h3><pre><code>int mergeFile(char *file1, char *file2, char *file3, char *outfile, char *errorMessage)
+{
+    FILE *fp1 = NULL;
+    FILE *fp2 = NULL;
+    FILE *fp3 = NULL;
+    FILE *fpout = NULL;
+    char *fileString = NULL;
+    int filesize = 0;
+
+    fp1 = fopen(file1, &quot;r&quot;);
+    if (!fp1) {
+        strcpy(errorMessage, &quot;file 1 open failed&quot;);
+        return EXIT_FAILURE;
+    }
+    fp2 = fopen(file2, &quot;r&quot;);
+    if (!fp2) {
+        fclose(fp1);
+        strcpy(errorMessage, &quot;file 2 open failed&quot;);
+        return EXIT_FAILURE;
+    }
+    fp3 = fopen(file3, &quot;r&quot;);
+    if (!fp3) {
+        fclose(fp1);
+        fclose(fp2);
+        strcpy(errorMessage, &quot;file 3 open failed&quot;);
+        return EXIT_FAILURE;
+    }
+    fpout = fopen(outfile, &quot;w+&quot;);
+    if (!fpout) {
+        fclose(fp1);
+        fclose(fp2);
+        fclose(fp3);
+        strcpy(errorMessage, &quot;file out open failed&quot;);
+        return EXIT_FAILURE;
+    }
+    filesize += sizeOfFile(fp1);
+    filesize += sizeOfFile(fp2);
+    filesize += sizeOfFile(fp3);
+    fileString = (char *) malloc(sizeof(char) * filesize);
+    if (!fileString) {
+        fclose(fp1);
+        fclose(fp2);
+        fclose(fp3);
+        fclose(fpout);
+        strcpy(errorMessage, &quot;alloc memory error&quot;);
+        return EXIT_FAILURE;
+    }
+
+    // 读取文件内容
+    // 写入文件
+
+    fclose(fp1);
+    fclose(fp2);
+    fclose(fp3);
+    fclose(fpout);
+    free(fileString);
+    strcpy(errorMessage, &quot;everything is ok&quot;);
+    return EXIT_SUCCESS;
+}
+</code></pre><p>相信大家在第一次处理多个文件的打开和释放操作的时候，一定都写过上面这样的代码，每个错误都处理了，但是似乎很麻烦，并且每个错误的位置都写上了，写demo都写的快吐了，真后悔说三个文件，应该说两个就好了-，-。。。并且上面的demo还没有吧合并文件的逻辑加入，比如文件读取失败，文件写入失败的情况也没有放进去，如果这些也加进去的话，方法会变得更加复杂</p>
+<h3 id="用goto优化一下"><a href="#用goto优化一下" class="headerlink" title="用goto优化一下"></a>用goto优化一下</h3><pre><code>int mergeFile2(char *file1, char *file2, char *file3, char *outfile, char *errorMessage)
+{
+    int ret = EXIT_SUCCESS;
+    FILE *fp1 = NULL;
+    FILE *fp2 = NULL;
+    FILE *fp3 = NULL;
+    FILE *fpout = NULL;
+    char *fileString = NULL;
+    int filesize = 0;
+    fp1 = fopen(file1, &quot;r&quot;);
+    if (!fp1) {
+        strcpy(errorMessage, &quot;file 1 open failed&quot;);
+        ret = EXIT_FAILURE;
+        goto EXIT_POINT;
+    }
+    fp2 = fopen(file2, &quot;r&quot;);
+    if (!fp2) {
+        strcpy(errorMessage, &quot;file 2 open failed&quot;);
+        ret = EXIT_FAILURE;
+        goto EXIT_POINT;
+    }
+    fp3 = fopen(file3, &quot;r&quot;);
+    if (!fp3) {
+        strcpy(errorMessage, &quot;file 3 open failed&quot;);
+        ret = EXIT_FAILURE;
+        goto EXIT_POINT;
+    }
+    fpout = fopen(outfile, &quot;w+&quot;);
+    if (!fpout) {
+        strcpy(errorMessage, &quot;file out open failed&quot;);
+        ret = EXIT_FAILURE;
+        goto EXIT_POINT;
+    }
+    filesize += sizeOfFile(fp1);
+    filesize += sizeOfFile(fp2);
+    filesize += sizeOfFile(fp3);
+    fileString = (char *) malloc(sizeof(char) * filesize);
+    if (!fileString) {
+        strcpy(errorMessage, &quot;alloc memory error&quot;);
+        ret = EXIT_FAILURE;
+        goto EXIT_POINT;
+    }
+
+    // 读取文件内容
+    // 写入文件
+
+    strcpy(errorMessage, &quot;everything is ok&quot;);
+
+EXIT_POINT:
+    if (fp1) fclose(fp1);
+    if (fp2) fclose(fp2);
+    if (fp3) fclose(fp3);
+    if (fpout) fclose(fpout);
+    if (fileString) free(fileString);
+    return ret;
+}
+</code></pre><p>一眼看上去，多了goto后，整个代码非常的简洁和一致，出错的地方只需要设置错误信息和错误代码即可，之后，变交给EXIT_POINT那里的代码来执行清理工作，从代码上来看至少满足了内核编码风格中前三条的描述，提高了代码的整体可读性</p>
+<h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>总结下，万恶的goto其实也并不是毒药，只要使用的得当，也是一个利器，当然对于这种情况的goto的使用，其实是因为C语言里面没有异常处理机制，进而提出的一种错误处理思路，对于有异常处理的语言大家都很习惯的使用try-catch-finally语句对代码中的错误进行处理并进行最后的清理工作，但是对于C语言来说，这样处理的风格简单总有简单的魅力</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Understanding node.js（翻译）"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Understanding node.js（翻译）</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Aug 15 2013</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/node/">#node</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <p>本文是对<a href="http://debuggable.com/felix" target="_blank" rel="noopener">Felix Geisendörfer</a>大神的<a href="http://debuggable.com/posts/understanding-node-js:4bd98440-45e4-4a9a-8ef7-0f7ecbdd56cb" target="_blank" rel="noopener">Understanding node.js</a>的一个翻译，主要是最近发现node.js这个东西似乎确实很强力，虽然不知道自己理解对不对，但是感觉，node.js和go里面最方便的一点就是把多线程以及web后端开发搞的更加容易了。下面正文开始，顺便说下本文主要自己学习的以及标题取得都挺洋气的就保留了，翻译水平不好，见谅啊=_,=，顺便说下，想学的同学可以去这里看看<a href="http://www.nodebeginner.org" target="_blank" rel="noopener">The Node Beginner Book</a></p>
+<p>在我将<a href="http://nodejs.org/" target="_blank" rel="noopener">node.js</a>介绍给别人后，他们大多数有两种反应，一种是马上就了解了，另一种则觉得非常的疑惑。如果你是第二种人，那么我将试图这样来解释node.js是什么</p>
+<ul>
+<li>node.js是一种命令行工具，你下载tar包，编译，安装源代码</li>
+<li>node.js可以让你在终端直接一句<code>node my_app.js</code>直接运行你的JavaScript程序</li>
+<li>node.js使用<a href="http://code.google.com/p/v8/" target="_blank" rel="noopener">V8引擎</a>（就是那个让Google的Chrome能run的飞快的东西）解析执行JS脚本</li>
+<li>node.js提供了通过JavaScript访问网络和文件系统的API</li>
+</ul>
+<a id="more"></a>
+<h2 id="“But-I-can-do-everything-I-need-in-ruby-python-php-java-…-”"><a href="#“But-I-can-do-everything-I-need-in-ruby-python-php-java-…-”" class="headerlink" title="“But I can do everything I need in: ruby, python, php, java, … !”"></a>“But I can do everything I need in: ruby, python, php, java, … !”</h2><p>嗯，你说的是对的。node不是一个会跑来帮你把事情做完的独角兽（嗯原文freaking unicorn），它只是 一个工具，并且至少目前没办法替代你现在日常用的东西。</p>
+<h2 id="“Get-to-the-point-”"><a href="#“Get-to-the-point-”" class="headerlink" title="“Get to the point!”"></a>“Get to the point!”</h2><p>node在你需要同时做几件事情的时候是很好用的。你肯定写过一些代码，然后想让他们并行，那么我告诉你，在node里面，除了你的代码之外所有的东西都是并行运行的。</p>
+<h2 id="“Huh-”"><a href="#“Huh-”" class="headerlink" title="“Huh?”"></a>“Huh?”</h2><p>恩恩，就是这样滴啦，除了你的代码以外的东西，都是并行运行的。怎么来理解呢，我们先想象你的代码就是一个国王，而node就是国王的士兵。</p>
+<p>故事的开始是国王的士兵把国王给叫起来，问他有没有啥事给他干，然后呢，国王列了一个清单给他的士兵，然后继续睡觉去了-，-……<br>士兵收到任务后，就把任务分给了其他的士兵一起来完成。</p>
+<p>士兵完成了他的工作后，士兵就在国王家门口排队等着汇报结果了。国王呢，每次只能看一个士兵的结果，有时候还会给那个士兵更多的事情去做。</p>
+<p>Life is good！所以说呢，国王的士兵并行的吧所有的任务搞完了，但是呢国王每次只会看一个结果，所以国王可以关注所有的结果。</p>
+<p>故事简单，但是要是直接找个差不多的东西来说明下非阻塞（non-blocking）还是挺难的。</p>
+<h2 id="“That’s-fantastic-but-could-you-quit-the-silly-metaphor-and-speak-geek-to-me-”"><a href="#“That’s-fantastic-but-could-you-quit-the-silly-metaphor-and-speak-geek-to-me-”" class="headerlink" title="“That’s fantastic, but could you quit the silly metaphor and speak geek to me?”"></a>“That’s fantastic, but could you quit the silly metaphor and speak geek to me?”</h2><p>恩恩，故事讲完了，我们来看点干货，看看node.js的程序是个啥样<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>)</span><br><span class="line">  , sys = <span class="built_in">require</span>(<span class="string">'sys'</span>);</span><br><span class="line"></span><br><span class="line">fs.readFile(<span class="string">'treasure-chamber-report.txt'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">report</span>) </span>&#123;</span><br><span class="line">  sys.puts(<span class="string">"oh, look at all my money: "</span>+report);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">fs.writeFile(<span class="string">'letter-to-princess.txt'</span>, <span class="string">'...'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  sys.puts(<span class="string">"can't wait to hear back from her!"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>上面的代码给了node读文件和写文件这两个事儿，然后呢就去睡觉了。<br>一旦node完成一个事儿了，就调用回调函数了，但是呢一次只能有一个回调函数执行，其他的回调函数才会继续。而且无法保证回调函数的顺序。</p>
+<h2 id="“So-I-don’t-have-to-worry-about-code-accessing-the-same-data-structures-at-the-same-time-”"><a href="#“So-I-don’t-have-to-worry-about-code-accessing-the-same-data-structures-at-the-same-time-”" class="headerlink" title="“So I don’t have to worry about code accessing the same data structures at the same time?”"></a>“So I don’t have to worry about code accessing the same data structures at the same time?”</h2><p>恩恩，这就是JavaScript单线程/事件循环设计的美妙之处了。</p>
+<h2 id="“Very-nice-but-why-should-I-use-it-”"><a href="#“Very-nice-but-why-should-I-use-it-”" class="headerlink" title="“Very nice, but why should I use it?”"></a>“Very nice, but why should I use it?”</h2><p>一个原因是高效。一个web应用，主要的响应时间一般来说也就是所有的数据库查询时间总和，用node，你可以让他一次执行所有的查询，这样就将执行的时间缩短到了最慢的那个查询的时间。</p>
+<p>另外一个原因就是JavaScript了，可以使用node共享前段和后端的代码。而且JavaScript也在慢慢的变成一个更为通用的语言，不管你用python，ruby，java，php还是神马的，你咋都要搞点点JS的东西吧。</p>
+<p>最后一个原因就是速度，目前V8是世界上最快的动态语言解释器之一，我无法想象还有什么语言能够像JavaScript现在一样追求速度。另外，node提供了一个轻量级的I/O能够让你尽可能的的利用系统的I/O资源。</p>
+<h2 id="“So-you-are-saying-I-should-write-all-my-apps-in-node-from-now-on-”"><a href="#“So-you-are-saying-I-should-write-all-my-apps-in-node-from-now-on-”" class="headerlink" title="“So you are saying I should write all my apps in node from now on?”"></a>“So you are saying I should write all my apps in node from now on?”</h2><p>既是，也不是，一旦你开始耍node这把锤子，所有东西都开始看上去象是颗钉子了，但是如果你做的事情是有一个期限的，那么你还要考虑下面的东西：</p>
+<ul>
+<li>对你来说，低响应时间和高并发是否那么重要？因为node非常擅长这个。</li>
+<li>你的项目有多大？小的项目妥妥的，大的项目就要仔细的评估了（已有的库，修复bug的资源等各种问题了（原文里面有个upstream-，-不知道咋翻译了））。</li>
+</ul>
+<h2 id="“Does-node-run-on-Windows-”"><a href="#“Does-node-run-on-Windows-”" class="headerlink" title="“Does node run on Windows?”"></a>“Does node run on Windows?”</h2><p>呀，作者写的有点旧了-，-现在支持windows，去<a href="http://nodejs.org/" target="_blank" rel="noopener">node.js</a>下个setup妥妥的，原文就懒得翻译了=_,=</p>
+<h2 id="“Can-I-access-the-DOM-in-node-”"><a href="#“Can-I-access-the-DOM-in-node-”" class="headerlink" title="“Can I access the DOM in node?”"></a>“Can I access the DOM in node?”</h2><p>好问题啊！DOM肯定是木有滴，DOM是一个浏览器才有的东西，幸好node用的V8是一个完全剥离了这些乱七八糟东西的好东西啊。但是啊，还有些家伙实现了一个<a href="http://www.yuiblog.com/blog/2010/04/09/node-js-yui-3-dom-manipulation-oh-my/" target="_blank" rel="noopener">DOM的node module</a>，这个东西也实现了一些例如客户端代码单元测试的一些很酷的东西。</p>
+<h2 id="“Isn’t-event-driven-programming-really-hard-”"><a href="#“Isn’t-event-driven-programming-really-hard-”" class="headerlink" title="“Isn’t event driven programming really hard?”"></a>“Isn’t event driven programming really hard?”</h2><p>这就取决于你了，要是你知道怎么玩AJAX和浏览器里面的用户事件，用node肯定不成问题，而且TDD可以让你实现可维护性高的设计。</p>
+<h2 id="“Who-is-using-it-”"><a href="#“Who-is-using-it-”" class="headerlink" title="“Who is using it?”"></a>“Who is using it?”</h2><p>恩恩，这个东西，在<a href="http://wiki.github.com/ry/node" target="_blank" rel="noopener">node wiki</a>（翻到“使用Node的公司（原文Companies using Node）”）是有一个正在不断增加的列表的。<a href="http://www.yuiblog.com/blog/2010/04/09/node-js-yui-3-dom-manipulation-oh-my/" target="_blank" rel="noopener">Yahoo</a>用node搞了个YUI，<a href="http://www.plurk.com/" target="_blank" rel="noopener">Plurk</a>用来搞massive comet（这个真不知道是啥东西了-，-大坨的彗星？还是大坨的东西-，-…）还有Paul Bakaus搞的游戏引擎（<a href="http://ajaxian.com/archives/aves-game-engine" target="_blank" rel="noopener">mind-blowing game engine</a>）里面也有一部分node后端。<a href="http://www.joyent.com/" target="_blank" rel="noopener">Joyent</a>雇了node的创造者Ryan Dahl，并且大大滴赞助了node的开发，以及heroku也将会支持node。</p>
+<h2 id="“Where-can-I-learn-more-”"><a href="#“Where-can-I-learn-more-”" class="headerlink" title="“Where can I learn more?”"></a>“Where can I learn more?”</h2><p>Tim Caswell写了一个非常棒的<a href="http://howtonode.org/" target="_blank" rel="noopener">How To Node</a>博客，在twitter上follow下<a href="http://search.twitter.com/search?q=%23nodejs" target="_blank" rel="noopener">#nodejs</a>，或者订阅<a href="http://groups.google.com/group/nodejs" target="_blank" rel="noopener">邮件列表</a>。或者IRC上的<code>#node.js</code>（恩恩，点点在名字里面的）频道，我们要超200 lurker-mark（这啥意思-，-？）了XDDDDD</p>
+<p>当然我（那是原文作者-，-）也还会继续在我的博客<a href="http://debuggable.com/" target="_blank" rel="noopener">debuggable.com</a>写文章滴。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

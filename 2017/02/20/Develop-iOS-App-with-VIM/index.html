@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="征服恐惧！用 Vim 写 iOS App"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">征服恐惧！用 Vim 写 iOS App</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Feb 20 2017</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/iOS/">#iOS</a> <a class="tag" href="/tags/vim/">#vim</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <p>我们都知道 Vim 和 Emacs 都是文本编辑器中的上古神器，你也许用 ctags，cscopes 配合 Vim 完成过大型 C 或者 C++ 的开发，你也许配合过其他插件，完成过 JavaScript，python 代码的开发，但是很少有人试过 iOS app 的开发吧，毕竟 iOS 的框架包含了很多东西，以及 Objective-C 天生很长的 API 名字，让我们没办法把此神器用起来，今天我就来给大家讲下我是怎么使用 Vim 开发 iOS App 的，当然 Emacs 也可以</p>
+<h1 id="begin"><a href="#begin" class="headerlink" title="begin"></a>begin</h1><p>使用 Vim 开发 iOS App 并不是特殊的爱好，而是被 Xcode 8 活生生的逼的，刚开始更新了 Xcode 8 以后，Xcode 8 把第三方插件给屏蔽了，导致没有 XVim 给我用了，没有 XVim 以后，发现异常不顺手，于是尝试用了一段时间的 AppCode，不得不说 AppCode 是一个非常好的 IDE，但是他有个很大的缺点，那就是 Java，JetBrain 家的东西都很不错，唯一缺点就是基于 Java，整个平台都略慢，然后我在不断的 google 过程中，发现了有人竟不知何谓恐惧，竟然使用 Vim 开发 iOS App，最后我也学会了这个新姿势 XDDDD</p>
+<p>不过目前，只支持 Objective-C 代码的开发，swift 的话，没有解决工程文件自动补全的问题，因为目前大家使用的流行的 swift 自动补全工具 SourceKitten 并没有支持 workspace 所以暂时还没用起来</p>
+<p>以及，目前不支持调试，因为发现 Vim 对调试的支持确实好糟糕…</p>
+<a id="more"></a>
+<h1 id="准备活动"><a href="#准备活动" class="headerlink" title="准备活动"></a>准备活动</h1><p>工欲善其事，必先利其器，主角是 Vim 或者 Emacs，少了其他配角和龙套们，也没办法正负恐惧，我们来看看用到了些什么东西，让我们的 Vim 成为利器的，这里只是点下他们的名，文章后面会把链接奉上</p>
+<ul>
+<li><p>首先我们来看主角队的同学们，他们是征服恐惧的主力</p>
+<ul>
+<li>macOS，没有神话，开发 iOS 还是只能在 Mac 上</li>
+<li>支持 python 的 Vim，可以用 Vim8 或是 neoVim 食用更佳，我就用的 neoVim</li>
+<li>YCMD，其实他是 YouCompleteMe + YouCompelteMeDeamon 的合体，自动补全、定义跳转等功能，就依赖他了</li>
+</ul>
+</li>
+<li><p>接下来我们来看看其他龙套们</p>
+<ul>
+<li>Vbundle，装插件用的，没他，龙套和主角都不用上场了</li>
+<li>unite + unite-outline + unite-outline-objc，提供了方法导航</li>
+<li>auto-pairs，自动补全右括号</li>
+<li>ctrlp，文件搜索跳转</li>
+<li>Ag，字符串搜索工具</li>
+<li>syntastic，语法检查工具</li>
+<li>vim-clang-format，代码格式工具</li>
+</ul>
+</li>
+</ul>
+<p>恩，需要的东西大概就是这些了，Vim 的配置文件，我是基于好久以前 square 开源的 maximum-awesome 的，所以，配合这个食用风味更佳，我的 dot file 也放到了 github 上，欢迎大家 star</p>
+<h1 id="进入正题"><a href="#进入正题" class="headerlink" title="进入正题"></a>进入正题</h1><p>龙套们，基本都可以通过配置 vbundle 来完成安装，之后只用配置对应的快捷键就好了，这里的正题，要搞定难搞的主 YCMD</p>
+<h2 id="难搞的主-YCMD"><a href="#难搞的主-YCMD" class="headerlink" title="难搞的主 YCMD"></a>难搞的主 YCMD</h2><h3 id="安装-YCMD"><a href="#安装-YCMD" class="headerlink" title="安装 YCMD"></a>安装 YCMD</h3><p>YCMD 的安装很简单，主要是需要一定的配置</p>
+<p>首先在 vim 的配置文件中加入下面的内容，更新配置文件并执行 <code>BundleInstall</code> 命令，让 Vbundle 把 YouCompleteMe 插件装上</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Plugin <span class="string">'Valloric/YouCompleteMe'</span></span><br></pre></td></tr></table></figure>
+<p>然后到这个路径 <code>~/.vim/bundle/YouCompleteMe</code> 这里是 YouCompleteMe 安装的位置，在这里需要编译 YCM，一条命令就可以搞定</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./install.py --clang-completer --system-libclang</span><br></pre></td></tr></table></figure>
+<p><code>--clang-completer</code> 告诉脚本我们需要 clang 的支持，<code>--system-libclang</code> 告诉编译脚本使用系统的 clang，因为之前 clang 升级 4.0 的时候，并没有已经编译好的包给我下载，所以这里不用系统 clang 的话，编译脚本会下载一个 clang 3.0，这样就无法支持 iOS 10.0 以后的 sdk 了，因为 iOS 10.0 以后的 sdk 为了支持 swift 引入了一些 clang 3.0 不支持的新语法，所以这里要加上 <code>--system-libclang</code></p>
+<p>然后等他编译完成，这样 YCMD 就配置好了，似乎这里看并不是很难搞，其实难搞的是如何在 iOS 项目中配置好自动提示</p>
+<h3 id="为-Xcode-项目配置-YCMD"><a href="#为-Xcode-项目配置-YCMD" class="headerlink" title="为 Xcode 项目配置 YCMD"></a>为 Xcode 项目配置 YCMD</h3><p>这里进入到了真正征服恐惧的地方了</p>
+<h4 id="YouCompleteMe-的原理"><a href="#YouCompleteMe-的原理" class="headerlink" title="YouCompleteMe 的原理"></a>YouCompleteMe 的原理</h4><p>曾经有人说过，编辑器再怎么神器是没办法超过 IDE 的，因为 IDE 是通过编译、解析整个项目的所有文件，来达到语法错误提示，自动补全，定义跳转等高级功能的，而 YCMD 就是来弥补这一个差距的，YCMD 通过传入完整的编译参数，编译需要提示的文件，来实现自动补全，这样没办法超过 IDE 的部分就被抹平了</p>
+<h4 id="配置一个项目"><a href="#配置一个项目" class="headerlink" title="配置一个项目"></a>配置一个项目</h4><p>这里我们配置一个复杂的项目来练练手，首先 YCMD 是不可能通过 Xcode 的项目文件或是 workspace 文件获取到编译参数的，所以这一步需要手来，当然，将来可以做成自动的，因为目前手动的做其实很方便，所以现在还没有做成自动的</p>
+<p>首先，YCMD 是通过每个项目路径下的 <code>.ycm_extra_conf.py</code> 脚本文件来获取编译参数的，这个脚本文件中有一个叫做 <code>FlagsForFile</code> 的函数，我们通过这个函数返回某一个特定文件需要的编译参数，一般情况下大部分文件的编译参数是一样的，我们来看一个配置的列子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> ycm_core</span><br><span class="line"></span><br><span class="line">flags = [</span><br><span class="line">        <span class="string">'-resource-dir'</span>,</span><br><span class="line">        <span class="string">'/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0'</span>,</span><br><span class="line">        <span class="string">'-x objective-c'</span>,</span><br><span class="line">        <span class="string">'-arch armv7'</span>,</span><br><span class="line">        <span class="string">'-fmessage-length=0'</span>,</span><br><span class="line">        <span class="comment"># '-fmodules',</span></span><br><span class="line">        <span class="comment"># '-gmodules',</span></span><br><span class="line">        <span class="string">'-fdiagnostics-show-note-include-stack'</span>,</span><br><span class="line">        <span class="string">'-fmacro-backtrace-limit=0'</span>,</span><br><span class="line">        <span class="string">'-D__arm__=1'</span>,</span><br><span class="line">        <span class="string">'-D__IPHONE_OS_VERSION_MIN_REQUIRED=80000'</span>,</span><br><span class="line">        <span class="string">'-std=gnu99'</span>,</span><br><span class="line">        <span class="string">'-fobjc-arc'</span>,</span><br><span class="line">        <span class="string">'-Wnon-modular-include-in-framework-module'</span>,</span><br><span class="line">        <span class="string">'-Werror=non-modular-include-in-framework-module'</span>,</span><br><span class="line">        <span class="string">'-Wno-trigraphs'</span>,</span><br><span class="line">        <span class="string">'-fpascal-strings'</span>,</span><br><span class="line">        <span class="string">'-Os'</span>,</span><br><span class="line">        <span class="string">'-fno-common'</span>,</span><br><span class="line">        <span class="string">'-Wno-missing-field-initializers'</span>,</span><br><span class="line">        <span class="string">'-Wno-missing-prototypes'</span>,</span><br><span class="line">        <span class="string">'-Werror=return-type'</span>,</span><br><span class="line">        <span class="string">'-Wunreachable-code'</span>,</span><br><span class="line">        <span class="string">'-Wno-implicit-atomic-properties'</span>,</span><br><span class="line">        <span class="string">'-Werror=deprecated-objc-isa-usage'</span>,</span><br><span class="line">        <span class="string">'-Werror=objc-root-class'</span>,</span><br><span class="line">        <span class="string">'-Wno-arc-repeated-use-of-weak'</span>,</span><br><span class="line">        <span class="string">'-Wduplicate-method-match'</span>,</span><br><span class="line">        <span class="string">'-Wno-missing-braces'</span>,</span><br><span class="line">        <span class="string">'-Wparentheses'</span>,</span><br><span class="line">        <span class="string">'-Wswitch'</span>,</span><br><span class="line">        <span class="string">'-Wunused-function'</span>,</span><br><span class="line">        <span class="string">'-Wno-unused-label'</span>,</span><br><span class="line">        <span class="string">'-Wno-unused-parameter'</span>,</span><br><span class="line">        <span class="string">'-Wunused-variable'</span>,</span><br><span class="line">        <span class="string">'-Wunused-value'</span>,</span><br><span class="line">        <span class="string">'-Wempty-body'</span>,</span><br><span class="line">        <span class="string">'-Wconditional-uninitialized'</span>,</span><br><span class="line">        <span class="string">'-Wno-unknown-pragmas'</span>,</span><br><span class="line">        <span class="string">'-Wno-shadow'</span>,</span><br><span class="line">        <span class="string">'-Wno-four-char-constants'</span>,</span><br><span class="line">        <span class="string">'-Wno-conversion'</span>,</span><br><span class="line">        <span class="string">'-Wconstant-conversion'</span>,</span><br><span class="line">        <span class="string">'-Wint-conversion'</span>,</span><br><span class="line">        <span class="string">'-Wbool-conversion'</span>,</span><br><span class="line">        <span class="string">'-Wenum-conversion'</span>,</span><br><span class="line">        <span class="string">'-Wshorten-64-to-32'</span>,</span><br><span class="line">        <span class="string">'-Wpointer-sign'</span>,</span><br><span class="line">        <span class="string">'-Wno-newline-eof'</span>,</span><br><span class="line">        <span class="string">'-Wno-selector'</span>,</span><br><span class="line">        <span class="string">'-Wno-strict-selector-match'</span>,</span><br><span class="line">        <span class="string">'-Wundeclared-selector'</span>,</span><br><span class="line">        <span class="string">'-Wno-deprecated-implementations'</span>,</span><br><span class="line">        <span class="string">'-DOBJC_OLD_DISPATCH_PROTOTYPES=0'</span>,</span><br><span class="line">        <span class="string">'-isysroot'</span>,</span><br><span class="line">        <span class="string">'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk'</span>,</span><br><span class="line">        <span class="string">'-fstrict-aliasing'</span>,</span><br><span class="line">        <span class="string">'-Wprotocol'</span>,</span><br><span class="line">        <span class="string">'-Wdeprecated-declarations'</span>,</span><br><span class="line">        <span class="string">'-miphoneos-version-min=8.0'</span>,</span><br><span class="line">        <span class="string">'-g'</span>,</span><br><span class="line">        <span class="string">'-Wno-sign-conversion'</span>,</span><br><span class="line">        <span class="string">'-Wno-infinite-recursion'</span>,</span><br><span class="line">        <span class="string">'-fembed-bitcode-marker'</span>,</span><br><span class="line">        <span class="string">'-I/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform'</span>,</span><br><span class="line">        <span class="string">'-I/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/include'</span>,</span><br><span class="line">        <span class="string">'-I/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks'</span>,</span><br><span class="line">        <span class="string">'-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0/include'</span>,</span><br><span class="line">        <span class="string">'-F/Users/apple/Documents/Developer/CloudLifeWorkspace/iOS/Develop/Project_iOS/project'</span>,</span><br><span class="line">        <span class="string">'-MMD'</span>,</span><br><span class="line">        <span class="string">'-MT'</span>,</span><br><span class="line">        <span class="string">'-MF'</span>,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">SOURCE_EXTENSIONS = [ <span class="string">'.cpp'</span>, <span class="string">'.cxx'</span>, <span class="string">'.cc'</span>, <span class="string">'.c'</span>, <span class="string">'.m'</span>, <span class="string">'.mm'</span> ]</span><br><span class="line"></span><br><span class="line">HEADER_EXTENSIONS = [ <span class="string">'.hpp'</span>, <span class="string">'.hxx'</span>, <span class="string">'.hh'</span>, <span class="string">'.h'</span> ]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">FlagsForFile</span><span class="params">( filename, **kwargs )</span>:</span></span><br><span class="line">        staticFlags = flags</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">                <span class="string">'flags'</span>: staticFlags,</span><br><span class="line">                <span class="string">'do_cache'</span>: <span class="keyword">True</span></span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>这里上面的代码可以当作 <code>.ycmd_extra_conf</code> 文件的一个最小模板，也就是如果我们的项目里面没有子目录，没有第三方库，那么使用这个已经可以为 iOS 项目提供自动提示了</p>
+<p>颤抖吧凡人，如此这般的编译条件，需要你能够把 Xcode 项目配置中的编译参数完完全全翻译出来才行，但是我也是凡人，所以这个不是我写的，而是有方法生成的，方法如下</p>
+<p>把需要增加自动提示的项目用 Xcode 打开，然后编译，然后如下图所示，找到编译信息然后找到项目中的一个文件，注意不要是 Pod 中的文件，最右边，有个三条横线的按钮，点开他，没错，你看到了完整的编译参数，下图中 <code>EXPORT PATH =....</code> 下面的所有内容就是完整的编译参数</p>
+<ul>
+<li>Report View</li>
+</ul>
+<p><img src="/img/dev-ios-with-vim/img01-xcode-build.png" alt="Xcode 中的 Report View"></p>
+<ul>
+<li>戳这个按钮</li>
+</ul>
+<p><img src="/img/dev-ios-with-vim/img03-xcode-buildinfo-button.png" alt="Xcode 中的编译信息按钮"></p>
+<ul>
+<li>我们要的编译信息</li>
+</ul>
+<p><img src="/img/dev-ios-with-vim/img02-xcode-buildinfo.png" alt="Xcode 中的编译信息"></p>
+<p>右键，copy，找到你熟悉的记事本，参数都是空格分隔的，所以，这里我们把它转换成上面代码中的形式，并把不需要的去掉，比如这里我注释了 <code>-fmodules</code> 和 <code>-gmodules</code> 因为这样编译没办法使用 module</p>
+<p>把这些加入到配置文件中后，再打开 Vim 你就会发现自动提示变得非常好用了，不过这里还会有一个问题，如果编译的时候，有无法找到 <code>UIKit</code>，这是因为 YCMD 默认引入了 macOS SDK 的路径，导致了编译时 clang 认为我们编译目标是 macOS，所以如下图需要修改 <code>~/.vim/bundle/YouCompleteMe/third_party/ycmd/ycmd/completers/cpp/flags.py</code> 文件，去掉默认引入 macOS sdk 的编译参数，这样就好了</p>
+<p><img src="/img/dev-ios-with-vim/img04-do-not-include-macossdk.png" alt="需要修改的 YCMD 文件"></p>
+<h4 id="效果图们"><a href="#效果图们" class="headerlink" title="效果图们"></a>效果图们</h4><p>至此，最主要的问题已经被我们解决了，接下来看下效果如何</p>
+<ul>
+<li>首先是自动提示</li>
+</ul>
+<p><img src="/img/dev-ios-with-vim/img05-result-autocomplete.png" alt="自动提示"></p>
+<ul>
+<li>查找文件</li>
+</ul>
+<p><img src="/img/dev-ios-with-vim/img06-ctrip-find-file.png" alt="文件查找"></p>
+<ul>
+<li>方法名称大纲</li>
+</ul>
+<p><img src="/img/dev-ios-with-vim/img07-outline.png" alt="Outline"></p>
+<ul>
+<li>搜索字符串</li>
+</ul>
+<p><img src="/img/dev-ios-with-vim/img08-Ag-find.png" alt="搜索字符串"></p>
+<ul>
+<li>语法检查</li>
+</ul>
+<p><img src="/img/dev-ios-with-vim/img09-syntax-check.png" alt="语法检查"></p>
+<h2 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h2><p>这么做自然不是为了花样炫技，更多的是为了探索 Vim 的使用，以及更多了解 Xcode 项目</p>
+<ul>
+<li>完整的 Vim 环境，写代码再也不用碰鼠标了</li>
+<li>Vim 插件 + 不满的地方自己动手丰衣足食</li>
+<li>快速，跟 Vim 比速度，笑话</li>
+<li>方便快接的字符串搜索，替换操作</li>
+<li>学了点 Python</li>
+<li>附赠一个 C/C++ 的开发环境</li>
+</ul>
+<h2 id="已知问题"><a href="#已知问题" class="headerlink" title="已知问题"></a>已知问题</h2><p>虽然目前已经可以达到写代码的程度了，但是还是有很多问题，如下：</p>
+<ul>
+<li>没办法 debug</li>
+<li>不支持 Xcode 中的 group 展示</li>
+<li>头文件的提示有问题</li>
+<li>不能使用 <code>@import</code> 的导入，会报语法错误</li>
+<li>xib，storyboard 自然是不行的，我的做法是 Xcode 里面拖 UI + 关联 Outlet + Debug，Vim 中做大量的代码编辑操作</li>
+<li><code>[]</code> 方括号的匹配没有 Xcode 那么智能</li>
+<li>delegate 或是全局的自动提示，需要使用 ctrl + 空格打开，并且有时候会有点慢</li>
+<li>delegate 的自动提示有时候需要输入前面半部分的方法名才会有，比如上面截图的 tableView，需要先输入 <code>- (void)tableView:(UITableView *)tableView</code> 再使用 ctrl + 空格才会有非常好的自动提示，当然输入前面这部分也会有一定的提示，整体上看能接受</li>
+</ul>
+<p>上面的问题都是一直以来我没有解决的问题，大家要是发现有破解的方法，欢迎联系</p>
+<h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>折腾这么多，相信大家已经可以用 Vim 敲 iOS 的代码了，虽然虽然当初开始折腾的时候，踩了很多坑，比如 clang 3 升级 clang 4 后，原来的配置都不能用了，但是收获挺多的也并不是这么一篇文章能够说完的，除了 Vim 大家也可以试试 Emacs 下的配置，我用的 Spacemacs，添加了 ycmd 的 layer，配置后也有了相同的效果</p>
+<p>也欢迎大家丢砖</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="http://valloric.github.io/YouCompleteMe/" target="_blank" rel="noopener">YouCompleteMe</a>: 自动补全插件</li>
+<li><a href="https://github.com/VundleVim/Vundle.vim" target="_blank" rel="noopener">Vbundle</a>: 插件管理插件</li>
+<li><a href="https://github.com/Shougo/unite.vim" target="_blank" rel="noopener">Unite</a>: 一个通用的显示插件，可以用来显示各种东西，比如文件列表，buffer 列表，outline</li>
+<li><a href="https://github.com/Shougo/unite-outline" target="_blank" rel="noopener">Unite-outline</a>: Unite 插件的 outline 插件</li>
+<li><a href="https://github.com/ryotakato/unite-outline-objc" target="_blank" rel="noopener">Unite-outline-objc</a>: Unite-outline 插件的 Objective-C 插件</li>
+<li><a href="https://github.com/jiangmiao/auto-pairs" target="_blank" rel="noopener">auto-pairs</a>: 自动补全括号的插件</li>
+<li><a href="https://github.com/ctrlpvim/ctrlp.vim" target="_blank" rel="noopener">ctrlp</a>: 文件查找插件</li>
+<li><a href="https://github.com/rking/ag.vim" target="_blank" rel="noopener">Ag</a>: 字符串查找插件</li>
+<li><a href="https://github.com/vim-syntastic/syntastic" target="_blank" rel="noopener">syntastic</a>: 语法检查插件</li>
+<li><a href="https://github.com/rhysd/vim-clang-format" target="_blank" rel="noopener">vim-clang-format</a>: clang format 格式化插件</li>
+<li><a href="http://vimawesome.com" target="_blank" rel="noopener">VimAwesome</a>: 方便的 Vim 插件导航网站</li>
+<li><a href="https://github.com/square/maximum-awesome" target="_blank" rel="noopener">maximum-awesome</a>: 一个比较有名的 Vim 配置，包括了上面的 Vbundle，Ag，ctrlp，syntastic 等插件，以及一些很方便的配置，我的配置文件是基于这个配置的，使用前先安装这个</li>
+<li><a href="https://github.com/noark9/dotfiles" target="_blank" rel="noopener">我的配置文件</a>: 我的配置文件，除了上文写的内容，还加了些 php，python，js 等开发配置，以及一些自己觉得用起来方便的配置</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="学习iOS上QQ的聊天数据库"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">学习iOS上QQ的聊天数据库</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Jan 17 2015</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/iOS/">#iOS</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>这篇内容完全是意外啊，起因是酱紫的</p>
+<p>某日看见一个Mac的app打折大礼包（bundle）买了以后里面有个神奇的iPxx设备管理的app，叫iMazing，然后用iMazing尝试了下，发现居然可以看app里面的数据，然后出于手闲好奇的心里-，-我就点开了大TX的扣扣看了一眼，于是就产生了下面的一系列意外发现</p>
+<p>iMazing长下面酱紫，用起来赶脚还是很不错的啊，于是我顺手点开了扣扣，出于学习的目的，研究了一下</p>
+<p><img src="/img/qq-chat-db/imazing-home.png" alt="iMazing Home"></p>
+<p>发现iMazing很强力啊，把整个app和数据都dump出来了，以及这次我们要讲的主角，消息记录，嘛大企鹅的消息记录在别的平台上似乎都是加密过的，iOS上却没有加密，这让人有点意外，不过估计也比较相信水果公司的沙盒是很安全的吧，不过这也给我们点机会一窥企鹅里面到底是啥样的。</p>
+<p>另外本文完全自我yy的，水平有限写的不好的地方大家拍砖即可</p>
+<a id="more"></a>
+<h1 id="找找主角在哪里"><a href="#找找主角在哪里" class="headerlink" title="找找主角在哪里"></a>找找主角在哪里</h1><p>我们来找找主角在哪里，下面图是企鹅的document路径下的东西，从名字来看，分了好多东西，也承载了企鹅很多的功能，比如看到Weiyun，看到Video了(*゜∀゜)</p>
+<p><img src="/img/qq-chat-db/qq-document.png" alt="QQ的Document路径"></p>
+<p>上面打上马赛克的，是QQ号为路径的两个目录，大家肯定都以为我们的主角就在里面了，哈哈哈，其实大意了，打开里面是这样的</p>
+<p><img src="/img/qq-chat-db/qq-others.png" alt="Document下的QQ号路径"></p>
+<p>外面的QQ号的路径里面其实是头像啊，用户信息啊，图片啊，视频啊之类的东西，并不是我们期待的聊天记录，我之前也被骗了，还以为大企鹅已经加密了用户的QQ聊天记录了，后来手闲点开来看一看，发现，哎呀原来在这里啊。</p>
+<p><img src="/img/qq-chat-db/user-content.png" alt="content下的QQ号路径"></p>
+<p>上面的图就是我的一个帐号下面的所有的文件了，一眼看到，QQ.db，这个必须是主角了，接下来我们就把它拆开来看看，里面都有些啥东西呢。</p>
+<h1 id="拆解QQ-db"><a href="#拆解QQ-db" class="headerlink" title="拆解QQ.db"></a>拆解QQ.db</h1><h2 id="一瞥"><a href="#一瞥" class="headerlink" title="一瞥"></a>一瞥</h2><p>用sqlite打开qq.db这个文件以后，发现没有加密，也就是说我们的所有聊天记录，都是明文存放在手机里面的，这里再次体会到了不越狱的重要性。接下来我们一步一步的来看看，首先<code>.tables</code>看下，有一些什么样的数据表呢</p>
+<p><img src="/img/qq-chat-db/all-tables.png" alt="所有的表"></p>
+<p>上面的图就是所有的数据表了，里面所有号码都被我打上了码，不过大家都懂得，上面的码就是我们平时使用的群号码，qq号码了，以及这次的新发现，讨论组号码，另外，截图在我升级新的QQ之前截得，那么新加的表，就懒得截图了-_，-不过会在下面描述滴，以及，找到了个好看的free工具了，哈哈，可以更方便了</p>
+<p>从上面的图片来看，大概可以把数据表分为下面几类：</p>
+<p>注意：在花括号中的内容是根据内容可变的</p>
+<ul>
+<li><p>数据库文件本身的信息</p>
+<ul>
+<li>tb_dbVersion：数据表的版本，目测每个表有一个tableSign，对应到一个版本，tx很变态-，-数据的版本是记录在表上的</li>
+</ul>
+</li>
+<li><p>文件相关的</p>
+<ul>
+<li>tb_File：保存用户收到和发送的文件列表</li>
+</ul>
+</li>
+<li><p>用户聊天(tb_c2cMsg开头)</p>
+<ul>
+<li>tb_c2cTables：跟QQ用户聊天的表</li>
+<li>tb_recentC2CMsg：最近的用户消息</li>
+<li>tb_c2cMsg_{QQ号}：跟某个QQ用户聊天的聊天记录</li>
+</ul>
+</li>
+<li><p>讨论组（tb_discuss开头的）</p>
+<ul>
+<li>tb_discuss_recent：最近的讨论组聊天记录</li>
+<li>tb_discussMaxSeq：讨论组消息序列</li>
+<li>tb_discussGrp_{讨论组ID}：某个讨论组的聊天记录</li>
+</ul>
+</li>
+<li><p>群组相关的（tb_Troop开头）</p>
+<ul>
+<li>tb_TroopAnnouncement：群通知信息</li>
+<li>tb_TroopMem：目前不知道是用来干啥的，也没看到数据，看字段像是保存群和群成员的表，但是几次实验都没有数据，感觉很奇怪</li>
+<li>tb_Troop：群列表</li>
+<li>tb_TroopRemark：用户在不同群的群名称</li>
+<li>tb_Troop_recent：最近的群聊天记录</li>
+<li>tb_TroopMsgSeq：群的消息序列</li>
+<li>tb_TroopMsg_{群号}：某个群的聊天记录</li>
+</ul>
+</li>
+<li><p>QQ悄悄话（tb_Sec开头）</p>
+<ul>
+<li>tb_SecSession：会话列表</li>
+<li>tb_SecMsg_{tb_SecSession表中的sessionId}：悄悄话消息记录</li>
+</ul>
+</li>
+<li><p>目前未知的</p>
+<ul>
+<li>tb_eimUserSummary：某种用户信息</li>
+<li>tb_userSummary：某种用户信息</li>
+</ul>
+</li>
+</ul>
+<p>上面就是目前看见到的，所有类型的表，大家似乎觉得没看到用户列表，用户列表根据文件名看，应该是在同级目录下的一个plist文件里面保存着了</p>
+<p>第一部分总结一下，QQ为了每个独立的聊天记录处理方便吧，将所有的聊天记录分成了不同的表，每个用户，每个群，每个讨论组都有一个表</p>
+<h2 id="聊天记录表"><a href="#聊天记录表" class="headerlink" title="聊天记录表"></a>聊天记录表</h2><p>其实真正的主角在这里，我们的聊天记录表，因为QQ就是即时通讯软件，而及时通讯软件的核心就是聊天，那么知道聊天记录里面有些啥，那就知道在处理不同类型消息的时候，通过QQ的聊天记录表，我们可以从中窥得一些QQ在设计数据存储时的取舍和思想，对于聊天记录，这里主要关注如何处理多重类型的消息的</p>
+<ul>
+<li>普通的文本聊天</li>
+</ul>
+<p>就和我们看见的那样，直接使用聊天文本，对于QQ原生的表情，那跟通过文本看表情一样是使用<code>\表情名称</code>插入到文本中的。</p>
+<ul>
+<li>有图片的</li>
+</ul>
+<p>目前看到的是通过<code>&lt;img&gt;图片&lt;/img&gt;</code>作为图片名字插入到消息中，之后在一个叫做picUrl的字段里面放入对应图片名字的描述，以及url，具体看图</p>
+<p><img src="/img/qq-chat-db/qq-i-send-image.png" alt="我发出去的图片"></p>
+<p>对于我收到的图片，可以看到图片的链接</p>
+<p><img src="/img/qq-chat-db/qq-i-received-image.png" alt="我收到的图片"></p>
+<p>可以看得到，对于我发送的图片，并不保存连接的地址，而是直接保存了本地文件的位置，对于我收到的图片，那么连接会保存两个，一个是缩略图的，一个是原图的连接，并且仔细看的话两个连接只是第一个参数不一样，目测第一个参数应该是用来决定图片的大小的，现在看到的是198，之后，我在<code>Documents/QQ号/image_thumbnail</code>路径下找了几个图片看了一下，发现宽高都是在198以内，那么可以知道QQ使用的缩略图的大小是在198以内的图片，如果过长或者过宽，那么等比例缩放。</p>
+<ul>
+<li>声音的</li>
+</ul>
+<p>声音的文件，我们从聊天数据里面来看，发现很有意思的是，文件的信息也是用过<code>picUrl</code>这个字段来记录的，看图</p>
+<p><img src="/img/qq-chat-db/qq-msg-audio.png" alt="声音类型的消息"></p>
+<p>之后在<code>Document/QQ号/Audio</code>路径下能够找到这个声音文件</p>
+<ul>
+<li>系统消息</li>
+</ul>
+<p>系统消息类型的，每个系统消息都有一个单独的QQ号，比如兴趣部落这个QQ消息，也是有QQ号的，并且和普通的联系人一样有一个单独的<code>tb_c2cMsg</code>开头的表保存着。</p>
+<p>下面是一部分的内容：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">msg</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">appmsg</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">item</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">cover</span>&gt;</span>http://s.p.qq.com/pub/jump?d=rRv3zzfe<span class="tag">&lt;/<span class="name">cover</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">digest</span>&gt;</span><span class="tag">&lt;/<span class="name">digest</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">title</span>&gt;</span>[自拍] 秀自己的自拍姿势啦，不会的进来涨姿势哦！<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://s.p.qq.com/pub/jump?_wv=1027&amp;amp;d=RZbMzFie&amp;amp;st=2&amp;amp;pt=1<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">item</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">cover</span>&gt;</span>http://s.p.qq.com/pub/jump?d=Y3fEAqZf<span class="tag">&lt;/<span class="name">cover</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">title</span>&gt;</span>[90后] 你敢在这里写下你的初吻吗？<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://s.p.qq.com/pub/jump?_wv=1027&amp;amp;d=AYrfiqVZ&amp;amp;st=2&amp;amp;pt=1<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">item</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">cover</span>&gt;</span>http://s.p.qq.com/pub/jump?d=unmeMvjU<span class="tag">&lt;/<span class="name">cover</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">title</span>&gt;</span>[80后] 【就爱滚床单】你的睡姿如何？<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://s.p.qq.com/pub/jump?_wv=1027&amp;amp;d=BQVna2nU&amp;amp;st=2&amp;amp;pt=1<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">item</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">cover</span>&gt;</span>http://s.p.qq.com/pub/jump?d=7q3vrfqZ<span class="tag">&lt;/<span class="name">cover</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">title</span>&gt;</span>[爱情] 说说暗恋一个人最心酸的事是什么？<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://s.p.qq.com/pub/jump?_wv=1027&amp;amp;d=qz3rRnAa&amp;amp;st=2&amp;amp;pt=1<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">appmsg</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">time</span>&gt;</span>1414602851<span class="tag">&lt;/<span class="name">time</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">meta</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">msg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我们来看看对应的消息截图是这样的：</p>
+<p><img src="/img/qq-chat-db/qq-system-msg.png" alt="系统的消息"></p>
+<p>可以看到QQ的系统消息提供的数据是一个xml，里面用cover标记这个消息的标题以及背景，用item标签标记下面每个子项目，每一个item也有自己的title，cover，url这些属性，用来显示标题，封面，还有点击后跳转的连接。</p>
+<h1 id="关于表情的更新"><a href="#关于表情的更新" class="headerlink" title="关于表情的更新"></a>关于表情的更新</h1><p>在聊天记录中，忽略了一个事情是表情，本来按照我的想象，表情只是纯文字类似<code>/呵呵</code>这样就能显示表情，但是发现，自己输入到qq的<code>/呵呵</code>却没办法正确的显示表情，于是猜测了下，可能QQ用到了隐藏的字符，作为表情的标记，于是做了下面的实验，把表情复制到了自己的app中，打印一下看看</p>
+<p><img src="/img/qq-chat-db/qq-emotion-content-string.jpg" alt="表情文字"></p>
+<p>发现果然是这样的，前面多了一个<code>\x14</code>的字符，在看数据库中的记录，因为历史纪录肯定是能显示的，那么数据库中肯定也能查的到</p>
+<p><img src="/img/qq-chat-db/qq-emotion-in-sqlite.png" alt="表情聊天记录"></p>
+<p>果然在数据库中也有这样的数据，第一个字符是unicode为20也就是x14（十六进制）的字符，去unicode对照表看看，似乎只是一个无关的控制字符，猜想应该是一个占位符，用来标记哪些是用户选择的表情，哪些是用户手工输入的文字，这样用户就不能通过直接编辑框输入<code>/呵呵</code>来发送表情了。</p>
+<p><img src="/img/qq-chat-db/qq-emotion-unicode-table.jpg" alt="字符"></p>
+<h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>只是简单粗暴的打开了qq.db看了看里面到底有些什么，当然看的也很不仔细，里面还有很多东西需要再去验证，再去思考的内容，这里也没有全部列出来，只是作为im大头的企鹅君，能够看看大企鹅里面是怎么设计的，对我们以后做类似app的开发也有很多的帮助。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

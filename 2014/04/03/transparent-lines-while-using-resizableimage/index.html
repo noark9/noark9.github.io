@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Resizable Image 使用时遇到的透明的线"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Resizable Image 使用时遇到的透明的线</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Apr 3 2014</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/iOS/">#iOS</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>最近略忙啊。。。于是blog稍微暂停了一段时间啊，好吧今天来个短小精干的，说说最近遇到的一个问题了，其实可能大家都遇到过了，一个比较普通的问题，在使用Resizable Image和Stretchable Image的时候，出现透明线的问题。</p>
+<h1 id="问题观察和分析"><a href="#问题观察和分析" class="headerlink" title="问题观察和分析"></a>问题观察和分析</h1><p>iOS开发过程中啊，我们经常用到的一个东西就是Resizable Image或者叫Stretchable Image的图像，我来粗糙翻译下可以拉伸的图像，用来填充我们的界面，为啥呢，因为一个可以拉升的图像，我们只需要指定需要从那个位置开始拉升，那么我们就能使用一个图片，创造一堆不同大小的控件了。</p>
+<h2 id="观察"><a href="#观察" class="headerlink" title="观察"></a>观察</h2><p>扯了好多闲，我们来看看到底是啥样的吧，因为，好麻烦不打算开demo了，于是我选择附上so转载图片的连接，并无耻的使用提问者的图片，<a href="http://stackoverflow.com/questions/19005668/resizableimagewithcapinsets-to-strech-chat-bubble-issue-in-ios7" target="_blank" rel="noopener">SO问题原链</a>，这篇原链上，大神们的讨论也解决了这个问题。</p>
+<p><img src="/img/transparentLines.png" alt="问题截图"></p>
+<p>虽说是截了别人图片我还是很厚道的加了点标注，重新创造了下，上面本来不应该会有的东西就是那几条跟消息气泡颜色不同的线了。</p>
+<a id="more"></a>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>我先总结下大神说了啥，对于这个问题怎么破除：</p>
+<ol>
+<li>这是iOS7上的bug，怪不得我看iOS6怎么妥妥的。。。（其实是我打开方式不对）</li>
+<li>这是因为啊，我们的图像最终绘制的地方，长宽不是偶数（真蛋疼－，－我总觉得是RP问题）</li>
+<li>图像的长宽是浮点数，也就是说只能是整数，不能有小数</li>
+</ol>
+<p>只要做到上面三个，那就消灭了这些万恶的线了。</p>
+<h2 id="分析2"><a href="#分析2" class="headerlink" title="分析2"></a>分析2</h2><p>看了看大神说的，恍然大雾，于是想了想，改了段代码做测试，发现不对啊，还是这样，于是我开始怀疑自己的人品了，因为深深坚信SO上的大神肯定不会乱说，除了我这样的酱油会干这种事。思来想去那还是Debug把，于是调试，调试调试，发现－，－我的长宽居然有浮点数。。。思来想去思来想去，总算想到了，我的长宽是通过</p>
+<pre><code>sizeWithFont:constrainedToSize:lineBreakMode:
+</code></pre><p>这个方法计算得到的。。。那太明显了，果断是这个方法计算出来的有小数。。。再调试后确认了想法，略微修改（ceil，round，还是其他的，大家自己处置这些老鼠屎吧），推荐ceil一下，这样可以保证如果文字计算得到的大小是0.几几几结果被round舍去了，文字就显示不全了。</p>
+<p>其实这个是第二个问题，<code>sizeWithFont:constrainedToSize:lineBreakMode</code>返回的结果是浮点数，之前一直没仔细看，结果。。。</p>
+<h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>其实这个问题异常的简单，搜到so那篇文章的肯定都能马上解决问题，这个好像也是由于r屏幕在绘制时，拉伸像素点所引起的，这个最近还在继续的<em>cocoa drawing guide</em>中也看到了。</p>
+<p>that’s all，真想说－，－写这么简单粗糙不会被人丢砖头么－，－</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

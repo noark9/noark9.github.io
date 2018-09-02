@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="ReactiveCocoa 模式 —— RACScheduler"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">ReactiveCocoa 模式 —— RACScheduler</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Feb 18 2015</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/iOS/">#iOS</a> <a class="tag" href="/tags/RAC/">#RAC</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>好，上一篇之后，我们再接再厉，继续下一篇，好好学习如何正确的使用和思考RAC中的一些基本概念。</p>
+<p><code>RACScheduler</code>是RAC中非常重要的概念，原文的博主也说了讲了这个，才能让他的博客对的上模式这个词。</p>
+<p>本文译自<a href="http://rcdp.io/RACScheduler.html" target="_blank" rel="noopener">ReactiveCocoa Design Patterns</a>。</p>
+<p><strong>注意：</strong>下文中，为了方便大家理解，部分单词没有翻译，当然如果需要知道中文的，相对上期，增加的部分如下：</p>
+<ul>
+<li>scheduler：调度器，词典里面的翻译是计算机里面把需要执行的作业（job）、操作（operation）组织放入到合适的队列的东西</li>
+</ul>
+<h1 id="RACScheduler"><a href="#RACScheduler" class="headerlink" title="RACScheduler"></a>RACScheduler</h1><p>在ReactiveCocoa的signal里面传递的所有事件，都是通过框架里面一个叫做scheduler的组件去完成的，在RAC里面他的表现形式就是<code>RACScheduler</code>类簇。因为这样的设计为表达同步、异步和延迟事件，以及取消已经在调度中的事件提供了方便的抽象概念。<code>RACScheduler</code>通过调度block来完成对事件传送的操作，可以通过销毁通过schedule方法返回的<code>RACDisposable</code>对象来去掉已经在调度中（scheduling）的block。</p>
+<p><code>RACScheduler</code>是一个类簇，下面还有更为具体的scheduler：</p>
+<h2 id="RACImmediateScheduler"><a href="#RACImmediateScheduler" class="headerlink" title="RACImmediateScheduler"></a>RACImmediateScheduler</h2><p>RAC内部使用的一个私有scheduler，只支持同步的调度。使用时只是简单的立即执行block，延迟调度工作可以使用<code>-[NSThread sleepUntilDate:]</code>来阻塞当前线程，显然没有任何方法可以阻止scheduler的执行，所以销毁<code>RACDisposable</code>对象什么都不会发生（实际上他的schedule方法返回的是一个nil）。</p>
+<h2 id="RACQueueScheduler"><a href="#RACQueueScheduler" class="headerlink" title="RACQueueScheduler"></a>RACQueueScheduler</h2><p>这个用的是GCD里面的队列来实现block的schedule，他只是基于GCD的发布（dispatching）block和队列进行了简单的封装，如果你知道GCD是怎么做的，那么你也就知道他是怎么做的了。</p>
+<h2 id="RACSubscriptionScheduler"><a href="#RACSubscriptionScheduler" class="headerlink" title="RACSubscriptionScheduler"></a>RACSubscriptionScheduler</h2><p>另一个框架内部使用的scheduler，他转发当前的调度到当前的线程（scheduler可以和线程关联），如果当前线程不存在的话，那么会转发到默认的后台线程队列执行。</p>
+<h1 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h1><p>Scheduler方法是这样子的：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (RACDisposable *)schedule:(<span class="keyword">void</span> (^)(<span class="keyword">void</span>))block;</span><br><span class="line"></span><br><span class="line">- (RACDisposable *)after:(<span class="built_in">NSDate</span> *)date schedule:(<span class="keyword">void</span> (^)(<span class="keyword">void</span>))block;</span><br><span class="line"></span><br><span class="line">- (RACDisposable *)afterDelay:(<span class="built_in">NSTimeInterval</span>)delay schedule:(<span class="keyword">void</span> (^)(<span class="keyword">void</span>))block;</span><br><span class="line"></span><br><span class="line">- (RACDisposable *)after:(<span class="built_in">NSDate</span> *)date repeatingEvery:(<span class="built_in">NSTimeInterval</span>)interval withLeeway:(<span class="built_in">NSTimeInterval</span>)leeway schedule:(<span class="keyword">void</span> (^)(<span class="keyword">void</span>))block;</span><br></pre></td></tr></table></figure>
+<p>通过block创建调度的方法像这样：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">RACDisposable *disposable = [[RACScheduler mainThreadScheduler] afterDelay:<span class="number">5.0</span> schedule:^&#123;</span><br><span class="line">    <span class="comment">// 需要做的事情</span></span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果你改变主意了</span></span><br><span class="line">[disposable dispose]; <span class="comment">// block 将会被取消，也就不会执行了</span></span><br></pre></td></tr></table></figure>
+<h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>这一篇的内容超精简，不过讲的内容也不多，但是在RAC里面确是非常重要的一个概念。</p>
+<p>现在发出来的这三篇主要是讲RAC框架里面提供的基础工具的，接下来还有一篇是flattenMap相关概念的，这三篇之后，就会开始讲到真正的RAC设计模式的相关内容了，其中最为主要的就是MVVM模式了，敬请期待。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

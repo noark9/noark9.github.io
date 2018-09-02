@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="简单用起NSTableView"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">简单用起NSTableView</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Sep 17 2013</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/cocoa/">#cocoa</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>本文不是单独讲NSTableView如何使用，或是如何拖拽，或是其他的，我在参考了Apple的Guide以及一些资料整理后，综合运用NSTableView，NSPasetboard等一些基础技术，来告诉大家如何最简单最快捷的开始用起NSTableView，让新入门的童鞋们能够快速的吧自己的项目run起来，而不是再去花一两周去慢慢看文档了，当然要好好用文档还是少不了滴。</p>
+<h1 id="Mac上的TableView"><a href="#Mac上的TableView" class="headerlink" title="Mac上的TableView"></a>Mac上的TableView</h1><p>经过一段时间在iOS上的探索后，用自己在cocoa touch开发上半残的经验开始了cocoa开发的历险。在尝试了Button，TextField等基础的东西后，也基于最近在尝试的东西，决定试试当初在iOS开发上卡了好几天才想通怎么弄的TableView了。但是总觉得目前网上关于Mac app开发的资料非常少，主要是iOS太火了吧把Mac的光芒都掩盖了。参考了下Apple关于TableView，OutlineView（为啥是OutlineView，他两是一家子的）的Guide和TableViewPlayground的例子后，不敢说对NSTableView有多少了解，起码怎么用起来是知道了。</p>
+<p>在Mac app的开发和iOS app的开发以及使用非常的相似，所以对应iOS上UITableView自然有一个NSTableView为Mac服务。而且其中的使用方法和使用的思想也是非常相似的。因此用过iOS上UITableView的童鞋们，对NSTableView肯定轻松上手了。</p>
+<p><img src="/img/myTV.png" alt="成品"></p>
+<p>上面的图就是今天打算弄的Mac app的成品了，左边是分类，右边是分类下的东西，需要实现的功能包括了，左边选择左边分类的时候，右边显示分类下的东西，右边分类下的东西可以拖拽到左边其他分类中，右边分类下的东西可以拖拽到其他应用中（文本的方式），Add按钮实现在左边分类中添加一个分类并可以编辑名称。会弄的童鞋们肯定觉得这些功能小儿科了，嘛，这个还是挣扎了好几天才能有此结果啊，大家见笑了。</p>
+<a id="more"></a>
+<h1 id="要做些啥"><a href="#要做些啥" class="headerlink" title="要做些啥"></a>要做些啥</h1><p>上面说了的功能对应，我们要做下面的事情</p>
+<ol>
+<li><p>界面</p>
+<ul>
+<li>两个TableView，一左一右（这个，是废话了）</li>
+</ul>
+</li>
+<li><p>显示和交互</p>
+<ul>
+<li>对TableView提供数据</li>
+<li>两个TableView的数据交互</li>
+<li>添加item</li>
+</ul>
+</li>
+<li><p>拖拽操作（Drag and Drop）</p>
+<ul>
+<li>TableView之间的拖拽</li>
+<li>剪贴板的写入</li>
+</ul>
+</li>
+</ol>
+<h1 id="动手吧"><a href="#动手吧" class="headerlink" title="动手吧"></a>动手吧</h1><p>那不说废话了，我们开始吧。按照上面的顺序，其实个人感觉也是难易度的顺序了和实现这个程序功能的顺序了，首先把界面拖出来，好不好看大家自己看啦，然后先把最基础的数据显示搞定，都没数据那还有啥拖拽的意思啊，接下来就是实现这个应用的高级功能了——拖拽=_,=+</p>
+<h2 id="界面的理解"><a href="#界面的理解" class="headerlink" title="界面的理解"></a>界面的理解</h2><p>界面的话这个就太简单了，用interface builder把两个TableView拖到界面上，至于怎么摆放好看的话，那就仁者见仁智者见智了，不过个人建议，可以考虑用一个Vertical Split View或者Horizontal Splite View把两个TableView一左一右或者一上一下放好喽最好还能结合界面布局的Constraints保证拖拽窗口大小的时候，这两Table身材跟着走样。拖拽好的界面就像这样</p>
+<p><img src="/img/interface.png" alt="界面"></p>
+<p>嗯嗯，我用的就是Vertical Split View了，左边一个右边一个，左边的就是分类，右边的就是分类下的元素</p>
+<p><img src="/img/windowTree.png" alt="界面树"></p>
+<p>在界面树上可以看见，一个TableView里面，他包括了这些东西，一个Header也就是俗称的标题栏了，一个TableView也就是一个TableView的TableView（认为他是灵魂吧，或者药的有效成分-，-？），TableView下面还有其他东西，嗯嗯TableCloumn以及下面的TableCell，这两个，就是有效成分的实际构成了，字面上理解，TableCloumn那就是Table的列了，Cell的话跟iOS有点类似，可以理解为一个TableView中元素的一个原型（我是这么理解的了，具体是不是再说啦），看过guide的童鞋发现了，这里用的是Cell based的TableView，还有一种高档的用法是View based的TableView，那个，以后再分解吧。</p>
+<h2 id="数据源"><a href="#数据源" class="headerlink" title="数据源"></a>数据源</h2><p>完成了界面，那就可以run了，只是run起来，啥东西都没有，那么接下来，我们先把TableView的数据源给搞定，这样至少可以看到列表里面的东西，不过在实现TableView的数据源之前，还需要做的一个事情是实现应用的数据模型，小伙伴们是不是觉得果然低调奢华有内涵了啊=_,=+</p>
+<p>先不忙实现对TableView的操作，我们这里先实现两个东西，一个叫SimpleObj顾名思义——简单对象，另一个叫DataEntity一样的，数据管理类。</p>
+<p>SimpleObj类是我实现了用于模拟实际使用过程中，可能并不是直接使用一个字符串作为传入的东西，那还是用一个简单的类来实现吧，so叫SimpleObj了</p>
+<p>DataEntity这个东西，由于我是从其他语言转过来的新童鞋，所以习惯了其他的东西里面管理数据的类，都叫XXXManager之类的，不过参看了下TableViewPlayground后，觉得应该稍微与时俱进就叫XXXXEntity了，这个类，实现了对数据的初始化以及其他的一些操作。</p>
+<h3 id="数据模型——SimpleObj"><a href="#数据模型——SimpleObj" class="headerlink" title="数据模型——SimpleObj"></a>数据模型——SimpleObj</h3><p>好我们先来看简单的SimpleObj怎么实现的</p>
+<p>首先我们看下.h的interface文件</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">SimpleObject</span> : <span class="title">NSObject</span></span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSString</span> *name;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSString</span> *type;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSString</span> *category;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>似乎灰常简单啊（魂淡这就是你说的有内涵么）嘛，低调低调，自然implement文件也不会很复杂see～</p>
+<h3 id="数据管理类——DataEntity"><a href="#数据管理类——DataEntity" class="headerlink" title="数据管理类——DataEntity"></a>数据管理类——DataEntity</h3><p>接下来我们看看DataEntity啦</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#import <span class="meta-string">"SimpleObject.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">DataEntity</span> : <span class="title">NSObject</span></span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSMutableArray</span> *categories;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSMutableDictionary</span> *items;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSArray</span> *)itemsForCategory:(<span class="built_in">NSString</span> *)category;</span><br><span class="line">- (<span class="built_in">NSArray</span> *)removeItem:(<span class="built_in">NSString</span> *)item inCategory:(<span class="built_in">NSString</span> *)category;</span><br><span class="line">- (<span class="built_in">NSArray</span> *)addItem:(<span class="built_in">NSString</span> *)item inCategory:(<span class="built_in">NSString</span> *)category;</span><br><span class="line">- (<span class="keyword">void</span>)moveItem:(SimpleObject *)item toCategory:(<span class="built_in">NSString</span> *)category;</span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">id</span>)sharedInstance;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>这里需要解释下了，categories就是左边TableView需要显示的数据，items是右边将要显示的数据，因为在应用中需要修改，所以我分别使用了NSMutableArray和NSMutableDictionary来存储，<br>接下来的几个方法分别实现了根据category查找items（用于左边单击选择时在右边显示item用），删除item，添加item，移动item到新的category，还有实现单例模式需要的sharedInstance。这些方法都不细看了，毕竟今天的主角是NSTableView。接下来我们看看实现文件（代码大家看工程文件吧，太长了就不贴了）就开始打boss啦～～</p>
+<h2 id="实现NSTableView显示数据"><a href="#实现NSTableView显示数据" class="headerlink" title="实现NSTableView显示数据"></a>实现NSTableView显示数据</h2><p>完成了，我们的SimpleObj和DataEntity后，就可以在TableView里面把我们的categories和items显示到ui上了，那么如何进行呢，我们如果需要在一个TableView里面显示数据，肯定很关心这两个问题：</p>
+<ol>
+<li>我的Table里面有多少行呢？</li>
+<li>每行要显示些啥东西呢？</li>
+</ol>
+<p>每个NSTableView在显示之前都会问他的NSTableViewDataSourceDelegete下面这两个问题：</p>
+<ol>
+<li>– numberOfRowsInTableView:</li>
+<li>– tableView:objectValueForTableColumn:row:</li>
+</ol>
+<p>第一个告诉TableView你有多少行，第二个告诉他每行有些啥东西。所以实现了这两个东西，TableView就知道他自己要干啥了，这两个方法是左边TableView的Delegate需要告诉他的事情。</p>
+<h3 id="基本的数据展示方法"><a href="#基本的数据展示方法" class="headerlink" title="基本的数据展示方法"></a>基本的数据展示方法</h3><p>我们先来看左边的TableView的这两个方法是是如何实现的</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="built_in">NSInteger</span>)numberOfRowsInTableView:(<span class="built_in">NSTableView</span> *)tableView</span><br><span class="line">&#123;</span><br><span class="line">    DataEntity *dataEntity = [DataEntity sharedInstance];</span><br><span class="line">    <span class="keyword">return</span> dataEntity.categories.count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">id</span>)tableView:(<span class="built_in">NSTableView</span> *)tableView objectValueForTableColumn:(<span class="built_in">NSTableColumn</span> *)tableColumn row:(<span class="built_in">NSInteger</span>)row</span><br><span class="line">&#123;</span><br><span class="line">    DataEntity *dataEntity = [DataEntity sharedInstance];</span><br><span class="line">    <span class="keyword">return</span> [dataEntity.categories objectAtIndex:row];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>左边TableView里面需要显示categories里面的各个分类，所以在numberOfRowsInTableView:里面就返回了categories的数量，由于我们的categories只是NSString类型的字符串可以直接返回给TableView进行显示，所以我们在tableView:objectValueForTableColumn:row:中就直接返回categories中第row个元素给TableView去显示。这样运行程序左边的Table就大功告成了。</p>
+<p>接着是右边的TableView了，右边的TableView显示左边categories下的items，DataEntity中的items是一个NSMutableDictionary，将categories中的一个分类对应到一个存放items的数组。接下来我们就要让右边的TableView也能显示东西了。</p>
+<h3 id="实现交互"><a href="#实现交互" class="headerlink" title="实现交互"></a>实现交互</h3><p>一开始我们说过，右边的东西要跟着左边一起动，所以右边除了需要显示table里面的东西以外，还需要从左边获取现在正在显示的category是哪个。这个怎么做到呢，根据我半残的iOS经验应该用protocol，那么我们先确定我们需要什么样的东西，需要一个什么样的代理来告诉右边TableView我选择了谁。</p>
+<p>在左边TableView的interface中定义下面的接口，并增加<code>@property (weak) id&lt;SelectedItemDidChangeDelegate&gt; itemChangeDelegate;</code>属性，在左边Table选择后通过<code>itemChangeDelegate</code>通知右边的TableView告诉他我改了改选中的东西哦～</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">SelectedItemDidChangeDelegate</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line">- (<span class="keyword">void</span>)selectedItemDidChangeTo:(<span class="built_in">NSString</span> *)item;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>接下来在左边实现<code>tableViewSelectionDidChange:</code>方法，通过<code>itemChangeDelegate</code>通知右边的Table选择的item发生了变化。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)tableViewSelectionDidChange:(<span class="built_in">NSNotification</span> *)notification</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([_itemChangeDelegate respondsToSelector:<span class="keyword">@selector</span>(selectedItemDidChangeTo:)]) &#123;</span><br><span class="line">        DataEntity *dataEntity = [DataEntity sharedInstance];</span><br><span class="line">        <span class="built_in">NSString</span> *selectedItem = [dataEntity.categories objectAtIndex:[_tableview selectedRow]];</span><br><span class="line">        [_itemChangeDelegate selectedItemDidChangeTo:selectedItem];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这样每次对左边的Table进行了选择之后，右边都会知道左边选了啥并响应这一事件。接下来我们看右边怎么回应左边的呼唤。</p>
+<p>为了回应左边Table的呼唤，右边Table的代理需要先实现<code>SelectedItemDidChangeDelegate</code>接口，并实现该接口所定义的<code>selectedItemDidChangeTo:</code>方法，我们来看看右边怎么实现这两个方法以及TableView每次会问的两个问题。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)selectedItemDidChangeTo:(<span class="built_in">NSString</span> *)item</span><br><span class="line">&#123;</span><br><span class="line">    _selectedCategory = item;</span><br><span class="line">    [_rightTableView reloadData];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSInteger</span>)numberOfRowsInTableView:(<span class="built_in">NSTableView</span> *)tableView</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSInteger</span> itemCount = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (_selectedCategory) &#123;</span><br><span class="line">        DataEntity *dataEntity = [DataEntity sharedInstance];</span><br><span class="line">        itemCount = [dataEntity itemsForCategory:_selectedCategory].count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> itemCount;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">id</span>)tableView:(<span class="built_in">NSTableView</span> *)tableView objectValueForTableColumn:(<span class="built_in">NSTableColumn</span> *)tableColumn row:(<span class="built_in">NSInteger</span>)row</span><br><span class="line">&#123;</span><br><span class="line">    SimpleObject *item = <span class="literal">nil</span>;</span><br><span class="line">    <span class="keyword">if</span> (_selectedCategory) &#123;</span><br><span class="line">        DataEntity *dataEntity = [DataEntity sharedInstance];</span><br><span class="line">        item = [[dataEntity itemsForCategory:_selectedCategory] objectAtIndex:row];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> item.description;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>我们看到在每次TableView询问那两个老问题的时候，右边TableView的Delegate都要先看看_selectedCategory到底是啥，这个_selectedCategory也就是左边TableView告诉通过<code>selectedItemDidChangeTo:</code>告诉右边TableView我现在选了谁，接下来通过TableView的<code>reloadData:</code>方法告诉TableView加载数据，这时候右边的Delegate就会告诉TableView新的数据是些啥了。</p>
+<h3 id="添加item"><a href="#添加item" class="headerlink" title="添加item"></a>添加item</h3><p>TableView交互部分最后一个要做的事情是在TableView里面添加item，也就是下面那个Add按钮要做的事情了。TableView提供了<code>insertRowsAtIndexes:withAnimation:</code>方法，可以在TableView中添加新的行，我们来看怎么实现。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="keyword">IBAction</span>)addSth:(<span class="keyword">id</span>)sender &#123;</span><br><span class="line">    [_tableview beginUpdates];</span><br><span class="line">    DataEntity *de = [DataEntity sharedInstance];</span><br><span class="line">    <span class="built_in">NSString</span> *nt = <span class="string">@"Enter Name"</span>;</span><br><span class="line">    [de.categories insertObject:nt atIndex:<span class="number">0</span>];</span><br><span class="line">    [_tableview insertRowsAtIndexes:[<span class="built_in">NSIndexSet</span> indexSetWithIndex:<span class="number">0</span>] withAnimation:<span class="built_in">NSTableViewAnimationEffectGap</span>];</span><br><span class="line">    [_tableview endUpdates];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>上面的代码首先告诉TableView现在<code>beginUpdates</code>也就是我要添加新东西啦，接着在我的categories里面也要加上这个item否则之后会出现out of index的问题，接着通过<code>insertRowsAtIndexes:withAnimation:</code>添加一个item到table里面，<code>NSTableViewAnimationEffectGap</code>告诉TableView添加时需要一个简单的动画。这样就实现了最简单的添加操作，但是我们要在添加的时候能够就修改item的名字要怎么办呢？经过翻看skd文档后，找到了<code>editColumn:row:withEvent:select:</code>这个方法，这个方法会告诉TableView我要编辑你的第某行的item。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="keyword">IBAction</span>)addSth:(<span class="keyword">id</span>)sender &#123;</span><br><span class="line">    [_tableview beginUpdates];</span><br><span class="line">    DataEntity *de = [DataEntity sharedInstance];</span><br><span class="line">    <span class="built_in">NSString</span> *nt = <span class="string">@"Enter Name"</span>;</span><br><span class="line">    [de.categories insertObject:nt atIndex:<span class="number">0</span>];</span><br><span class="line">    [_tableview insertRowsAtIndexes:[<span class="built_in">NSIndexSet</span> indexSetWithIndex:<span class="number">0</span>] withAnimation:<span class="built_in">NSTableViewAnimationEffectGap</span>];</span><br><span class="line">    [_tableview editColumn:<span class="number">0</span> row:<span class="number">0</span> withEvent:<span class="literal">nil</span> select:<span class="literal">YES</span>];</span><br><span class="line">    [_tableview endUpdates];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>在编辑完成后TableView需要告诉他的Delegate我完成编辑了，那么需要在Delegate中实现<code>tableView:setObjectValue:forTableColumn:row:</code>方法，接收编辑事件。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)tableView:(<span class="built_in">NSTableView</span> *)tableView setObjectValue:(<span class="keyword">id</span>)object forTableColumn:(<span class="built_in">NSTableColumn</span> *)tableColumn row:(<span class="built_in">NSInteger</span>)row</span><br><span class="line">&#123;</span><br><span class="line">    DataEntity *de = [DataEntity sharedInstance];</span><br><span class="line">    [de.categories setObject:object atIndexedSubscript:row];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>在这里我做的只是在完成修改时，同步更新categories中的数据，以保持TableView和DataSource中的东西一致。</p>
+<h2 id="拖拽操作"><a href="#拖拽操作" class="headerlink" title="拖拽操作"></a>拖拽操作</h2><p>这样我们的应用程序已经基本成型了，其实TableView使用到这里基本算是结束了，平时的使用已经基本能够满足了。接下来就是一个比较高级的部分Drag and Drop了，为啥说他高级呢，一开始我想着拖拽无非就是左边拖了，右边接收就可以了，从TableViewPlayground里面来看却发现这个操作其实不简单，拖拽里面除了拖拽的东西相互交互以外还需要实现对Mac中剪贴板的写入和读取，个人理解是Mac在所有的拖拽里面都使用了剪贴板，以保持应用程序自身和应用之间交互数据的简洁和统一。</p>
+<h3 id="拖拽到其他应用（剪贴板写入）"><a href="#拖拽到其他应用（剪贴板写入）" class="headerlink" title="拖拽到其他应用（剪贴板写入）"></a>拖拽到其他应用（剪贴板写入）</h3><p>现在这样已经能应对很多场景了，能够在一个应用里面分享数据了，接下来我们要在应用程序之间拖拽来进行数据交换了。</p>
+<p>这个虽然说起来复杂，但是其实实现起来很简单，首先我们需要在TableView告诉大家，在拖拽时候需要写入什么对象到剪贴板里面，在拖拽某行时，告诉TableView应该写入什么对象</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="keyword">id</span> &lt;<span class="built_in">NSPasteboardWriting</span>&gt;)tableView:(<span class="built_in">NSTableView</span> *)tableView pasteboardWriterForRow:(<span class="built_in">NSInteger</span>)row</span><br><span class="line">&#123;</span><br><span class="line">    DataEntity *dataEntity = [DataEntity sharedInstance];</span><br><span class="line">    SimpleObject *item = [[dataEntity itemsForCategory:_selectedCategory] objectAtIndex:row];</span><br><span class="line">    <span class="keyword">return</span> item;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>在上面我们看见了，这个方法需要放回一个<code>id &lt;NSPasteboardWriting&gt;</code>的对象，所以对于SimpleObj我们也要实现这个接口</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="built_in">NSArray</span> *)writableTypesForPasteboard:(<span class="built_in">NSPasteboard</span> *)pasteboard</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSArray</span> *writableTypes = <span class="literal">nil</span>;</span><br><span class="line">    writableTypes = [<span class="built_in">NSArray</span> arrayWithObject:<span class="built_in">NSPasteboardTypeString</span>];</span><br><span class="line">    <span class="keyword">return</span> writableTypes;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">id</span>)pasteboardPropertyListForType:(<span class="built_in">NSString</span> *)type</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([type isEqualToString:<span class="built_in">NSPasteboardTypeString</span>]) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.description;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> ([type isEqualToString:<span class="string">@"SimpleObject"</span>]) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.description;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>在上面实现NSPasteboardWriting中的<code>writableTypesForPasteboard:</code>和<code>pasteboardPropertyListForType:</code>方法。</p>
+<p><code>writableTypesForPasteboard:</code>方法告诉写入剪贴板的对象，我们需要写入些什么样的对象类型，将这些对象类型放到一个数组中，这样就可以告诉剪贴板，这个对象会有哪些类型写入。</p>
+<p><code>pasteboardPropertyListForType:</code>方法告诉剪贴板什么样的类型，返回什么样的数据，这里我们就没有复杂操作了，都返回字符串了。</p>
+<p>不过右边要能拖拽之前要先告诉大家，我能拖拽哦～，那么需要在AppDelegate里面执行下面的代码设定是右边的拖拽源</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[_rightTableView setDraggingSourceOperationMask:<span class="built_in">NSDragOperationEvery</span> forLocal:<span class="literal">NO</span>];</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这样就实现了可以在应用程序之间交换数据了，现在可以将item拖拽出来，拖拽出来的东西，将按照<code>pasteboardPropertyListForType:</code>中的的代码，表现为实际的对象。</p>
+<h3 id="TableView之间的拖拽"><a href="#TableView之间的拖拽" class="headerlink" title="TableView之间的拖拽"></a>TableView之间的拖拽</h3><p>接下来先来做TableView之间的拖拽，TableView之间拖拽，也就是应用程序内的数据交互，这个操作可以通过剪贴板，也可以通过TableView之间的接口来实现，这里思考了好会儿，觉得如果用剪贴板可能太复杂了，也没啥必要所以就先使用TableView来实现了。</p>
+<p>使用TableView交互来实现的话需要通过接口来交互数据。</p>
+<p>右边：我拖了个东西来给你哦，快接着吧。</p>
+<p>左边：嗯嗯，我先来看看我能不能接收呢</p>
+<p>左边：好嘞，接着啦～</p>
+<p>右边：接着了啊，好那我吧这边东西干掉啦～</p>
+<p>嗯嗯，我们就要让左边和右边的TableView这么对话了，那么我们先来看交互的接口如何定义</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//告诉右边我接着了啊</span></span><br><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">ItemDragFinishedDelegate</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)finishDrag;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//告诉左边我要拖个东西给你了哦</span></span><br><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">RightTableviewItemDraggingDelegate</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)dragItem:(SimpleObject *)item fromCategory:(<span class="built_in">NSString</span> *)category;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>接下来我们来看如何实现上面左边和右边的对话吧，先来看右边怎么告诉左边的TableView我要给你东西了</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)tableView:(<span class="built_in">NSTableView</span> *)tableView draggingSession:(<span class="built_in">NSDraggingSession</span> *)session willBeginAtPoint:(<span class="built_in">NSPoint</span>)screenPoint forRowIndexes:(<span class="built_in">NSIndexSet</span> *)rowIndexes</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>([_draggingDestenation respondsToSelector:<span class="keyword">@selector</span>(dragItem:fromCategory:)]) &#123;</span><br><span class="line">        DataEntity *dataEntity = [DataEntity sharedInstance];</span><br><span class="line">        <span class="built_in">NSArray</span> *items = [dataEntity itemsForCategory:_selectedCategory];</span><br><span class="line">        [_draggingDestenation dragItem:[items objectAtIndex:[rowIndexes lastIndex]] fromCategory:_selectedCategory];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>上面代码响应了拖拽的事件，并且检测_draggingDestenation是否能够响应RightTableviewItemDraggingDelegate定义的事件，如果响应的话，告诉他我要把item拖给你的某个category了哦。左边先看看自己能不能接收这个拖拽的东西，TableView的Delegate中的<code>tableView:validateDrop:proposedRow:proposedDropOperation:</code>就是实现这个事情的</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="built_in">NSDragOperation</span>)tableView:(<span class="built_in">NSTableView</span> *)tableView validateDrop:(<span class="keyword">id</span>&lt;<span class="built_in">NSDraggingInfo</span>&gt;)info proposedRow:(<span class="built_in">NSInteger</span>)row proposedDropOperation:(<span class="built_in">NSTableViewDropOperation</span>)dropOperation</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (dropOperation == <span class="built_in">NSTableViewDropAbove</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">NSDragOperationNone</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">NSDragOperationMove</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>上面的代码实现了对拖拽到左边的item的验证是否可以拖拽，我们的左边只需要拖拽到左边的category上，而不能插入到左边的列表中。那么在上面我们看到了对dropOperation有一个验证的操作，如果是NSTableViewDropAbove就返回NSDragOperationNone，否则就返回NSDragOperationMove，那这个DropAbove这个还是很容易理解的字面意思上看，就是说这个拖拽的事情啊，是在发生在行的上面（原文Specifies that the drop should occur above the specified row），返回None就表示不允许他拖放上去。还有一种是NSTableViewDropOn，表示这个拖拽发生在拖拽的行，下面图分别表示了两种DragOperation</p>
+<p><img src="/img/dragOn.png" alt="NSTableViewDropOn"></p>
+<p>上面是DragOn的情况</p>
+<p><img src="/img/dragAbove.png" alt="NSTableViewDragAbove"></p>
+<p>上面是DragAbove的情况</p>
+<p>好，左边先看看自己能不能接受了以后，就开始接受拖拽了，TableViewDelegate的<code>tableView:acceptDrop:row:dropOperation:</code>就是用来告诉TableView如何去接受Drop事件的了，那来看看怎么弄吧</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="built_in">BOOL</span>)tableView:(<span class="built_in">NSTableView</span> *)tableView acceptDrop:(<span class="keyword">id</span>&lt;<span class="built_in">NSDraggingInfo</span>&gt;)info row:(<span class="built_in">NSInteger</span>)row dropOperation:(<span class="built_in">NSTableViewDropOperation</span>)dropOperation</span><br><span class="line">&#123;</span><br><span class="line">    DataEntity *dataEntity = [DataEntity sharedInstance];</span><br><span class="line">    [dataEntity moveItem:_currentDraggingItem toCategory:[dataEntity.categories objectAtIndex:row]];</span><br><span class="line">    <span class="keyword">if</span> ([_itemDragFinishedDelegate respondsToSelector:<span class="keyword">@selector</span>(finishDrag)]) &#123;</span><br><span class="line">        [_itemDragFinishedDelegate finishDrag];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>同样，在完成了拖拽的处理以后，他会问一问_itemDragFinishedDelegate（也就是右边的TableView）你能不能接收我告诉你我接受完了啊，告诉他I finishDrag啦</p>
+<p>接着右边实现finishDrag方法，把还在右边显示的item干掉了</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)finishDrag</span><br><span class="line">&#123;</span><br><span class="line">    [_tableiew reloadData];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>其实我们在Drag的过程中就已经完成把item从一个category移到另一个了，所以当finishDrag后就只需要重新加载数据就可以了。</p>
+<h1 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h1><p>额，写的挺长的，也不知道对大家有没有点帮助，这里综合了NSTableView的一些基础用法，综合起来内容挺多的。完整的代码在这里下载<a href="/source/myTV.zip">myTV.zip</a>。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Effective Objective-C 2.0 Tips 总结 Chapter 3 &amp; Chapter 4"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Effective Objective-C 2.0 Tips 总结 Chapter 3 &amp; Chapter 4</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Jul 21 2017</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/iOS/">#iOS</a> <a class="tag" href="/tags/Objective-C/">#Objective-C</a> <a class="tag" href="/tags/Effective-Objective-C/">#Effective Objective-C</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="Effective-Objective-C-2-0-Tips-总结-Chapter-3-amp-Chapter-4"><a href="#Effective-Objective-C-2-0-Tips-总结-Chapter-3-amp-Chapter-4" class="headerlink" title="Effective Objective-C 2.0 Tips 总结 Chapter 3 &amp; Chapter 4"></a>Effective Objective-C 2.0 Tips 总结 Chapter 3 &amp; Chapter 4</h1><h2 id="Chapter-3-接口与-API-设计"><a href="#Chapter-3-接口与-API-设计" class="headerlink" title="Chapter 3 接口与 API 设计"></a>Chapter 3 接口与 API 设计</h2><ul>
+<li><p>Tips 15 使用前缀避免明明空间冲突</p>
+<ul>
+<li>Objective-C 没有命名空间，所以我们在起名时要设法避免命名冲突</li>
+<li>避免命名冲突的方法就是使用前缀</li>
+<li>应用中的所有名称都需要加前缀（包括实现文件中的全局变量和纯 C 函数）</li>
+</ul>
+</li>
+<li><p>Tips 16 提供“全能（designated）初始化方法”</p>
+<ul>
+<li>一个会被所有初始化方法调用到的初始化方法</li>
+<li>当底层数据存储机制变化时，只需要修改这个方法就可以了，不需要改动其他初始化方法</li>
+<li>如果超类的全能初始化方法不适用于子类，或是与超类不同，那么需要覆盖这个超类方法</li>
+<li>子类的全能初始化方法都应该调用超类的对应方法，逐级向上</li>
+</ul>
+</li>
+</ul>
+<a id="more"></a>
+<ul>
+<li><p>Tips 17 实现 description 方法</p>
+<ul>
+<li>在数组字典等集合对象打印时，都会调用对象的 <code>description</code> 方法，方便调试</li>
+<li>系统默认的 <code>description</code> 方法对于自定义的对象并没有输出较为有用的内容，所以可以实现这个方法方便我们显示对象</li>
+<li>在调试时会调用 <code>debugDescription</code> 方法（也就是在调试时 lldb 中输入 po 时调用的将会是 <code>debugDescription</code>），所以实现他可以帮助我们调试时获得更多的信息</li>
+<li>可以使用 <code>NSDictionary</code> 来实现 <code>description</code> 方法，这样显示和输出都会比较方便，例如：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// Header File</span><br><span class="line">// 这里我略微修改了下原书中的示例代码</span><br><span class="line">@interface EOCLocation : NSObject</span><br><span class="line">@property (nonatomic, copy) NSString *title;</span><br><span class="line">@property (nonatomic) CGFloat latitude;</span><br><span class="line">@property (nonatomic) CGFloat longitude;</span><br><span class="line">@end</span><br><span class="line">// 我们要是可以使用 NSLog(@&quot;%@&quot;, eoc_location) 直接输出这个对象的经纬度（也就是所有属性）就好了，那么可以参考下面的写法实现 description 方法</span><br><span class="line">@implementation EOCLocation</span><br><span class="line">- (NSString *)description &#123;</span><br><span class="line">    return [NSString stringWithFormat:@&quot;&lt;%@: %p, %@&gt;&quot;,</span><br><span class="line">            [self class],</span><br><span class="line">            self,</span><br><span class="line">            @&#123;</span><br><span class="line">                @&quot;title&quot;: self.title,</span><br><span class="line">                @&quot;latitude&quot;: @(self.latitude),</span><br><span class="line">                @&quot;longitude&quot;: @(self.longitude),</span><br><span class="line">            &#125;];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>Tips 18 尽量使用不可变对象</p>
+<ul>
+<li>减少 side effect，在使用了一段时间的 RAC 和学习函数式思想后，一定程度上理解了不可变对象的好处</li>
+<li>具体开发实践中，应尽量把对外公布的属性设为只读，并且有必要时才对外公布，否则使用私有属性</li>
+<li>对于只读属性，可以不用指定内存管理语义（也就是 strong，weak，copy）</li>
+<li>对外只读的属性可以在对象内部，也就是类扩展（Class-Extension 也叫 Class-Continuation）中重新声明为可读写的</li>
+<li>可以使用 GCD 来设置读写操作为同步操作</li>
+<li>就算属性设置为只读，在外部仍可以使用 KVC 来访问这些属性，例如：<code>[object setValue:@&quot;value&quot; forKey:@&quot;propertyName&quot;]</code></li>
+<li><p>集合属性（Array，Set，Dictionary）可以提供只读属性供外界使用（内部保存可变类型的变量，返回该变量的不可变拷贝），并提供操相应的操作方法，例如下面例子中，使用 <code>-addFriend:</code> 和 <code>-removeFriend:</code> 方法来实现对 <code>friends</code> 集合的操作，这样保证了添加或删除盆友的操作对象是知情的。对于直接修改 <code>friends</code> 集合的操作对象是不知情的，这样可能会导致对象内各数据的不一致。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">@interface EOCPerson : NSObject</span><br><span class="line">@property (nonatomic, strong, readonly) NSSet *friends;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation EOCPerson &#123;</span><br><span class="line">    NSMutableSet *_internalFriends;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (NSSet *)friends &#123;</span><br><span class="line">    return [_internalFriends copy];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)addFriend:(EOCPerson *)person &#123;</span><br><span class="line">    [_internalFriends addObject:person];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)removeFriend:(EOCPerson *)person &#123;</span><br><span class="line">    [_internalFriends removeObject:person];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>不要在返回的对象上查询其是否是可变对象并对其进行操作，同上条这样对对象集合属性的直接修改，容易产生 bug</p>
+</li>
+</ul>
+</li>
+<li><p>Tips 19 使用清晰而协调的命名方式</p>
+<ul>
+<li>方法名的风格要保证与自己的代码或是需要集成的框架一致，也就是上下文需要一致，这点最重要放第一</li>
+<li>起名遵循 Objective-C 的命名规范，这样的接口名字一定程度上提示了接口的作用</li>
+<li>方法名言简意赅，从左到右读起来最好像一个日常用于中的句子</li>
+<li>方法名里不要使用缩略后的类型名称</li>
+<li>Objective-C 的方法名相较其他语言要长一些，但是可以更好地表达方法的作用，以及各个参数的意义，比如：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Rectangle *recgangle = new Rectangle(5.0f, 10.0f);</span><br><span class="line">// 不如下面的命名方式</span><br><span class="line">Rectangle *recgangle = [Rectangle initWithSize:(float)width :(float)height];</span><br><span class="line">// 不如下面的命名方式</span><br><span class="line">Rectangle *recgangle = [Rectangle initWithWidth:(float)width andHeight:(float)height];</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>Tips 20 为私有方法名加前缀</p>
+<ul>
+<li>因为在 Objective-C 中没有私有方法，所有对象都可以响应任意消息，并且可以通过 runtime 获取对象可以相应的消息，所以我们使用特定的命名来区分私有方法</li>
+<li>在使用 Category 或继承系统中或第三方库中的类的时候，可以防止命名冲突</li>
+<li>C 语言中使用 <code>_</code> 下划线作为系统内部函数的开头所以我们不能使用 <code>_</code> 作为私有方法的前缀（苹果的官方库也使用 <code>_</code>）</li>
+<li>原书作者建议使用 <code>p_</code> 来作为私有方法的前缀，个人建议使用开发中项目使用的前缀小写来作为类前缀，比如上文的 <code>EOCPerson</code> 中添加私有方法可以使用 <code>eco_privateMethodName:</code>，这样的前缀在第三方类库中出现重复的概率比较小</li>
+</ul>
+</li>
+<li><p>Tips 21 理解 Objective-C 错误模型</p>
+<ul>
+<li>ARC 在默认情况下并不是异常安全的，也就是抛出异常的时候，在作用域末尾应该释放的对象将不会被释放</li>
+<li>可以使用 <code>-fobjc-arc-exceptions</code> 来告诉编译器需要生成异常安全的代码，但是这样会引入一些额外代码，并且在不抛出异常时也会执行这部分代码</li>
+<li>就算不使用 ARC 使用异常也很容易写出内存泄漏的代码，因为需要在抛出异常前清理所有申请的资源，所以现在我们只在非常罕见（严重错误，比如：抽象类中的方法没有实现）的情况下抛出异常，抛出之后不需要考虑回复的问题，并且退出应用，这样就不用编写复杂的异常安全代码</li>
+<li>对于不严重的错误，我们通过返回 nil/0 或是使用 <code>NSError</code> 来处理，<code>NSError</code> 中包含了错误处理所需的各种信息，我们自己的错误需要规划和设置好对应的 Error Domain，Error Code</li>
+<li>一般通过 delegate 来传递错误 <code>- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error</code> 或是输入参数返回错误 <code>- (BOOL)doSomething:(NSError **)error</code></li>
+</ul>
+</li>
+<li><p>Tips 22 理解 <code>NSCopying</code> 协议</p>
+<ul>
+<li>实现 <code>NSCopying</code> 接口可以让类实现拷贝（<code>copy</code>）方法，<code>- (id)copyWithZone:(NSZone *)zone</code> 中的 <code>zone</code> 是以前开发时使用的内存区参数，目前已经不使用了，可以不用考虑他</li>
+<li>实现 <code>NSMutableCopying</code> 协议支持可变拷贝（<code>mutableCopy</code>）方法</li>
+<li>对象拷贝时需要决定是深拷贝还是浅拷贝，一般情况下用浅拷贝</li>
+<li>绝大多数情况下 <code>NSCopying</code> 实现的都是浅拷贝，所以如果使用深拷贝，建议创建一个单独的方法来完成</li>
+</ul>
+</li>
+</ul>
+<h2 id="Chapter-4-协议（Protocol）和分类（Category）"><a href="#Chapter-4-协议（Protocol）和分类（Category）" class="headerlink" title="Chapter 4 协议（Protocol）和分类（Category）"></a>Chapter 4 协议（Protocol）和分类（Category）</h2><ul>
+<li><p>Tips 23 使用委托（delegate）和数据源（data source）协议进行对象间通信</p>
+<ul>
+<li>委托模式（delegate pattern）：对象把应对某个行为的责任委托给了另一个类</li>
+<li>类似我们经常使用的 <code>UITableView</code>，<code>UITableViewDelegate</code> 和 <code>UITableViewDataSource</code> 分别定义了如何处理事件的接口和如何提供数据的接口，实现这两个接口为 <code>UITableView</code> 提供交互逻辑和显示数据，<code>UITableView</code> 本身只负责显示获取到的数据</li>
+<li>委托模式同样适用于异步事件，比如网络请求完成后，回调委托对象将结果传递回去，实现事件的异步处理</li>
+<li>使用委托对象的对象中的委托对象属性需要设置为 weak，防止循环引用</li>
+<li>使用委托中的方法时，使用 <code>respondsToSelector:</code> 先查询委托对象是否实现了该方法，特别是在协议中使用 <code>@option</code> 关键字标注的可选方法</li>
+<li>委托中的方法名要清晰明确，需要说明事件的来源，当前的事件，以及为什么委托对象需要获取这个事件，所有委托方法都需要将发起委托的对象发送到委托对象（作为第一个参数），让委托对象判断事件来源</li>
+<li>针对需要进行多次调用的委托对象（例如网络加载时下载进度），可以通过结构体等方法，在设置委托对象的时候，一次检查需要响应的方法并记录，之后在使用的时候，直接通过记录结果来判断是否实现了某个方法，不用每次都使用 <code>respondsToSelector:</code> 方法来查询是否实现，例：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">@interface EOCNetworkFetcher() &#123;</span><br><span class="line">    struct &#123;</span><br><span class="line">        unsigned int didReceiveData       : 1;</span><br><span class="line">        unsigned int didFailWithError     : 1;</span><br><span class="line">        unsigned int didUpdateProgressTo  : 1;</span><br><span class="line">    &#125; _delegateFlags;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation EOCNetworkFetcher</span><br><span class="line">- (void)setDelegate:(id&lt;EOCNetworkFetcherDelegate&gt;)delegate &#123;</span><br><span class="line">    _delegate = delegate;</span><br><span class="line">    _delegateFlags.didReceiveData = [delegate respondsToSelector:@selector(networkFetcher:didReceiveData:)];</span><br><span class="line">    _delegateFlags.didFailWithError = [delegate respondsToSelector:@selector(networkFetcher:didFailWithError:)];</span><br><span class="line">    _delegateFlags.didUpdateProgressTo = [delegate respondsToSelector:@selector(networkFetcher:didUpdateProgressTo:)];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// 在需要调用 delegate 方法的时候</span><br><span class="line">if (_delegateFlags.didUpdateProgressTo) &#123;</span><br><span class="line">    [_delegate networkFetcher:self didUpdateProgressTo:currentProgress];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>Tips 24 将类的实现代码分散到便于管理的多个 Category 中</p>
+<ul>
+<li>在开发的过程中，类的代码只会越来越大，那么我们可以通过分类机制将类的代码打散，根据业务分散到不同的分类中</li>
+<li>应该把私有方法放到叫（Private）的分类中，隐藏实现细节</li>
+</ul>
+</li>
+<li><p>Tips 25 总是为第三方分类的分类名称加前缀</p>
+<ul>
+<li>如果分类中出现同名方法，容易出现奇怪的 bug，所以在为其他类添加分类的时候，分类名称和分类中的方法需要添加你自己使用的前缀</li>
+</ul>
+</li>
+<li><p>Tips 26 勿在分类中声明属性</p>
+<ul>
+<li>分类中可以定义方法（包括 getter 和 setter），但是不要定义属性，因为在分类中定义的属性不会生成实例变量</li>
+<li>虽然有 <code>objc_setAssociatedObject</code> 魔法可以用，但是这容易导致内存管理问题，因为无法使用属性记录内存管理语义，但是建议一般情况下不使用</li>
+<li>分类的主要作用是扩张类的功能，而不是封装数据</li>
+</ul>
+</li>
+<li><p>Tips 27 使用 Class-Continuation 分类，隐藏实现细节</p>
+<ul>
+<li>Class-Continuation 分类必须定义在该类的实现文件中，并且可以声明实例变量，并且建议仅以此种方式增加实例变量</li>
+<li>头文件中声明为只读的属性，可以在实现文件中的 Class-Continuation 分类中扩展为可读写</li>
+<li>私有方法原型，和私有属性，都可以放到 Class-Continuation 分类中</li>
+<li>在 Class-Continuation 分类中可以声明实现的接口，并且外部不会知道</li>
+<li>可以通过私有属性很好的封装 C++/Objective-C++ 的代码，提供 Objective-C 的接口给其他代码使用</li>
+</ul>
+</li>
+<li><p>Tips 28 通过协议提供匿名对象</p>
+<ul>
+<li>使用类似 <code>@property(nonatomic, weak) id&lt;ProtocolName&gt; delegate;</code> 提供匿名类型对象作为 delegate，可以隐藏类名</li>
+<li>对于类型不重要，只需要提供可向应方法的对象，可以使用匿名对象，隐藏实现细节</li>
+</ul>
+</li>
+</ul>
+<h2 id="对于-Chapter-1-的补充"><a href="#对于-Chapter-1-的补充" class="headerlink" title="对于 Chapter 1 的补充"></a>对于 Chapter 1 的补充</h2><p>第一章第四条中，多用类型常量，少用 <code>#define</code> 预处理指令中，建议大家使用类型常量而不是 <code>#define</code> 来定义常量，这里增加一个补充内容，swift 中，我们可以使用 <code>struct</code> 中的静态变量来声明常量，这样带来的一个好处是使用和分类管理非常方便</p>
+<p>Xcode 8.0 带的 clang 4.0 后开始支持类常量，也就是定义属性的时候，可以加入 <code>class</code> 来修饰属性，这样这个属性是属于类的，于是乎，我们可以这样使用常量了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSString *notificationName = XXXConstant.notificationNames.XXXUserDidLoginNotificationName;</span><br></pre></td></tr></table></figure>
+<p>看上去比类型常量长一些，不过似乎还算比较好看</p>
+<p>定义的时候需要这样定义：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@interface XXXConstantNotificationNames : NSObject</span><br><span class="line"></span><br><span class="line">@property(nonatomic, readonly) NSString *XXXUserDidLoginNotificationName;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface XXXConstant : NSObject</span><br><span class="line"></span><br><span class="line">@property(nonatomic, class, copy) XXXConstantNotificationNames *notificationNames;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>并且，类常量是不会被 synthesize 的，也就是说编译器不会自动为类常量创建相应的变量，所以在实现文件中，我们需要这么写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">@implementation XXXConstantNotificationNames</span><br><span class="line"></span><br><span class="line">- (NSString *)XXXUserDidLoginNotificationName &#123;</span><br><span class="line">    return @&quot;XXXUserDidLoginNotificationName&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation XXXConstant</span><br><span class="line">static XXXConstantNotificationNames *_notificationNames = nil;</span><br><span class="line"></span><br><span class="line">+ (void)load &#123;</span><br><span class="line">    _notificationNames = [[XXXConstantNotificationNames alloc] init];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (XXXConstantNotificationNames *) &#123;</span><br><span class="line">    reutrn _notificationNames;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>看上去比定义一个 <code>kXXXUserDidLoginNotificationName</code> 字符串常量，麻烦了非常多，但是相信在项目代码量不断增加，以及工程变得越来越复杂以后，这样的做法对于代码管理上是非常有帮助的</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="对切图标注的思考"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">对切图标注的思考</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Aug 15 2015</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/iOS/">#iOS</a> <a class="tag" href="/tags/设计/">#设计</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <p>本文仅作为个人学习记录使用，也欢迎在<a href="http://creativecommons.org/licenses/by-nc/4.0/deed.zh_TW" target="_blank" rel="noopener">许可协议</a>范围内转载或使用，请尊重版权并且保留原文链接，谢谢您的理解合作。如果您觉得本站对您能有帮助，您可以使用<a href="http://noark9.github.io/atom.xml" target="_blank" rel="noopener">RSS</a>方式订阅本站，这样您将能在第一时间获取本站信息。</p>
+<h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>为什么写这个呢，在开发了一段时间的客户端以后，发现在还原设计稿的时候，收到的标注搞总是无法传达出设计师的心意，总需要自己再去丈量设计师给的设计图，另外前段时间，知乎专栏上这篇文章似乎略火<a href="http://zhuanlan.zhihu.com/aegeank/20101849?utm_campaign=rss&amp;utm_medium=rss&amp;utm_source=rss&amp;utm_content=title" target="_blank" rel="noopener">做一份让工程师泪流满面的标注</a>，当时看了看，觉得很不错啊，然后发给我司设计师大人们看了，我司设计师跟我说，nonono，工作量略大，我在仔细看看了后觉得确实，一个设计稿需要做三个标注，那是多蛋疼的事情啊-，-但是作为一个不断上进的码农，于是在开发之余不断的思考，决定写个文章告诉设计师，我是怎么想的，按照我的想法来标注-，-目的是从根本上解决这个问题。。。。。。</p>
+<p>那么我们的目的就是：</p>
+<ul>
+<li>把我们怎么用代码画界面，告诉设计师们</li>
+<li>减少设计师和攻城狮之间无必要的交流</li>
+<li>帮助设计师们用最少的成本做出让码农们泪流满面的标注稿</li>
+</ul>
+<a id="more"></a>
+<h1 id="iOS-中的基础元素"><a href="#iOS-中的基础元素" class="headerlink" title="iOS 中的基础元素"></a>iOS 中的基础元素</h1><p>首先，我们需要说下 iOS 里面到底那些东西是系统原生的，以及系统原生的东西要注意些什么，其实所有的系统原生 app 基本都用的原生的控件来做的，我们一般把系统提供的基础的元素叫做控件（Control）</p>
+<h2 id="最基本的控件"><a href="#最基本的控件" class="headerlink" title="最基本的控件"></a>最基本的控件</h2><p>其实最基本的控件只有一个，由这个控件组成了千千万万的控件</p>
+<h3 id="UIView-视图"><a href="#UIView-视图" class="headerlink" title="UIView - 视图"></a><code>UIView</code> - 视图</h3><p><img src="/img/ios-design-mark/design1/image-view.png" alt="UIView"></p>
+<p>视图基本可以说是一个万能的控件，也是最基本的一个控件，他提供了和用户交互的最基本的功能</p>
+<ul>
+<li>其实所有的控件都可以认为是一堆视图组合而来，只是不同的控件提供了已经封装好的功能</li>
+<li>同时，所有的控件也是一个视图也就是他们还可以拿来组合成其他的控件</li>
+<li>可以在上面增加手势的操作，也可以在上面显示图片各种，或者播放动画</li>
+<li>所有的自定义控件，也可以认为是一个视图</li>
+</ul>
+<h2 id="基础的组合控件"><a href="#基础的组合控件" class="headerlink" title="基础的组合控件"></a>基础的组合控件</h2><p>下面有四个最基础的控件，我们可以用这四个最基础的控件，来组成大部分的应用</p>
+<h3 id="UILabel-文本标签"><a href="#UILabel-文本标签" class="headerlink" title="UILabel - 文本标签"></a><code>UILabel</code> - 文本标签</h3><p><img src="/img/ios-design-mark/design1/image-label.png" alt="UILabel"></p>
+<p>应该是所有平台都有的一个控件了，作用是在屏幕上显示文字</p>
+<ul>
+<li>可以多行，也可以有不同的字体，样式</li>
+<li>一个普通的文本标签只能按行显示文本，而不能沿着曲线显示文字</li>
+<li>一个文本标签里面每个文字可以有不同的字体，属性</li>
+<li>一个文本标签只能响应一个事件，比如你要在文字里面加很多个连接，那你就要提前告诉码农了，这样我们可以提前考虑是否使用替代品</li>
+</ul>
+<h3 id="UIButton-按钮"><a href="#UIButton-按钮" class="headerlink" title="UIButton - 按钮"></a><code>UIButton</code> - 按钮</h3><p><img src="/img/ios-design-mark/design1/image-button.png" alt="UIBUtton"></p>
+<p>按钮是平时用的非常非常非常多的一个控件，顾名思义一个可以按的突起物（当然屏幕上不会突起东西给你按），这也是最主要的，接收用户输入的一个控件</p>
+<ul>
+<li>我们可以给他文字的标题，或是图标，或是两样都有</li>
+<li>按钮有不同的状态（可用，按下，不可用，选中），我们可以给不同状态的按钮不同的文字，字体，或是图标</li>
+</ul>
+<h3 id="UITextField-输入框"><a href="#UITextField-输入框" class="headerlink" title="UITextField - 输入框"></a><code>UITextField</code> - 输入框</h3><p><img src="/img/ios-design-mark/design1/image-textfield.png" alt="UITextField"></p>
+<p>输入文字用的框，所以叫输入框，解决接收用户输入文本内容的控件</p>
+<ul>
+<li>输入框，只能输入一行文字</li>
+<li>他有可以自定义的占位符（PlaceHolder）在没有输入内容的时候，可以显示占位符，占位符的颜色是不可以修改的</li>
+<li>有四种边框样式<br><img src="/img/ios-design-mark/design1/image-textfield-style.png" alt="Text Field Style"></li>
+<li>密码框也是这个</li>
+<li>我们是可以处理回车键所响应的事件的</li>
+<li>和他类似的是 <code>UITextView</code> 可以多行编辑，但是不能显示占位符</li>
+</ul>
+<h3 id="UIImageView-图片"><a href="#UIImageView-图片" class="headerlink" title="UIImageView - 图片"></a><code>UIImageView</code> - 图片</h3><p><img src="/img/ios-design-mark/design1/image-imageview.png" alt="UIImageView"></p>
+<p>显示图片用的控件，可以在里面显示一个图片</p>
+<ul>
+<li>视图也可以显示图片，但是我们平时更多的使用图片因为他会为我们管理如何在视图上显示图片</li>
+<li>简单的关键帧动画，就是使用这个东西做的了</li>
+<li>我们可以控制图片显示是如何拉升的</li>
+</ul>
+<h2 id="其他的基本控件"><a href="#其他的基本控件" class="headerlink" title="其他的基本控件"></a>其他的基本控件</h2><p>不多说，直接上图</p>
+<p><img src="/img/ios-design-mark/design1/image-controls.jpg" alt="基本控件"></p>
+<p>图上面是 iOS 中的基本控件</p>
+<h2 id="复杂点的还有啥"><a href="#复杂点的还有啥" class="headerlink" title="复杂点的还有啥"></a>复杂点的还有啥</h2><p>复杂的，用的最多的是 <code>UITableView</code>（后面叫他列表） 和 <code>UICollectionView</code>（后面叫他收藏集），有个人说过，大部分的应用，其实就是从网络加载一些数据，然后把他们显示到一个表格里面，于是，大部分的 app 就这样成了，这两个后面在讲到布局的时候会重点讲，这里，大家可以理解为列表就是 iOS 中的短信列表界面或是设置界面，收藏集就是相册的界面</p>
+<h2 id="基础控件的作用"><a href="#基础控件的作用" class="headerlink" title="基础控件的作用"></a>基础控件的作用</h2><p>为啥开篇讲一大堆废话，说说基础控件有些啥呢</p>
+<ol>
+<li>这些是 iOS 中原生带有的控件，攻城狮们不需要花费多少力气就能用起来的东西</li>
+<li>这些控件在 iOS 中就长这样，如果需要很多变化，那么可以先跟攻城狮商量下能不能在所需要的时间内完成，或是考虑替代的方案</li>
+<li>我们看到的大部分的 iOS app 的界面，都是通过上面的基础控件堆叠而成，如果上面没有的，那么一定是用各种各样的切图堆叠而成</li>
+</ol>
+<p>讲完基础的控件，那么我们来看，攻城狮在把设计图变成 app 是怎么做的</p>
+<h1 id="攻城狮眼中的设计图"><a href="#攻城狮眼中的设计图" class="headerlink" title="攻城狮眼中的设计图"></a>攻城狮眼中的设计图</h1><p>设计图，其实也分为好多类，那么我们平常大概会用到下面这几种界面：</p>
+<ol>
+<li>不会变化的固定界面，比如拍照、录像、图片编辑等，以及小的一些零散弹出界面</li>
+<li>需要用户填写的表单类型的界面，例如登录注册、信息补全、文章发表等</li>
+<li>数据列表界面，例如糗事列表，聊天列表等，或是瀑布流类型的数据列表</li>
+<li>容器界面，比如应用主界面，聊天主界面等</li>
+</ol>
+<p>对于上面的设计图，iOS 攻城狮们，一般是这么考虑的</p>
+<ol>
+<li>死的界面，但是对于 iPhone 4，5，6，6 plus，iPad 可能会有不同的布局，小的零散界面我们会单独开发一个视图进行显示，或是在目标视图上叠加一个视图</li>
+<li>大部分情况下用列表来解决，也就是认为这是一个表格，为什么呢，下面会具体说</li>
+<li>如果是单行的数据，或者高度不变的相册，考虑会使用列表来实现，如果是高度变化的瀑布流，或者复杂的瀑布流，考虑使用收藏集来实现，不过将来可能会都使用收藏集替代所有的列表</li>
+<li>一个大壳子，考虑里面的列表，或是文章内容，如何管理，如何跳转，以及主界面上一些公共按钮，和公共的交互方式</li>
+</ol>
+<h2 id="不会变化的固定界面"><a href="#不会变化的固定界面" class="headerlink" title="不会变化的固定界面"></a>不会变化的固定界面</h2><p>大多数 app 的拍摄界面，弹出气泡等等，都是不会变化的固定界面，我们先来看看整个屏幕的固定界面</p>
+<p>iPhone 4s 上的拍摄界面</p>
+<p><img src="/img/ios-design-mark/design1/image-camera-iphone4.png" alt="iPhone 4 相机"></p>
+<p>在 iPhone 5 上是这样的</p>
+<p><img src="/img/ios-design-mark/design1/image-camera-iphone5.png" alt="iPhone 5 相机"></p>
+<p>相信大家看出来了吧，在 iPhone 4s 上，由于屏幕尺寸比 iPhone 5 小了一些，导致有些 UI 没有足够的空间来摆放，这时候水果的攻城狮们把原来黑色的背景设置成半透明的了，然后再把取景区域放到了背景下面<br>也就是说，这种情况下，对于小屏幕的 iPhone 4s 和屏幕长了点的 iPhone 5 需要单独出不同的设计图</p>
+<h3 id="糟糕的例子"><a href="#糟糕的例子" class="headerlink" title="糟糕的例子"></a>糟糕的例子</h3><p>首先我们先来看看平时攻城狮们会收到什么样的标注吧</p>
+<p><img src="/img/ios-design-mark/design1/image-bad-mark.png" alt="糟糕的例子"></p>
+<p>上面的图片是一个糟糕的标注例子，为什么糟糕呢，在这个例子里面只是简单的标注了每个元素位置在哪里，大小是多少，缺少了非常重要的东西，也就是攻城狮们平时所需要的布局的逻辑</p>
+<p>对于这样的界面，我这自觉靠谱的上进攻城狮会怎么处理呢，我用 iPhone 5 的拍摄界面来举例</p>
+<h3 id="固定界面的布局逻辑"><a href="#固定界面的布局逻辑" class="headerlink" title="固定界面的布局逻辑"></a>固定界面的布局逻辑</h3><p>在拿到设计稿的时候，首先我会先看整个界面的设计能够分成多少个部分，对于像是相机这样的完整的全屏幕的界面，首先需要思考整个界面能够分成多少个大的部分，那么从上到下，分为了如下图所示的，1，2，3三个部分</p>
+<p>第一个部分是顶部栏，第二个部分是中间的拍摄预览区域，第三个部分是下面的相机类型选择和拍摄按钮等操作功能</p>
+<p><img src="/img/ios-design-mark/design1/image-struct-step1.png" alt="第一步"></p>
+<p>接下来，我们就会把整个界面拆分为三个部分，分别布局到屏幕上，同时，我们会考虑三个部分的叠放次序，现在假设预览区域叠放在了顶部栏和下面操作功能区域之下，如下图所示</p>
+<p><img src="/img/ios-design-mark/design1/image-struct-tree.png" alt="叠放次序"></p>
+<p>相信看到这里已经发现为什么上面的标注是一个糟糕的例子了吧，因为上面的标注对攻城狮来说，除了大小信息，其他基本是没用的，当然有的童鞋会说了，那我们为什么不按照上面的位置来开发呢，为什么不呢，原因如下：</p>
+<ol>
+<li>除了攻城狮开发时的布局逻辑以外，设计师对 UI 也是有逻辑要求的</li>
+<li>攻城狮的布局逻辑，是为了更容易和方便的完成界面的开发</li>
+<li>攻城狮的布局逻辑要考虑屏幕在发生变化的时候，UI 需要如何变化</li>
+<li>设计师不说，攻城狮肯定是不会从设计图上看出设计师的 UI 逻辑的</li>
+</ol>
+<p>目前想到的有这些，童鞋们可以补充，所以上面的理由只是包括但不限于-,-</p>
+<p>闲话结束，接下来我们来看，上下两个区域又是如何进行布局的呢，首先我们来看上面区域的示意图</p>
+<p><img src="/img/ios-design-mark/design1/image-struct-top.png" alt="顶部栏"></p>
+<p>在设计图上，顶部栏有四个按钮，看样子是平均分布在顶部栏上面的，那又是怎么个平均分布法呢？每个按钮占据的位置平分顶部栏么？这样的标注，攻城狮是猜不出来的，同时，这理没有告诉攻城狮，如何去考虑屏幕变宽的情况，那这里，有这么一些情况</p>
+<ol>
+<li>每个按钮是平均分布在顶部栏的一个区域内，那么这个区域，设计师要给出来</li>
+<li>每个按钮之间的距离是相同的，并且最左边的按钮和最右边的按钮位置是确定的</li>
+<li>按钮在垂直方向是如何分布的，是距顶部一个距离，还是水平居中，还是距底部一个距离</li>
+<li>会不会有全部按钮不可用的情况，或者全部按钮隐藏的情况</li>
+</ol>
+<p>设计师的标注至少需要告诉攻城狮上面的问题，否则如果是像糟糕例子中那样的话不如不标注，让攻城狮自己去量更好</p>
+<p>那么接下来我们来看底部的操作区域在攻城狮眼里是啥样的呢</p>
+<p><img src="/img/ios-design-mark/design1/image-struct-bottom.png" alt="操作区域"></p>
+<p>在这里，底部栏根据设计的 UI 逻辑可能会被分为1，2两个部分，第一个部分包含一个自定义的控件，用来选择拍摄的功能，第二部分包含了打开相册，拍照和滤镜的功能，这里，我做了1，2两个部分的拆分，但是实际情况时不一定需要进行拆分，下面列一下这个布局需要些什么样的信息</p>
+<ol>
+<li>A，B，C 三个按钮，在整个底部操作区域居中，还是只是距离顶部、或底部一定的距离，还是只是在2的区域内居中，如果是在2的区域内居中，那么就需要将这个视图拆分为1，2两个部分</li>
+<li>A，B，C 三个按钮是如何分布的，是 B 距离 A 一定距离 A 距离 C 一定距离，还是 A，C 贴在两边，B居中</li>
+</ol>
+<p>同样，一份可用的标注需要至少告诉攻城狮上面的问题，攻城狮才能在基本不需要和设计师沟通的情况下开始开发</p>
+<p>对于划分成多个部分的 UI 攻城狮们又会把每个小的部分单独拿出来，继续使用现有的控件布局或是再划分成更小的部分，直到所有的部分都已经完成划分布局为止，其实在码农的世界，我们叫递归 —— 把大的东西划分成小的东西，把小的东西分成更小的东西，然后逐步攻破，最终把大的东西解决掉</p>
+<h3 id="泪流满面的标注"><a href="#泪流满面的标注" class="headerlink" title="泪流满面的标注"></a>泪流满面的标注</h3><p>为什么会出现糟糕的那个标注?</p>
+<ol>
+<li>设计师的 UI 逻辑在标注图中丢失了</li>
+<li>UI 上元素直接的关系，比绝对位置更加有用</li>
+</ol>
+<p>那，根据上面的问题，我们来做个让自己泪流满面的标注吧（感谢设计师给提的意见）</p>
+<p><img src="/img/ios-design-mark/design1/image-good-mark.png" alt="想要的标注效果"></p>
+<p>为什么说，这是攻城狮想要的标注结果呢，要是我说是给我们自己的攻城狮们和设计师们看了的结果会不会被丢砖呢（´∀｀*) </p>
+<p>这个设计图，解决了我们上面提出的两个问题，最终的，最重要的是减少了攻城狮和设计师直接无必要的沟通而浪费的时间（当然除了想泡设计 MM 的攻城狮 GG 除外）</p>
+<p>我们来看看这个标注是如何解决上面问题的：</p>
+<ol>
+<li>直接对元素标注大小</li>
+<li>对于依赖屏幕的大小或距离，可以使用百分比来标注</li>
+<li>绝对的大小和距离，可以使用具体的数值</li>
+<li>标注元素和元素之间的距离，而不是整个元素在画布上的绝对位置</li>
+<li>对于无法使用标注描述的逻辑，使用文字来辅助描述，比如居中、元素间距相同、元素大小相同等</li>
+<li>界面可以分解为多个部分，在每个部分里面也进行相对位置的标注，并且在每个部分外面标注部分的大小和区域</li>
+</ol>
+<p>好，我们继续来下一步，看看其他类型的界面了</p>
+<h2 id="其他类型的界面"><a href="#其他类型的界面" class="headerlink" title="其他类型的界面"></a>其他类型的界面</h2><p>就像刚才说的，其他类型的界面其实也是不同的固定界面的组合，那么接下来我们来看看列表类型界面和收藏集界面如何标注更好吧</p>
+<h3 id="列表类型界面"><a href="#列表类型界面" class="headerlink" title="列表类型界面"></a>列表类型界面</h3><p>大多数列表界面其实只需要把每一行界面当做一个固定不变的界面就行了，如下图</p>
+<p><img src="/img/ios-design-mark/design1/image-tableview.png" alt="普通的列表"></p>
+<p>当然还有下面这样的列表，这样的列表，大多数设计师可能认为下面是一个独立的固定界面，其实不是的，攻城狮们为了能够方便快速的在上面添加一个一个的项目会把这样的界面转化成一个列表，所以标注的时候，只需要把下面红框部分的</p>
+<p><img src="/img/ios-design-mark/design1/image-tableview2.png" alt="普通的列表2"></p>
+<h3 id="收藏集类型的界面"><a href="#收藏集类型的界面" class="headerlink" title="收藏集类型的界面"></a>收藏集类型的界面</h3><p>对于收藏集类型的界面，对于每一种收藏集中的元素，当做一个独立的固定界面进行标注，除了收藏集中的元素，还需要为收藏集中元素之间的距离进行标注</p>
+<p><img src="/img/ios-design-mark/design1/image-collectionview.png" alt="收藏集"></p>
+<h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>总结下：</p>
+<ol>
+<li>对于固定的界面，如果对于小的屏幕（比如需要支持 iPhone 4）无法通过拉升界面元素来支持的情况下，那么需要针对不同屏幕尺寸的界面输出不同的设计图</li>
+<li>设计标注更多的需要告诉攻城狮 UI 元素的布局逻辑，而不是绝对位置</li>
+<li>标注图不能替代面对面沟通，如果有问题，最好面对面沟通，而不是猜</li>
+<li>标注之前，可以相互先商量下，这样结果可能更好</li>
+</ol>
+<p>最后，标注需要注意的（我从上面 copy 下来的-，-）：</p>
+<ol>
+<li>直接对元素标注大小</li>
+<li>对于依赖屏幕的大小或距离，可以使用百分比来标注</li>
+<li>绝对的大小和距离，可以使用具体的数值</li>
+<li>标注元素和元素之间的距离，而不是整个元素在画布上的绝对位置</li>
+<li>对于无法使用标注描述的逻辑，使用文字来辅助描述，比如居中、元素间距相同、元素大小相同等</li>
+<li>界面可以分解为多个部分，在每个部分里面也进行相对位置的标注，并且在每个部分外面标注部分的大小和区域</li>
+</ol>
+<p>以及，本文中的各种东西，非常适用于 iOS 的开发，并且强烈建议大家开发过程中使用 AutoLayout 之类的强大工具，因为这篇文章的内容，是为了使用 AutoLayout 开发界面而优化的，当然也适用于代码布局的方式，只是做起来没有那么直观而已</p>
+<p>以及，欢迎吐槽</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

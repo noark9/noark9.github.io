@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="noark9 的开发小笔记"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">noark9 的开发小笔记</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Home Page Post List -->
+<div class="container">
+  <div class="row">
+    <div class="col-lg-10 col-md-10 col-md-offset-1">
+      
+        <div class="post-item-wrapper">
+  <a href="/2015/01/25/rac-signal-from-rcdio/" class="post-title">
+      ReactiveCocoa 模式 —— Signals
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Jan 25 2015</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>在小伙伴们都玩了好久RAC之后，我才开始研究如何使用-，-思来想去发现这东西看上去似乎很复杂，用起来确实也很复杂，里面涉及到很多概念是常规iOS或是OS X开发过程中完全没用到过的，同时RAC也将函数式编程的思想带到了iOS开发中。</p>
+<p>在查找资料的过程中，找到了一个网站<a href="http://rcdp.io" target="_blank" rel="noopener">ReactiveCocoa Design Patterns</a>这个网站里面对RAC的一些基础观念进行了比较好的解释，所以为了让自己能更好的学习，就决定翻译翻译，也希望能对大家学习过程中有帮助。</p>
+<p>本文翻译自<a href="http://rcdp.io/Signal.html" target="_blank" rel="noopener">ReactiveCocoa Design Patterns</a></p>
+<p><strong>注意：</strong>下文中，为了方便大家理解，部分单词没有翻译，当然如果需要知道中文的，如下：</p>
+<ul>
+<li>signal：信号</li>
+<li>sequence：顺序序列</li>
+<li>stream：流</li>
+<li>pull-driven：拉驱动</li>
+<li>push-driven：推驱动</li>
+<li>value：值</li>
+<li>error：错误</li>
+<li>complete：完成</li>
+</ul>
+<h1 id="Signals"><a href="#Signals" class="headerlink" title="Signals"></a>Signals</h1><p>Signal是构造FRP程序最基础的砖块，一般来说，我们的程序组织一系列的signal，决定这些signal的值从何而来，signal之间如何连接，以及值如何在signal中传递。我们可以认为signal是一个管道，我们的应用程序是一个复杂的管道系统，将事件放入管道系统的输入端，从输出端得到结果。<br></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a> <a class="tag" href="/tags/RAC/">RAC</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2015/01/17/qq-chat-db-analysis/" class="post-title">
+      学习iOS上QQ的聊天数据库
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Jan 17 2015</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>这篇内容完全是意外啊，起因是酱紫的</p>
+<p>某日看见一个Mac的app打折大礼包（bundle）买了以后里面有个神奇的iPxx设备管理的app，叫iMazing，然后用iMazing尝试了下，发现居然可以看app里面的数据，然后出于手闲好奇的心里-，-我就点开了大TX的扣扣看了一眼，于是就产生了下面的一系列意外发现</p>
+<p>iMazing长下面酱紫，用起来赶脚还是很不错的啊，于是我顺手点开了扣扣，出于学习的目的，研究了一下</p>
+<p><img src="/img/qq-chat-db/imazing-home.png" alt="iMazing Home"></p>
+<p>发现iMazing很强力啊，把整个app和数据都dump出来了，以及这次我们要讲的主角，消息记录，嘛大企鹅的消息记录在别的平台上似乎都是加密过的，iOS上却没有加密，这让人有点意外，不过估计也比较相信水果公司的沙盒是很安全的吧，不过这也给我们点机会一窥企鹅里面到底是啥样的。</p>
+<p>另外本文完全自我yy的，水平有限写的不好的地方大家拍砖即可</p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2014/11/16/c-error-process/" class="post-title">
+      巧用goto语句来进行C语言中的错误处理
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Nov 16 2014</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>很多人不喜欢goto，认为goto为代码结构带来了很多灾难，但是用的好的话，其实goto同样能够优雅的解决很多问题，比如下面说的这个</p>
+<p>这个算是最近看的代码之髓第六章的一个读书扩展了，对于C里面，如何更好的处理错误，其中提到了一点Linux内核编码风格里面提到可以用goto来更好的集中处理错误，减少冗余代码，详情可以看<a href="https://www.kernel.org/doc/Documentation/CodingStyle" target="_blank" rel="noopener">Linux内核编码风格</a>中的第七章——集中处理函数的退出</p>
+<h1 id="怎么做"><a href="#怎么做" class="headerlink" title="怎么做"></a>怎么做</h1><h2 id="内核编码风格第七章"><a href="#内核编码风格第七章" class="headerlink" title="内核编码风格第七章"></a>内核编码风格第七章</h2><p>第七章原文大意是这么说的</p>
+<p>尽管有的人不喜欢goto，但是呢其实编译器里面还是一直用着无条件跳转这一和goto等价的东西。在一个函数里面如果有多个地方都需要进行清理和提交任务的时候，goto的好处就显现出来了。</p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/c/">c</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2014/09/03/custom-navigation-animation/" class="post-title">
+      自定义iOS导航动画
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Sep 3 2014</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>冒个泡，体现下存在感，哈哈哈哈，最近发现iOS自带的动画效果总是困扰着我-，-比如，iOS7上返回时，会自动加一个半透明的层做渐变感，比如返回的时候，总是整个view一起动的，动画过程中，我需要隐藏和显示导航栏等这些要求，原生的动画总是无法满足这些小小的要求!(ﾉ｀□´)ﾉ⌒┻┻</p>
+<p>经过数小时上网找资料，发现大神们要不就是一笔带过，要不就是懒得讲很多，于是，发现还是自己写比较科学啊┓(￣∇￣)┏，下面我们来尝试做一个</p>
+<h1 id="做的方法"><a href="#做的方法" class="headerlink" title="做的方法"></a>做的方法</h1><p>制作方法还是按照古法炮制，继承一个<code>NSNavigationController</code>然后重写其中的pop和push方法以达到我们的目的，在我的理解，导航控件他的pop和push方法，实现了在他自己的控制器栈中实现不断的出栈和入栈的操作，然后播放一小段动画，愉悦下大家，那么我们要做的事情就是去掉原来的动画，做pop，push的动作，然后播放我们自己的动画</p>
+<h2 id="截图工具"><a href="#截图工具" class="headerlink" title="截图工具"></a>截图工具</h2><p>做动画之前，必须要有的一个东西就是，我们要让什么东西来动呢，那导航上必然是两个ViewController中的View的内容喽，那么我们就需要对<code>UIView</code>进行扩充，实现获取View中的内容。<br></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2014/04/03/transparent-lines-while-using-resizableimage/" class="post-title">
+      Resizable Image 使用时遇到的透明的线
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Apr 3 2014</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>最近略忙啊。。。于是blog稍微暂停了一段时间啊，好吧今天来个短小精干的，说说最近遇到的一个问题了，其实可能大家都遇到过了，一个比较普通的问题，在使用Resizable Image和Stretchable Image的时候，出现透明线的问题。</p>
+<h1 id="问题观察和分析"><a href="#问题观察和分析" class="headerlink" title="问题观察和分析"></a>问题观察和分析</h1><p>iOS开发过程中啊，我们经常用到的一个东西就是Resizable Image或者叫Stretchable Image的图像，我来粗糙翻译下可以拉伸的图像，用来填充我们的界面，为啥呢，因为一个可以拉升的图像，我们只需要指定需要从那个位置开始拉升，那么我们就能使用一个图片，创造一堆不同大小的控件了。</p>
+<h2 id="观察"><a href="#观察" class="headerlink" title="观察"></a>观察</h2><p>扯了好多闲，我们来看看到底是啥样的吧，因为，好麻烦不打算开demo了，于是我选择附上so转载图片的连接，并无耻的使用提问者的图片，<a href="http://stackoverflow.com/questions/19005668/resizableimagewithcapinsets-to-strech-chat-bubble-issue-in-ios7" target="_blank" rel="noopener">SO问题原链</a>，这篇原链上，大神们的讨论也解决了这个问题。</p>
+<p><img src="/img/transparentLines.png" alt="问题截图"></p>
+<p>虽说是截了别人图片我还是很厚道的加了点标注，重新创造了下，上面本来不应该会有的东西就是那几条跟消息气泡颜色不同的线了。</p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2014/03/10/using-voice-over/" class="post-title">
+      用起 Voice Over
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Mar 10 2014</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>好久木有出现了，大家放心cocoa drawing还在长线更新，最近搬家了，从美丽的彩云之南搬到了高端大气上档次的深圳。于是中间好多天都没有开电脑，好多天就都没有接着写了，以前一直OS X的，今天换换口味来次iOS。</p>
+<p>最近看了一个感觉可能平时大家用的少的东西——Voice Over～就是碰一下屏幕就会说话的东西，神奇吧（魂淡，你就是尽找些没人耍的东西写么XDDD），嗯嗯，很神奇啊，so为啥说用的少呢-，-毕竟为特殊人群考虑的太少了，不过麻花的两个app做的还不错（ps，图形解锁直接废了XDDDDDDD能说这是bug么？），之前说找几个一直没找到合适的应用来看下别人做的效果，昨天不小心点了麻花的应用发现做的效果确实挺不错的。好，接下来我们看看怎么用起来。</p>
+<h1 id="用起Voice-Over"><a href="#用起Voice-Over" class="headerlink" title="用起Voice Over"></a>用起Voice Over</h1><p>平常要是我们用苹果原生的控件的话，那基本上是天生自带Voice Over的，也就是所有的东西都配合的天衣无缝，但是呢，要是某些小按钮啊，神马的，我们没有妥妥的设置好label之类的东西，更甚者用image之类的东西来当按钮的，那就不一定run的好了，那下面我们先讲下怎么处理原生控件的，接着讲下怎么自定义的，再接着讲下一种优化策略，本文一定程度上参考了<em>Accessibility Programming Guide for iOS</em>大家也可以看看这篇Guide了解更多。</p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2014/02/01/image-in-a-circle/" class="post-title">
+      把NSImage画在圆圈里面
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Feb 1 2014</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>新年快乐啊，虽然在努力码cocoa drawing guide part4，不过短线更新个小的，怎么把<code>NSImage</code>画到圆圈里面。</p>
+<p>我们都知道，<code>NSImageView</code>是四四方方的，丑死了。。。为了让我们的UI好看点，大家必定是下了很多苦功夫的啊，所以今天就分享一个非常普通而又实用的东西，把<code>NSImage</code>画到一个圆里面。其实之前google了好会儿了，觉得网上大家的方法都很麻烦，所以还是决定自己DIY了:)</p>
+<p>效果如下：</p>
+<p><img src="/img/circleImage.png" alt="圆形"></p>
+<p>这一篇的内容就刚好用到了drawing guide part4——图像的内容，我会告诉我我也参考了下PaintCode么:P</p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/cocoa/">cocoa</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2014/01/28/cocoa-drawing-guide-study-part-3/" class="post-title">
+      Cocoa Drawing Guide学习part3——颜色AND透明
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Jan 28 2014</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="Start"><a href="#Start" class="headerlink" title="Start"></a>Start</h1><p>cocoa drawing guide学习第三集～总算是写到第三集了啊，看来drawing guide的学习分享应该是能完成的，不过看了看目录貌似还有第四第五第六第七第八的-,-…慢慢来:)</p>
+<p>上一期想了想，总觉得是自己再笨拙的翻译，不过后来想了想，看了看，想了想，再看了看，再想了想，觉得自己还是吧一些重要的东西找了出来，也顺着把guide走了一遍，要是只是选出重点，或者选出怎么用來，那就是Cookbook了，所以大家别嫌啰嗦啊，我也是跟着学的，哈哈，不罗嗦了，正片开始。</p>
+<p>这一集的故事是颜色和透明的，用好色，用好透，那画出来的界面，肯定杠杠滴。</p>
+<h1 id="颜色和透明基础知识"><a href="#颜色和透明基础知识" class="headerlink" title="颜色和透明基础知识"></a>颜色和透明基础知识</h1><p>Cocoa的颜色支持构建在Quartz的顶层，<code>NSColor</code>类提供了创建和操作颜色的接口，其他的类提供了颜色和颜色空间的管理，以及在UI上选择颜色的控件。</p>
+<p>关于OS X里面的颜色解析，颜色理论和颜色管理，还要看看<em>Color Management Overview</em>和<em>Color Programming Topics</em>，-，-要看的东西真是越来越多了，也不知道看完能不能成cocoa大师啊。</p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/cocoa/">cocoa</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2014/01/28/codes-of-stanford-lesson-1/" class="post-title">
+      斯坦福第一课里面MVC通信方式整理
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Jan 28 2014</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>前些天在iTunes U里面看到今年斯坦福更新了iOS7的课程，以前也看了部分不过也是由于各种原因，没有全部看完，所以打算这次顺着当美剧追了:P。</p>
+<p>Cocoa Drawing Guide那个也还在长线更新着，只是最近项目有点紧张（奇葩吧年前居然还紧张了）哈哈，大坑还是要自己填，不过还是短线写点东西了，表示我还健在XDDDD</p>
+<p>在cocoa上开发了一段时间以后对于第一课里面MVC涉及到的通信方法都有了一定的了解，刚好顺便就总结下了。</p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a> <a class="tag" href="/tags/cocoa/">cocoa</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2014/01/07/cocoa-drawing-guide-study-part-2/" class="post-title">
+      Cocoa Drawing Guide学习part2——坐标系和仿射变换
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Jan 7 2014</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>cocoa drawing guide学习的第二篇，预览了下，目测是坐标和变换（仿射变换），第一篇里面把coordinate想象成协调了。。。脑内老在用高达Seed里面的协调者（Coordinator）来脑补。。。于是老觉得怪怪的。。。今天终于想了想翻下词典，发现原来这个还有坐标的意思啊。。。。。。2b了啊-，-好了不扯那么多，正片开始了。</p>
+<p>PS：关于啥是仿射变换<a href="http://zh.wikipedia.org/wiki/仿射变换" target="_blank" rel="noopener">→点我点我←</a></p>
+<p>PPS：大家原谅下，其实part1只是想做读书笔记的，后来想了想还是写下记录下分享下，于是part1会比较粗糙。。。其实part2也很粗糙:P</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>mac应用里面窗口提供了一个用来绘图的坐标系，cocoa会把窗口移动、变化的情况处理好。每一个添加到窗口中的view都有一个自己的相对坐标系（原文是Local坐标系。。。难道叫菊部坐标系-，-不要不要XDDD），在绘制的时候只需要用view的相对坐标系，不需要和窗口的坐标系进行转换。当前已经有的坐标系可以用数学变化来修改。下面的内容就是讲cocoa怎么管理坐标系，并且使用仿射变换来处理绘图环境的。<br></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/cocoa/">cocoa</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+  </div>
+</div>
+
+<!-- Pagination -->
+<div class="container">
+  <div class="row">
+    <div class="col-lg-10 col-md-10 col-md-offset-1">
+      <ul class="pagination">
+          
+              <li class="previous">
+                <a href="/">
+                  <span class="symbol-left">&lt;</span>
+                  <span>PREV</span>
+                </a>
+              </li>
+          
+          
+            <li class="next">
+              <a href="/page/3/">
+                <span>NEXT</span>
+                <span class="symbol-right">&gt;</span>
+              </a>
+            </li>
+          
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

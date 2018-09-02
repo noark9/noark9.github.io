@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="POP Animation 和 layoutSubviews 的冲突"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">POP Animation 和 layoutSubviews 的冲突</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Jun 25 2016</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/iOS/">#iOS</a> <a class="tag" href="/tags/pop/">#pop</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h1><p>因为 Facebook 的 POP 框架用起来很舒服，于是一直慢慢来习惯了用 POP 做动画，最近做了一个很简单的让一个 Button 旋转的动画，程序却异常的崩溃了，崩溃的地方在 <code>-layoutSubviews</code> 这个地方，如下图目测，应该是因为动画的时候，触发了 <code>-layoutSubviews</code> 方法，于是崩溃，就像这样</p>
+<p><img src="/img/layoutsubviews-pop-crash.png" alt="Crash"></p>
+<p>并且在终端输出了这样的信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Jun 27 07:05:17  shenzhenren[5868] &lt;Error&gt;: CGAffineTransformInvert: singular matrix.</span><br><span class="line">Jun 27 07:05:17  shenzhenren[5868] &lt;Error&gt;: CGAffineTransformInvert: singular matrix.</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h1 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h1><p>我们先来看下关键的几处代码是怎么写的：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder &#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> initWithCoder:aDecoder];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.isShowAll = <span class="literal">NO</span>;</span><br><span class="line">        [<span class="keyword">self</span> loadShowAllButton];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)layoutSubviews &#123;</span><br><span class="line">    [<span class="keyword">super</span> layoutSubviews];</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.top = <span class="number">8.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.right = <span class="keyword">self</span>.width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)loadShowAllButton &#123;</span><br><span class="line">    <span class="keyword">self</span>.showAllButton = [[<span class="built_in">UIButton</span> alloc] init];</span><br><span class="line">    [<span class="keyword">self</span> addSubview:<span class="keyword">self</span>.showAllButton];</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.width = <span class="number">36.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.height = <span class="number">36.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.left = <span class="number">0.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.top = <span class="number">0.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.contentMode = <span class="built_in">UIViewContentModeCenter</span>;</span><br><span class="line">    [<span class="keyword">self</span>.showAllButton setImage:[<span class="built_in">UIImage</span> imageNamed:<span class="string">@"default-show-more-arrow"</span>] forState:<span class="built_in">UIControlStateNormal</span>];</span><br><span class="line">    [<span class="keyword">self</span>.showAllButton addTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(showAllButtonPushed:) forControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)showAllButtonPushed:(<span class="built_in">UIButton</span> *)sender &#123;</span><br><span class="line">    <span class="keyword">self</span>.isShowAll = !<span class="keyword">self</span>.isShowAll;</span><br><span class="line">    POPBasicAnimation *animation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayerRotation];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>.isShowAll) &#123;</span><br><span class="line">        animation.toValue = @M_PI;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        animation.toValue = @<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    [sender pop_removeAllAnimations];</span><br><span class="line">    [sender pop_addAnimation:animation forKey:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码并不复杂，我想要实现的东西就是在点击按钮的时候，让他旋转180度，再次点击的时候让他转回来</p>
+<p>那么根据上面代码，崩溃的过程其实是这样的：</p>
+<ol>
+<li>点击按钮，触发 POP 动画</li>
+<li>POP 的动画为 UIView 添加对应的 Transform，同时产生动画</li>
+<li>因为 UIView 添加了 Transform，所以 UIView 触发了需要重新计算 layout 的过程</li>
+<li>调用 <code>- (void)layoutSubviews</code> 重新计算布局</li>
+<li>因为 UIView 有 Transform 了，再通过 <code>-setFrame:(GRect)frame</code> 设置 UIView 的 frame 出现错误，参考<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIView_Class/index.html#//apple_ref/occ/instp/UIView/frame" target="_blank" rel="noopener">官方文档</a></li>
+</ol>
+<h1 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h1><p>既然找到了原因，那么我们就根据原因来跳坑吧，既然是触发了 View 重新计算布局，那么我们不要让他在这个父 View 触发即可，那么最简单粗暴的解决方法就是，创建一个新的 View 包裹住我们需要动画的 View 于是，这样修改</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)layoutSubviews &#123;</span><br><span class="line">    [<span class="keyword">super</span> layoutSubviews];</span><br><span class="line">    <span class="keyword">self</span>.showAllButtonContainerView.top = <span class="number">8.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.showAllButtonContainerView.right = <span class="keyword">self</span>.width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)loadShowAllButton &#123;</span><br><span class="line">    <span class="keyword">self</span>.showAllButtonContainerView = [[<span class="built_in">UIView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0.0</span>f, <span class="number">0.0</span>f, <span class="number">36.0</span>f, <span class="number">36.0</span>f)];</span><br><span class="line">    [<span class="keyword">self</span> addSubview:<span class="keyword">self</span>.showAllButtonContainerView];</span><br><span class="line">    <span class="keyword">self</span>.showAllButton = [[<span class="built_in">UIButton</span> alloc] init];</span><br><span class="line">    [<span class="keyword">self</span>.showAllButtonContainerView addSubview:<span class="keyword">self</span>.showAllButton];</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.width = <span class="number">36.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.height = <span class="number">36.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.left = <span class="number">0.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.top = <span class="number">0.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.contentMode = <span class="built_in">UIViewContentModeCenter</span>;</span><br><span class="line">    [<span class="keyword">self</span>.showAllButton setImage:[<span class="built_in">UIImage</span> imageNamed:<span class="string">@"default-show-more-arrow"</span>] forState:<span class="built_in">UIControlStateNormal</span>];</span><br><span class="line">    [<span class="keyword">self</span>.showAllButton addTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(showAllButtonPushed:) forControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实问题的原因还是没有好好阅读官方文档</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

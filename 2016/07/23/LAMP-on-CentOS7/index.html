@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="在 Cent OS 7 上搭建带着 PHP 7 和 Memcached 的 LAMP"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">在 Cent OS 7 上搭建带着 PHP 7 和 Memcached 的 LAMP</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Jul 23 2016</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/linux/">#linux</a> <a class="tag" href="/tags/php/">#php</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>最近公司增加了一台测试用的服务器，当然因为只是测试用，所以决定所有东西都装到一个服务器上，用来我们自己撸代码，发测试版功能，做点小实验神码的，等等等等……反正就是方便用吧，所以自己来试了下搭建一台完全的 LAMP 开发\测试环境，当然同样踩到了无数的坑</p>
+<h1 id="那我们来开始吧"><a href="#那我们来开始吧" class="headerlink" title="那我们来开始吧"></a>那我们来开始吧</h1><h2 id="Step-1-先搞个服务器"><a href="#Step-1-先搞个服务器" class="headerlink" title="Step.1 先搞个服务器"></a>Step.1 先搞个服务器</h2><p>那第一步，我们先搞个服务器吧，搞啥服务器呢，既然是测试用那就搞点不要钱的，或者方便的吧，这里就推荐大家试试用 AWS 或者自己机器上搭建虚拟机，比如 Vagrant 这样的开发平台也是可以的，这里，我们就用 AWS 了，反正可以免费一年，AWS 的优点是访问国外网站超快，缺点自然是国内访问超慢，当然大家用啥都可以的啦，这里假设我们已经有一台 Cent OS 7 的服务器了，并且假设你可以远程链接到这台服务器（比如 ssh）</p>
+<a id="more"></a>
+<h2 id="Setp-2-安装配置-LAMP"><a href="#Setp-2-安装配置-LAMP" class="headerlink" title="Setp.2 安装配置 LAMP"></a>Setp.2 安装配置 LAMP</h2><ul>
+<li>首先我们安装 Apache</li>
+</ul>
+<p>安装 Apache 很简单，只需要通过 <code>yum</code> 安装就可以了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install httpd</span><br></pre></td></tr></table></figure>
+<p>安装完成后，使用 <code>systemctl</code> 命令启动他，并设置为开机自动启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start httpd.service</span><br><span class="line">systemctl enable httpd.service</span><br></pre></td></tr></table></figure>
+<p>也可以通过 <code>systemctl status</code> 来查看服务是否正确的启动了，也可以到 <code>/var/log/httpd</code> 路径下看访问日志和错误日志来排查问题</p>
+<p>新的 Cent OS 已经装了 FirewallD 了，所以如果装了这个，我们还需要告诉 FirewallD 打开防火墙</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --permanent --zone=public --add-service=http</span><br><span class="line">firewall-cmd --permanent --zone=public --add-service=https</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+<ul>
+<li>接下来装 MySQL</li>
+</ul>
+<p>首先，我们要知道的是，MySQL 没有在 Cent OS 7 的软件源库里面，Cent OS 7 里面有对应的替代品 MariaDB，因为龟壳公司收购了 MySQL，大家怕万一将来 MySQL 闭源了，那不都跪了，于是就开了个分支自己开始做起 MariaDB 来了，这里一步我们还是手工添加 MySQL 的软件源来安装 MySQL 保证还是那个味道</p>
+<p>首先添加 MySQL 的软件源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>接下来分别安装 MySQL 的客户端和服务端</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install mysql-server mysql-client</span><br></pre></td></tr></table></figure>
+<p>安装完成后，使用 <code>mysql_secure_installation</code> 来完成 MySQL 的安装配置</p>
+<p>同样需要为 MySQL 配置防火墙</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --permanent --zone=public --add-service=mysql</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+<ul>
+<li>接下来我们安装 PHP 7</li>
+</ul>
+<p>跟 MySQL 类似，目前发行包的软件源里面是不包含 PHP 7 的，只包含了 PHP 5.x 的版本，所以为了安装 PHP 7 我们同样需要添加 PHP 7 的软件源，根据这几天的实验情况看，Remi 的 PHP 7 的软件包和插件比较完善，所以我们就先添加 Remi 的软件源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install scl-utils</span><br><span class="line">yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm</span><br><span class="line">yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm</span><br></pre></td></tr></table></figure>
+<p>添加完成软件源后，我们就可以安装 PHP 7 和各种常用的东西了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install php70 php70-php-mysqlnd php70-php-curl php70-php-simplexml</span><br><span class="line">yum install php70-php-devel php70-php-gd php70-php-json php70-php-mcrypt php70-php-mbstring php70-php-opcache php70-php-pear php70-php-pecl-apcu php70-php-pecl-geoip php70-php-pecl-imagick php70-php-pecl-json-post php70-php-pecl-memcache php70-php-pecl-memcached php70-php-pecl-xmldiff php70-php-pecl-zip php70-php-pspell php70-php-soap php70-php-tidy php70-php-xml php70-php-xmlrpc</span><br></pre></td></tr></table></figure>
+<p>接下来呢，这里其实还没装完，因为最初我是为了升级服务器 PHP 5.x 而装的 PHP 7，所以如果你的服务器已经装了 PHP 5.x 需要简单的升级下，那么在这里安装完成 PHP 7 的软件包以后删除 PHP 5.x 然后在安装 <code>php70-php</code> 这个包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum remove php, php-common</span><br></pre></td></tr></table></figure>
+<p>然后</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install php70-php</span><br></pre></td></tr></table></figure>
+<p>之后修改配置文件重启 Apache 就可以了，要注意的是，PHP 7 的配置文件放到了 <code>/etc/opt/remi/php70/</code> 路径下，PHP 7 的相关文件放到了 <code>/opt/remi/php70/root/lib64/php</code> 路径下</p>
+<p>好，这样，我们一个带着 PHP 7 的服务器就装好了，大家可以在上面自由玩耍享受 PHP 7 带来的性能提升了</p>
+<h2 id="Setp-3-安装-SASL-和-Memcached"><a href="#Setp-3-安装-SASL-和-Memcached" class="headerlink" title="Setp.3 安装 SASL 和 Memcached"></a>Setp.3 安装 SASL 和 Memcached</h2><p>首先 Memcached 大家都知道是什么东西了，那么我来说说 SASL 是什么鬼 SASL 全称 Simple Authentication and Security Layer 用来做安全机制验证的，说简单点，就是用这个东西，我们可以让我们的 Memcached 在访问前需要验证下用户名密码，另外 Memcached 的 Binary 接口比需要使用 SASL 验证，否则就会输出 <code>Writing an error: Unknown command</code> 的错误（然而在 PHP 5.x 下，却正常。。。所以这个问题研究了好会儿）。</p>
+<p>我们先安装 SASL</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">yum install cyrus-sasl-plain</span><br><span class="line">yum install cyrus-sasl-devel</span><br><span class="line">yum install cyrus-sasl</span><br><span class="line">yum install cyrus-sasl-lib</span><br><span class="line">yum install cyrus-sasl-gssapi</span><br><span class="line">yum install cyrus-sasl-md5</span><br></pre></td></tr></table></figure>
+<p>安装完成后，通过 <code>systemctl start saslauthd.service</code> 命令启动这个服务，接下来，我们需要创建一个用户通过 SASL 验证来访问 Memcached</p>
+<p>首先我们要修改 SASL 的配置来使用当前 <code>/etc/shadow</code> 中的用户账户以及密码来进行验证，所以我们修改 <code>/etc/sysconfig/saslauthd</code> 中的 <code>MECH=shadow</code> 告诉 SASL 使用系统的账户密码来验证，修改完后通过 <code>systemctl restart saslauthd.service</code> 重启 SASL 的进程</p>
+<p>可以通过下面的命令来验证用户是否可以正确的被验证了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/sbin/testsaslauthd -u username -p password</span><br></pre></td></tr></table></figure>
+<p>成功将会显示 <code>0: OK &quot;Success.&quot;</code>，要注意的是这里的 username 和 password 是需要能够正常登录系统的用户名和密码，也就是需要记录在 <code>/etc/shadow</code> 文件中</p>
+<p>接下来我们安装 Memcached 需要的 libevent</p>
+<p><code>yum install libevent libevent-devel</code></p>
+<p>再接下来，我们需要通过源代码编译安装 Memcached，因为默认在 yum 中的 Memcached 是没有开启 SASL 验证的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget http://memcached.googlecode.com/files/memcached-1.4.15.tar.gz</span><br><span class="line">tar zxvf memcached-1.4.15.tgz</span><br><span class="line">cd memcached-1.4.15</span><br><span class="line">./configure --enable-sasl --with-php-config=/opt/remi/php70/root/bin/php-config</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>这样我们的 Memcached 也编译并安装完成了，接下来为 Memcached 的服务添加 SASL 验证和防火墙规则</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">saslpasswd2 -a memcached -c 用来访问 memcached 的用户</span><br><span class="line">firewall-cmd --permanent --zone=public --add-port=11211/tcp</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+<p>接下来我们启动 Memcached</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/bin/memcached -d -u 用来访问 memcached 的用户 -p 11211 -m 512 -c 1024 -S</span><br></pre></td></tr></table></figure>
+<p>上面参数中 <code>-S</code> 就是告诉 memcached 需要开启 SASL 验证了</p>
+<h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>到此，开发环境的配置就结束了，大家愉快的玩耍吧，欢迎掷砖&gt;_&lt;</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

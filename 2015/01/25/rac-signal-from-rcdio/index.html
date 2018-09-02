@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="ReactiveCocoa 模式 —— Signals"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">ReactiveCocoa 模式 —— Signals</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Jan 25 2015</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/iOS/">#iOS</a> <a class="tag" href="/tags/RAC/">#RAC</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>在小伙伴们都玩了好久RAC之后，我才开始研究如何使用-，-思来想去发现这东西看上去似乎很复杂，用起来确实也很复杂，里面涉及到很多概念是常规iOS或是OS X开发过程中完全没用到过的，同时RAC也将函数式编程的思想带到了iOS开发中。</p>
+<p>在查找资料的过程中，找到了一个网站<a href="http://rcdp.io" target="_blank" rel="noopener">ReactiveCocoa Design Patterns</a>这个网站里面对RAC的一些基础观念进行了比较好的解释，所以为了让自己能更好的学习，就决定翻译翻译，也希望能对大家学习过程中有帮助。</p>
+<p>本文翻译自<a href="http://rcdp.io/Signal.html" target="_blank" rel="noopener">ReactiveCocoa Design Patterns</a></p>
+<p><strong>注意：</strong>下文中，为了方便大家理解，部分单词没有翻译，当然如果需要知道中文的，如下：</p>
+<ul>
+<li>signal：信号</li>
+<li>sequence：顺序序列</li>
+<li>stream：流</li>
+<li>pull-driven：拉驱动</li>
+<li>push-driven：推驱动</li>
+<li>value：值</li>
+<li>error：错误</li>
+<li>complete：完成</li>
+</ul>
+<h1 id="Signals"><a href="#Signals" class="headerlink" title="Signals"></a>Signals</h1><p>Signal是构造FRP程序最基础的砖块，一般来说，我们的程序组织一系列的signal，决定这些signal的值从何而来，signal之间如何连接，以及值如何在signal中传递。我们可以认为signal是一个管道，我们的应用程序是一个复杂的管道系统，将事件放入管道系统的输入端，从输出端得到结果。<br><a id="more"></a></p>
+<h2 id="ReactiveCocoa-中的-signals"><a href="#ReactiveCocoa-中的-signals" class="headerlink" title="ReactiveCocoa 中的 signals"></a>ReactiveCocoa 中的 signals</h2><p>ReactiveCocoa 2.x的框架中使用<code>RACStream</code>对signal进行了抽象和包装，一个stream可以传递<em>value</em>，<em>error</em>，<em>complete</em>三种值，在一个<code>RACStream</code>接收了<em>error</em>或者<em>complete</em>之后，那么就不会在传递任何发送给他的值了。</p>
+<p>Stream有两种类型，一种是push-driver的<code>RACSignal</code>，一种是pull-driven的<code>RACSequence</code>。</p>
+<ul>
+<li>push-driven：表示这个stream在创建的时候是没有值的，只有在将来（接收到网络请求，或是用户输入事件）的时候才会有值。</li>
+<li>pull-driven：表示这个stream在创建的时候就已经有值了，并且我们可以从stream中顺序的获取里面的值，在ReactiveCocoa中通常通过Cocoa的集合对象（比如NSArray，NSSet，NSDictionary或者NSIndexSet）创建。</li>
+</ul>
+<p>未来的ReactiveCocoa 3中将会废弃sequences，不过这是后话了。</p>
+<h2 id="RACSequence-lt-gt-RACSignal"><a href="#RACSequence-lt-gt-RACSignal" class="headerlink" title="RACSequence &lt;=&gt; RACSignal"></a><code>RACSequence</code> &lt;=&gt; <code>RACSignal</code></h2><p><code>RACSequence</code>和<code>RACSignal</code>可以相互转换，把<code>RACSequence</code>转换成<code>RACSignal</code>需要把sequence里面的值放到一个<code>RACScheduler</code>中，<code>RACScheduler</code>之后会把值顺序的推（push）到新创建的<code>RACSignal</code>中，就像下面这样：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RACSequence *sequence = [@[@<span class="number">1</span>, @<span class="number">2</span>, @<span class="number">3</span>] rac_sequence];</span><br><span class="line">RACSignal *signal = [sequence signalWithScheduler:[RACScheduler mainThreadScheduler]];</span><br></pre></td></tr></table></figure>
+<p><code>RACSignal</code>也可以通过几种中间类型转化为<code>RACSequence</code>，首先收集所有发送到这个signal的值，直到signal收到complete值，之后像下面这样转化：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RACSignal *signal = ...;</span><br><span class="line"><span class="built_in">NSArray</span> *buffer = [signal toArray];</span><br><span class="line">RACSequence *sequence = [buffer rac_sequence];</span><br></pre></td></tr></table></figure>
+<p>我们需要注意的是<code>-toArray</code>方法是阻塞的，他会阻塞当前线程直到signal收到complete值，但是这里我们不知道将来还会有多少值，所以这里可能会有问题。</p>
+<p>另外一种不等待complete值的方法把<code>RACSignal</code>成<code>RACSequence</code>的方法就是<code>-sequence</code>方法，这个方法创建一个内部使用<code>RACReplaySubject</code>的<code>RACSignalSequence</code>，这个内部对象拥有所有的传递到signal的值，并且当访问的时候，才会吧signal到现在为止收到的所有值转化成sequence，就像下面这样：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RACSignal *signal = ...;</span><br><span class="line">RACSequence *sequence = [signal sequence];</span><br></pre></td></tr></table></figure>
+<p>虽然说<code>-sequence</code>方法不会等待signal收到complete值，但是如果signal还没有收到任何值，那么依然会阻塞当前线程直到收到第一个值。</p>
+<p>一般来说，我们更多关注<code>RACSignal</code>因为他代表了将要到来的值，而<code>RACSequence</code>大多数情况下只是为了方便的在集合对象上使用sequence的操作。</p>
+<h2 id="Signal-的来源"><a href="#Signal-的来源" class="headerlink" title="Signal 的来源"></a>Signal 的来源</h2><p>一般程序中的大部分signal是衍生（derived）得到的signal，也就是说signal大部分是通过对别的signal进行操作转化而来的，比如下面这个：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">RACSignal *existingSignal;</span><br><span class="line">RACSignal *newSignal = [[existingSignal map:^ <span class="keyword">id</span> (<span class="keyword">id</span> value) &#123;</span><br><span class="line">    <span class="keyword">return</span> someAction(value);</span><br><span class="line">&#125;] ignore: <span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
+<p>上面的例子里面<code>newSingal</code>发送<code>someAction(value)</code>的结果作为值，并把<code>nil</code>的值过滤掉，这里实际上创建了两个signal，第一个是通过<code>-map:</code>方法创建的，第二个是通过对第一个创建的signal调用<code>-ignore:</code>方法创建的，这些方法都会创建新的signal。</p>
+<p>但是呢，最初的signal是从哪里来的呢？如何像一个信号里面发送值呢？我们来看下面的内容</p>
+<h3 id="KVO-监听"><a href="#KVO-监听" class="headerlink" title="KVO 监听"></a>KVO 监听</h3><p>在<a href="http://rcdp.io/ViewModel.html" target="_blank" rel="noopener">ViewModel</a>（还未翻译）那篇里面看到过的一个例子是通过KVO的监听器来创建signal：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RACSignal *signal = RACObserve(object, propertyToObserve);</span><br></pre></td></tr></table></figure>
+<p>当<code>object</code>的<code>propertyToObserve</code>发生变化的时候signal会收到一个值，<code>RACObserve</code>是一个展开为<code>-rac_valuesForKeyPath:observer:</code>的宏。这里有一个要注意的地方是：这个红，总是使用<code>self</code>作为监听者，所以，如果在block里面使用这个宏的话，要注意循环引用的问题。</p>
+<h3 id="UIKit-的-Category-们"><a href="#UIKit-的-Category-们" class="headerlink" title="UIKit 的 Category 们"></a>UIKit 的 Category 们</h3><p>ReactiveCocoa提供了一组UIKit的Category为用户事件来产生signal。说起UIKit 的强大，正如大家所知，KVO功不可没。（感谢热心评论的小伙伴）</p>
+<h3 id="RACSubject"><a href="#RACSubject" class="headerlink" title="RACSubject"></a>RACSubject</h3><p><code>RACSubject</code>是连接rac代码和非rac代码的桥梁，<code>RACSubject</code>是一个<code>RACSignal</code>（继承而来）但是可以手动push值到里面，就像下面这样：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">RACSubject *subject = [RACSubject subject];</span><br><span class="line">RACSignal *derived = [subject map:^(<span class="keyword">id</span> value) &#123;</span><br><span class="line">    <span class="keyword">return</span> someAction(value);</span><br><span class="line">&#125;];</span><br><span class="line">[subject sendNext:@YES]; <span class="comment">// 这里就把YES的值push给subject，然后push给derived这个signal了</span></span><br></pre></td></tr></table></figure>
+<h3 id="动态-signal-们"><a href="#动态-signal-们" class="headerlink" title="动态 signal 们"></a>动态 signal 们</h3><p>动态signal的背后是一个叫<code>RACDynamicSignal</code>的私有类，因为这样的signal是开发者创建的，所以叫“动态”的signal。我们可以吧任何的异步动作转换为一个signal，就像下面这样：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">RACSignal *signal = [RACSignal createSignal:^RACDisposable *(<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber) &#123;</span><br><span class="line">    <span class="keyword">id</span> operation = asynchronusAction(^(<span class="keyword">id</span> asyncActionResult, <span class="built_in">NSError</span> *error) &#123;</span><br><span class="line">        <span class="keyword">if</span> (error) &#123;</span><br><span class="line">            [subscriber sendError:error];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            [subscriber sendNext:asyncActionResult];</span><br><span class="line">            [subscriber sendCompleted];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> [RACDisposable disposableWithBlock:^&#123;</span><br><span class="line">        [operation cancel];</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p><code>asynchronusAction()</code>需要一个block参数。</p>
+<p>这里是这样的：当第二个signal订阅第一个signal的时候将会调用我们传入给<code>-createSignal:</code>的block，并且把<code>subscriber</code>作为一个值传递给了下一个signal（<code>RACSignal</code>也实现了<code>RACSubscriber</code>接口），要注意的是，这个时候<code>asynchronusAction()</code>并没有被真正的调用，只有当有对象订阅这个动态signal的时候才会调用，<strong>在block定义的行为，只有在被订阅的时候发生</strong>，我们也可以这么认为，动态signal只有在有对象订阅它的时候才会打开。<br>（这一段在原文里面是放到了Subscription（订阅）那一节，但是看了一下觉得实际上应该是放在这里的内容）</p>
+<p>不用怕上面的”disposable”的内容，这里简单说下：在异步的操作能被取消的情况，我们需要在signal被销毁/释放（在RAC里面就是disposed）时候取消这个操作，将来也将会详细的说。</p>
+<h2 id="订阅"><a href="#订阅" class="headerlink" title="订阅"></a>订阅</h2><p>在上面的一个例子里面我们见过“订阅”了，这是RAC里面signal的基础设置，signal通过<strong>订阅</strong>相互连接起来，下面让我们假装需要通过map来从一个signal创建另一个新的signal：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RACSignal *mapSignal = [signal map:^<span class="keyword">id</span> (<span class="keyword">id</span> value) &#123;</span><br><span class="line">    <span class="keyword">return</span> someAction(value);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p>另一个需要注意的是订阅的block会为每个订阅者执行一次，所以如果我们再创建另一个源自上面signal的signal：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RACSignal *anotherMapSignal = [signal map:^<span class="keyword">id</span> (<span class="keyword">id</span> value) &#123;</span><br><span class="line">    <span class="keyword">return</span> anotherAction(value);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p>这样会对原来的signal创建另一个订阅并且会再一次调用订阅的block，但是在一些特定的情况下，我们不希望异步的行为被多次的执行，<code>RACConnection</code>是解决这个问题的方法，简单点说，<code>RACConnection</code>可以在订阅者之间通过他内部的<code>RACSubject</code>来分享没有送出去的signal，后面会详细说吧。。。</p>
+<p>严格的说，上面的例子，没有一个发生实际的订阅，因为<code>-map:</code>内部只是创建了一个动态signal，并且订阅原来的signal只有在通过订阅被<code>-map:</code>创建的signal的时候才会发生。这也意味着订阅是按照订阅链顺序反向发生的，为了触发这个订阅链，我们必须真正的去直接订阅一个signal，就像下面这两种形式：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[anotherMapSignal subscribeNext:^(<span class="keyword">id</span> value) &#123;</span><br><span class="line">    <span class="comment">// 代码</span></span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RAC(object, property) = anotherMapSignal;</span><br></pre></td></tr></table></figure>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

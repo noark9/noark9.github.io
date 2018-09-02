@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="noark9 的开发小笔记"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">noark9 的开发小笔记</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Home Page Post List -->
+<div class="container">
+  <div class="row">
+    <div class="col-lg-10 col-md-10 col-md-offset-1">
+      
+        <div class="post-item-wrapper">
+  <a href="/2017/07/21/EffectiveObjectiveCNote2/" class="post-title">
+      Effective Objective-C 2.0 Tips 总结 Chapter 3 &amp; Chapter 4
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Jul 21 2017</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="Effective-Objective-C-2-0-Tips-总结-Chapter-3-amp-Chapter-4"><a href="#Effective-Objective-C-2-0-Tips-总结-Chapter-3-amp-Chapter-4" class="headerlink" title="Effective Objective-C 2.0 Tips 总结 Chapter 3 &amp; Chapter 4"></a>Effective Objective-C 2.0 Tips 总结 Chapter 3 &amp; Chapter 4</h1><h2 id="Chapter-3-接口与-API-设计"><a href="#Chapter-3-接口与-API-设计" class="headerlink" title="Chapter 3 接口与 API 设计"></a>Chapter 3 接口与 API 设计</h2><ul>
+<li><p>Tips 15 使用前缀避免明明空间冲突</p>
+<ul>
+<li>Objective-C 没有命名空间，所以我们在起名时要设法避免命名冲突</li>
+<li>避免命名冲突的方法就是使用前缀</li>
+<li>应用中的所有名称都需要加前缀（包括实现文件中的全局变量和纯 C 函数）</li>
+</ul>
+</li>
+<li><p>Tips 16 提供“全能（designated）初始化方法”</p>
+<ul>
+<li>一个会被所有初始化方法调用到的初始化方法</li>
+<li>当底层数据存储机制变化时，只需要修改这个方法就可以了，不需要改动其他初始化方法</li>
+<li>如果超类的全能初始化方法不适用于子类，或是与超类不同，那么需要覆盖这个超类方法</li>
+<li>子类的全能初始化方法都应该调用超类的对应方法，逐级向上</li>
+</ul>
+</li>
+</ul></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a> <a class="tag" href="/tags/Objective-C/">Objective-C</a> <a class="tag" href="/tags/Effective-Objective-C/">Effective Objective-C</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2017/02/20/Develop-iOS-App-with-VIM/" class="post-title">
+      征服恐惧！用 Vim 写 iOS App
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Feb 20 2017</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><p>我们都知道 Vim 和 Emacs 都是文本编辑器中的上古神器，你也许用 ctags，cscopes 配合 Vim 完成过大型 C 或者 C++ 的开发，你也许配合过其他插件，完成过 JavaScript，python 代码的开发，但是很少有人试过 iOS app 的开发吧，毕竟 iOS 的框架包含了很多东西，以及 Objective-C 天生很长的 API 名字，让我们没办法把此神器用起来，今天我就来给大家讲下我是怎么使用 Vim 开发 iOS App 的，当然 Emacs 也可以</p>
+<h1 id="begin"><a href="#begin" class="headerlink" title="begin"></a>begin</h1><p>使用 Vim 开发 iOS App 并不是特殊的爱好，而是被 Xcode 8 活生生的逼的，刚开始更新了 Xcode 8 以后，Xcode 8 把第三方插件给屏蔽了，导致没有 XVim 给我用了，没有 XVim 以后，发现异常不顺手，于是尝试用了一段时间的 AppCode，不得不说 AppCode 是一个非常好的 IDE，但是他有个很大的缺点，那就是 Java，JetBrain 家的东西都很不错，唯一缺点就是基于 Java，整个平台都略慢，然后我在不断的 google 过程中，发现了有人竟不知何谓恐惧，竟然使用 Vim 开发 iOS App，最后我也学会了这个新姿势 XDDDD</p>
+<p>不过目前，只支持 Objective-C 代码的开发，swift 的话，没有解决工程文件自动补全的问题，因为目前大家使用的流行的 swift 自动补全工具 SourceKitten 并没有支持 workspace 所以暂时还没用起来</p>
+<p>以及，目前不支持调试，因为发现 Vim 对调试的支持确实好糟糕…</p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a> <a class="tag" href="/tags/vim/">vim</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2016/11/28/EffectiveObjectiveCNote1/" class="post-title">
+      Effective Objective-C 2.0 Tips 总结 Chapter 1 &amp; Chapter 2
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Nov 28 2016</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="Effective-Objective-C-2-0-Tips-总结-Chapter-1-amp-Chapter-2"><a href="#Effective-Objective-C-2-0-Tips-总结-Chapter-1-amp-Chapter-2" class="headerlink" title="Effective Objective-C 2.0 Tips 总结 Chapter 1 &amp; Chapter 2"></a>Effective Objective-C 2.0 Tips 总结 Chapter 1 &amp; Chapter 2</h1><p>下面只是对读到的所有 Tips 结合我平时开发中遇到的问题进行总结，每一个 Tips 和书中的每一条对应，本文的目的是去掉书中的大部分讨论的内容，让人能够马上使用这些 Tips，建议阅读过原书后食用更佳。</p>
+<h2 id="Chapter-1-熟悉-Objective-C"><a href="#Chapter-1-熟悉-Objective-C" class="headerlink" title="Chapter 1 熟悉 Objective-C"></a>Chapter 1 熟悉 Objective-C</h2><ul>
+<li><p>Tips 1 Objective-C 的起源</p>
+<ul>
+<li>Objective-C 是从 C 语言演化而来，有 C 的一些基础会有很大帮助</li>
+</ul>
+</li>
+<li><p>Tips 2 头文件中减少引用</p>
+<ul>
+<li>减少在类的头文件中 import 其他头文件，如果使用其他类，那么使用<code>@class ClassName;</code>来进行<strong>Forward Declaring</strong></li>
+<li>对于协议，每个协议放到对应的头文件，使用时候引用</li>
+<li>对于委托协议（比如 <code>UITableView</code> 和 <code>UITableViewDelegate</code>）因为只有与委托类放在一起才有意义，所以就不用单独分离头文件，应该放到定义 <code>UITableView</code> 的头文件中</li>
+</ul>
+</li>
+</ul></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a> <a class="tag" href="/tags/Objective-C/">Objective-C</a> <a class="tag" href="/tags/Effective-Objective-C/">Effective Objective-C</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2016/07/23/LAMP-on-CentOS7/" class="post-title">
+      在 Cent OS 7 上搭建带着 PHP 7 和 Memcached 的 LAMP
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Jul 23 2016</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>最近公司增加了一台测试用的服务器，当然因为只是测试用，所以决定所有东西都装到一个服务器上，用来我们自己撸代码，发测试版功能，做点小实验神码的，等等等等……反正就是方便用吧，所以自己来试了下搭建一台完全的 LAMP 开发\测试环境，当然同样踩到了无数的坑</p>
+<h1 id="那我们来开始吧"><a href="#那我们来开始吧" class="headerlink" title="那我们来开始吧"></a>那我们来开始吧</h1><h2 id="Step-1-先搞个服务器"><a href="#Step-1-先搞个服务器" class="headerlink" title="Step.1 先搞个服务器"></a>Step.1 先搞个服务器</h2><p>那第一步，我们先搞个服务器吧，搞啥服务器呢，既然是测试用那就搞点不要钱的，或者方便的吧，这里就推荐大家试试用 AWS 或者自己机器上搭建虚拟机，比如 Vagrant 这样的开发平台也是可以的，这里，我们就用 AWS 了，反正可以免费一年，AWS 的优点是访问国外网站超快，缺点自然是国内访问超慢，当然大家用啥都可以的啦，这里假设我们已经有一台 Cent OS 7 的服务器了，并且假设你可以远程链接到这台服务器（比如 ssh）</p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/linux/">linux</a> <a class="tag" href="/tags/php/">php</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2016/07/08/AutoLayout-2-IB-Tricks/" class="post-title">
+      iOS Autolayout 介绍 2 Interface Builder 技巧
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Jul 8 2016</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>上一期，介绍了一下 Autolayout 的一些基本做法，以及 iOS 上 AutoLayout 的思想和简单的原理介绍，有同学给我建议继续出下一期，这里，我们就来继续第二期吧，这一期我们依然停留在 Interface Builder（后面简写 IB）上，介绍我在工作中遇到的一些问题，以及依赖 IB 是如何解决的，也不会涉及很多代码。</p>
+<h1 id="小技巧篇"><a href="#小技巧篇" class="headerlink" title="小技巧篇"></a>小技巧篇</h1><h2 id="预览功能"><a href="#预览功能" class="headerlink" title="预览功能"></a>预览功能</h2><p>有时候，我们在拖拽完成布局后，总想看看效果怎么办呢？IB 给我们提供了预览功能，在 Assistant 编辑器中文件选择 preview 就可以看到 IB 布局后界面的预览效果了，而且可以添加多个设备，以及添加横屏和竖屏的效果。</p>
+<p><img src="/img/al2/al2.IB.preview.png" alt="选择预览"></p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a> <a class="tag" href="/tags/AutoLayout/">AutoLayout</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2016/06/25/layoutSubview-With-POP-Animation/" class="post-title">
+      POP Animation 和 layoutSubviews 的冲突
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Jun 25 2016</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h1><p>因为 Facebook 的 POP 框架用起来很舒服，于是一直慢慢来习惯了用 POP 做动画，最近做了一个很简单的让一个 Button 旋转的动画，程序却异常的崩溃了，崩溃的地方在 <code>-layoutSubviews</code> 这个地方，如下图目测，应该是因为动画的时候，触发了 <code>-layoutSubviews</code> 方法，于是崩溃，就像这样</p>
+<p><img src="/img/layoutsubviews-pop-crash.png" alt="Crash"></p>
+<p>并且在终端输出了这样的信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Jun 27 07:05:17  shenzhenren[5868] &lt;Error&gt;: CGAffineTransformInvert: singular matrix.</span><br><span class="line">Jun 27 07:05:17  shenzhenren[5868] &lt;Error&gt;: CGAffineTransformInvert: singular matrix.</span><br></pre></td></tr></table></figure></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a> <a class="tag" href="/tags/pop/">pop</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2016/06/04/autolayout-1/" class="post-title">
+      iOS Autolayout 介绍
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Jun 4 2016</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>曾经 iPhone 和 iPad 的屏幕的逻辑分辨率只有唯一的一个大小，所以在 iOS 上开发应用是非常幸福的，我们不需要面对大量的屏幕尺寸和分辨率，但是随着 iPhone5，6，6 plus，iPad Pro 的出现，以及 iOS 上提供的分屏多任务的支持，应对不同分辨率的布局在现在 iOS 开发中已经变的非常重要，在 iOS 上常用的布局方式有下面几种：</p>
+<ul>
+<li>代码布局，在 <code>- layoutSubview</code> 的时候调整每个元素的位置、大小实现 UI 的布局</li>
+<li><code>UIViewAutoresizing</code> 通过设置一系列的开关决定每个 view 在父 view 发生变化时如何处理，这种方式一般会和代码布局的方式相配和完成比较复杂的 UI 布局</li>
+<li>Autolayout，也是今天的主角，通过设置元素之间的关系来决定每个 view 的位置</li>
+</ul>
+<h1 id="布局解决的是什么问题"><a href="#布局解决的是什么问题" class="headerlink" title="布局解决的是什么问题"></a>布局解决的是什么问题</h1><p>Autolayout 要解决的问题是布局的问题，也就是 UI 上面每个元素的位置问题，在使用代码布局的时代我们在 <code>- viewDidLoad</code> 方法中设置每个元素的初始位置，在 <code>- layoutSubviews</code> 方法中，解决父 view 发生变化时界面上各个元素应该如何再次布局的问题，同时方便我们会配合 <code>UIViewAutoresizing</code> 的开关来简化部分代码。</p>
+<p>布局，要解决的问题就是 UI 上每个元素应该如何放置，他们的大小，以及绝对的位置在哪里，并且在 UI 发生变化，屏幕发生变化时，应如何应对。不论是通过代码布局，还是通过 Autolayout 布局，我们要做的都是告诉系统，每个元素在哪里，以及元素的宽和高。</p>
+<p>Autolayout 和代码布局的区别是，Autolayout 通过告诉布局引擎每个元素之间的相对位置（也就是元素之间的关系）让布局引擎推断出每个元素的绝对位置和元素大小并告诉系统如何显示，代码布局则是每次直接告诉系统每个元素的绝对位置和大小。</p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a> <a class="tag" href="/tags/AutoLayout/">AutoLayout</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2016/06/02/video-rendering-with-memory/" class="post-title">
+      内存拷贝渲染视频的研究
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Jun 2 2016</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="内存拷贝渲染视频"><a href="#内存拷贝渲染视频" class="headerlink" title="内存拷贝渲染视频"></a>内存拷贝渲染视频</h1><p>这里说的视频渲染是指通过 <code>CVPixelBufferRef</code> 获取 <code>CGImageRef</code> 对象在 UI 上进行渲染的过程。</p>
+<p>大家都知道视频渲染是一个非常麻烦的过程，一般来说我们会通过将 <code>CVPixelBufferRef</code> 转换为 <code>CIImage</code> 再将 <code>CIImage</code> 对象转换为 <code>CGImageRef</code> 来完成视频的渲染，其中 <code>CIImage</code> 渲染到 <code>CGImageRef</code> 的过程将会需要到 <code>CIContext</code> 的 <code>- render:toBitmap:rowBytes:bounds:format:colorSpace:</code> 方法来实现，但是在实际使用过程中发现，在 iOS 9.0 系统上，使用这个方法渲染视频时会出现内存泄漏的问题（长时间调试发现似乎是系统的问题）于是花了很多时间来找寻如何绕过 <code>CIContext</code> 来进行视频渲染，最终找到了直接内存拷贝进行视频渲染的方法，也是最为快速的方法。</p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2015/08/15/ios-design-mark/" class="post-title">
+      对切图标注的思考
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Aug 15 2015</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><p>本文仅作为个人学习记录使用，也欢迎在<a href="http://creativecommons.org/licenses/by-nc/4.0/deed.zh_TW" target="_blank" rel="noopener">许可协议</a>范围内转载或使用，请尊重版权并且保留原文链接，谢谢您的理解合作。如果您觉得本站对您能有帮助，您可以使用<a href="http://noark9.github.io/atom.xml" target="_blank" rel="noopener">RSS</a>方式订阅本站，这样您将能在第一时间获取本站信息。</p>
+<h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>为什么写这个呢，在开发了一段时间的客户端以后，发现在还原设计稿的时候，收到的标注搞总是无法传达出设计师的心意，总需要自己再去丈量设计师给的设计图，另外前段时间，知乎专栏上这篇文章似乎略火<a href="http://zhuanlan.zhihu.com/aegeank/20101849?utm_campaign=rss&amp;utm_medium=rss&amp;utm_source=rss&amp;utm_content=title" target="_blank" rel="noopener">做一份让工程师泪流满面的标注</a>，当时看了看，觉得很不错啊，然后发给我司设计师大人们看了，我司设计师跟我说，nonono，工作量略大，我在仔细看看了后觉得确实，一个设计稿需要做三个标注，那是多蛋疼的事情啊-，-但是作为一个不断上进的码农，于是在开发之余不断的思考，决定写个文章告诉设计师，我是怎么想的，按照我的想法来标注-，-目的是从根本上解决这个问题。。。。。。</p>
+<p>那么我们的目的就是：</p>
+<ul>
+<li>把我们怎么用代码画界面，告诉设计师们</li>
+<li>减少设计师和攻城狮之间无必要的交流</li>
+<li>帮助设计师们用最少的成本做出让码农们泪流满面的标注稿</li>
+</ul></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a> <a class="tag" href="/tags/设计/">设计</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2015/02/18/rac-scheduler-from-rcdpio/" class="post-title">
+      ReactiveCocoa 模式 —— RACScheduler
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Feb 18 2015</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo">No Post Excerpt</div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a> <a class="tag" href="/tags/RAC/">RAC</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+  </div>
+</div>
+
+<!-- Pagination -->
+<div class="container">
+  <div class="row">
+    <div class="col-lg-10 col-md-10 col-md-offset-1">
+      <ul class="pagination">
+          
+          
+            <li class="next">
+              <a href="/page/2/">
+                <span>NEXT</span>
+                <span class="symbol-right">&gt;</span>
+              </a>
+            </li>
+          
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

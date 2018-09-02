@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Effective Objective-C 2.0 Tips 总结 Chapter 1 &amp; Chapter 2"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Effective Objective-C 2.0 Tips 总结 Chapter 1 &amp; Chapter 2</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Nov 28 2016</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/iOS/">#iOS</a> <a class="tag" href="/tags/Objective-C/">#Objective-C</a> <a class="tag" href="/tags/Effective-Objective-C/">#Effective Objective-C</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="Effective-Objective-C-2-0-Tips-总结-Chapter-1-amp-Chapter-2"><a href="#Effective-Objective-C-2-0-Tips-总结-Chapter-1-amp-Chapter-2" class="headerlink" title="Effective Objective-C 2.0 Tips 总结 Chapter 1 &amp; Chapter 2"></a>Effective Objective-C 2.0 Tips 总结 Chapter 1 &amp; Chapter 2</h1><p>下面只是对读到的所有 Tips 结合我平时开发中遇到的问题进行总结，每一个 Tips 和书中的每一条对应，本文的目的是去掉书中的大部分讨论的内容，让人能够马上使用这些 Tips，建议阅读过原书后食用更佳。</p>
+<h2 id="Chapter-1-熟悉-Objective-C"><a href="#Chapter-1-熟悉-Objective-C" class="headerlink" title="Chapter 1 熟悉 Objective-C"></a>Chapter 1 熟悉 Objective-C</h2><ul>
+<li><p>Tips 1 Objective-C 的起源</p>
+<ul>
+<li>Objective-C 是从 C 语言演化而来，有 C 的一些基础会有很大帮助</li>
+</ul>
+</li>
+<li><p>Tips 2 头文件中减少引用</p>
+<ul>
+<li>减少在类的头文件中 import 其他头文件，如果使用其他类，那么使用<code>@class ClassName;</code>来进行<strong>Forward Declaring</strong></li>
+<li>对于协议，每个协议放到对应的头文件，使用时候引用</li>
+<li>对于委托协议（比如 <code>UITableView</code> 和 <code>UITableViewDelegate</code>）因为只有与委托类放在一起才有意义，所以就不用单独分离头文件，应该放到定义 <code>UITableView</code> 的头文件中</li>
+</ul>
+</li>
+</ul>
+<a id="more"></a>
+<ul>
+<li><p>Tips 3 使用字面量</p>
+<ul>
+<li>对于 <code>NSString</code>，<code>NSNumber</code>，<code>NSDictionary</code> 和 <code>NSArray</code>  使用类似 <code>@&quot;String&quot;</code>，<code>@1</code>，<code>@[]</code> 和 <code>@{}</code> 不要使用等价方法</li>
+</ul>
+</li>
+<li><p>Tips 4 使用类型常量</p>
+<ul>
+<li><p>定义常量时，使用类型常量不要使用 <code>#define</code>，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 使用如下的方式定义</span><br><span class="line">static const NSInteger kInteger = 1;</span><br><span class="line">// 而不是</span><br><span class="line">#define SOME_INTEGER 1</span><br></pre></td></tr></table></figure>
+<p>这样可以给编译器类型信息，在编译时和开发时能够进行类型检查</p>
+</li>
+<li>每一个 m 文件都是一个编译单元</li>
+<li>使用<code>static</code> 声明表示在本编译单元有效，若需要将变量放到全局有效，那么需要使用 <code>extern</code></li>
+<li>使用 <code>const</code> 表示常量不会被修改</li>
+</ul>
+</li>
+<li><p>Tips 5 使用枚举表示状态，选项，状态码</p>
+<ul>
+<li>使用 <code>NS\_ENUM</code> 宏定义枚举，因为枚举是按顺序的，也就是枚举值是1，2，3…… 这样的</li>
+<li>使用 <code>NS\_OPTION</code> 定义选项，因为选项是按位的，也就是选项是通过 <code>1 &lt;&lt; 0</code>，<code>1 &lt;&lt; 1</code> 这样来定义的，表示1右移</li>
+</ul>
+</li>
+</ul>
+<h2 id="Chapter-2-对象，消息，运行时"><a href="#Chapter-2-对象，消息，运行时" class="headerlink" title="Chapter 2 对象，消息，运行时"></a>Chapter 2 对象，消息，运行时</h2><ul>
+<li><p>Tips 6 理解属性</p>
+<ul>
+<li>使用属性，而不是实例变量，在代码中使用点(<code>.</code>)操作符访问属性</li>
+<li>属性会生成对应的实例变量，一般是属性名前加下划线，也可以在类的实现代码中通过 <code>@synthesize</code> 来指定，例如：<code>@synthesize firstName = _firstName</code></li>
+<li>使用 <code>@dynamic</code> 告诉编译器不需要生成对应的getter 和 setter</li>
+<li>属性的 attribute 会影响编译器生成的代码<ul>
+<li>atomic / nonatomic，原子性，一般我们都使用 <code>nonatomic</code> 因为 iOS 的属性锁开销很大，另外 <code>atomic</code> 并不能保证线程安全</li>
+<li>readwrite / readonly，读写或是只读</li>
+<li>内存管理要注意的<ul>
+<li>assign，简单类型直接赋值</li>
+<li>strong，表示持有</li>
+<li>weak，不持有，在对象被释放时属性将会变成 <code>nil</code></li>
+<li>unsafe_unretained，不持有，在对象被释放时属性不会变成 <code>nil</code></li>
+<li>copy，设置属性时会调用对象的 <code>-copy</code> 方法获得新的对象，建议所有不可变的 <code>NSString</code>，<code>NSArray</code>，<code>NSDictionary</code> 都使用这个方法，可变的类型不可以使用这个方法</li>
+<li>getter=name / setter=name，指定 getter 和 setter 方法的名字</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Tips 7 对象内部直接访问实例变量，设置时通过属性方法</p>
+<ul>
+<li>直接访问实例变量减少方法调用消耗</li>
+<li>设置通过属性方法，调用实际的 setter，能够保证写入控制和 KVO 的触发</li>
+<li>可以在 getter 和 setter 方法中加入断点方便调试</li>
+<li>惰性初始化的变量，因为需要需要重写 getter 方法，所以不能使用直接访问实例变量来访问</li>
+</ul>
+</li>
+<li><p>Tips 8 对象相等</p>
+<ul>
+<li><code>==</code> 只是比较对象指针是否相等，深层的比较需要使用 <code>-isEqual:</code> 方法</li>
+<li>如果 <code>-isEqual:</code> 返回返回真，那他们的 <code>-hash</code> 方法要返回同一个值，但是 <code>-hash</code> 方法返回同一个值的两个对象 <code>-isEqual:</code> 不一定为真</li>
+<li><code>-hash</code> 方法用作在集合类型中计算索引，如果所有对象的这个方法都返回同一个值，那么在集合中检索对象性能会很差，这个方法应该使用计算速度快，并且不容易碰撞的方法实现</li>
+<li>有特定相等判断方法的对象，优先使用特定相等判断方法，可以减少调用次数和对对象进行类型检查（例如 <code>NSString</code> 的 <code>-isEqualToString:</code> 方法）</li>
+<li>放入集合对象中的对象，需要保证 <code>-hash</code> 方法得到的值不会变，如果放入集合后，修改集合内对象导致 <code>-hash</code> 的值发生变化，那么集合对象是不会知道 <code>-hash</code> 值有变化，并且将来会出现奇怪的错误</li>
+</ul>
+</li>
+<li><p>Tips 9 类簇</p>
+<ul>
+<li>类簇很有用，可以把实现细节隐藏在抽象的基类中</li>
+<li>对于使用到类簇的对象，需要使用 <code>-isKindOfClass:</code> 来判断，不可使用 <code>[object class] == [Class class]</code> 或者 <code>-isMemberOfClass:</code> 来判断</li>
+<li>若要继承类簇中的类，那么需要根据文档实现对应的方法</li>
+</ul>
+</li>
+<li><p>Tips 10 Associated Object</p>
+<ul>
+<li>可以为已有的对象创建新的属性</li>
+<li>设置方法<ul>
+<li><code>void objc\_setAssociatedObject(id object, void *key, id value, objc\_AssociationPolicy policy)</code></li>
+<li><code>id objc\_getAssociatedObject(id object, void *key)</code></li>
+<li><code>id objc\_removeAssociatedObject(id object)</code></li>
+</ul>
+</li>
+<li>关联类型和属性的对应（上面 policy 的值）<ul>
+<li>OBJC_ASSOCIATION_ASSIGN：assign</li>
+<li>OBJC_ASSOCIATION_RETAIN_NONATOMIC：nonatomic, retain</li>
+<li>OBJC_ASSOCIATION_RETAIN：retain</li>
+<li>OBJC_ASSOCIATION_COPY_NONATOMIC：nonatomic, copy</li>
+<li>OBJC_ASSOCIATION_COPY：copy</li>
+</ul>
+</li>
+<li>key 的值，使用一个 opaque pointer，一般来说使用静态全局变量</li>
+</ul>
+</li>
+<li><p>Tips 11 理解 <code>objc\_msgSend</code> 的作用</p>
+<ul>
+<li>Objective-C 中所有的方法，都是 C 函数</li>
+<li>给某个对象的消息全部都是动态发送的，如下<ul>
+<li><code>id returnValue = [someObject messageName:parameter]</code></li>
+<li>编译后，将会使用 <code>objc\_msgSend</code> 函数处理消息发送，得到 <code>id returnValue = objc_msgSend(someObject, @selector(messageName:), parameter)</code></li>
+<li><code>objc\_msgSend</code> 会去 <code>someObject</code> 的方法列表中对应的函数，如果找不到，那么沿着继承体系继续找，还是找不到，那么会进行消息转发操作（在 Tips 12 讲解）</li>
+</ul>
+</li>
+<li>Objective-C 的运行时已经做了很多保证让这套机制性能很好<ul>
+<li>其中一个优化就是尾调用优化，Objective-C 的每个对象的方法都是 C 方法，并且有和 <code>objc\_msgSend</code> 一样的原型，这样在 <code>objc\_msgSend</code> 从对象的方法列表中找到对应函数时，可以直接跳转过去，不需要重新在调用堆栈中插入新的栈帧</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Tips 12 理解消息转发</p>
+<ul>
+<li>因为 Objective-C 使用运行时来决定具体调用的方法，所以在运行之前是不知道一个对象是否能响应特点方法的</li>
+<li>消息转发是在一个对象收到无法解读的消息时触发的机制</li>
+<li>消息转发的过程<ul>
+<li>第一步，进行动态方法解析——询问接收者，所属的类，看是否能动态添加方法，来处理未知的 selector</li>
+<li>第二步，第一步无法处理这个 selector 的话进行消息转发——首先，让接收者看看是否有对象能处理这个消息，如果有，那么丢给他处理；如果没有，那么运行时会把所有和消息相关的东西放到一个 <code>NSInvocation</code> 对象里面，最后再给接收者一次处理的机会</li>
+</ul>
+</li>
+<li>动态方法解析<ul>
+<li>过程，下面两个过程是渐进的，第一个失败了，那么执行第二个<ul>
+<li>调用 <code>+ (BOOL)resolveInstanceMethod:(SEL)selector</code> 询问类是否能新增一个实例方法处理这个消息</li>
+<li>调用 <code>+ (BOOL)resolveClassMethod:(SEL)selector</code> 询问类是否能增加一个类方法来处理这个消息</li>
+</ul>
+</li>
+<li>用法，相关方法实现已经写好，只等着运行时去动态插入到类里面就行了<ul>
+<li>实现 <code>@dynamic</code> 属性</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>消息转发<ul>
+<li>备选的消息接收者<ul>
+<li>调用 <code>- (id)forwardingTargetForSelector:(SEL)selector</code> 询问接收者是否有另一个对象来处理这个消息</li>
+<li>可以模拟多重继承，由对象内的其他对象来处理这个消息，但是从调用者看来，是被调用的对象处理的消息</li>
+<li>这样转发的消息，我们是无法进行操作或是修改消息内容的</li>
+</ul>
+</li>
+<li>完整的消息转发<ul>
+<li>创建 <code>NSInvocation</code> 对象，把 selector，target 和参数都放进去</li>
+<li>消息派发系统（message-dispatch system）调用 <code>- (void)forwardInvocation:(NSInvocation *)invocation</code> 方法吧消息指派给目标对象</li>
+<li>这个方法可以简单的只修改接收者让另一个对象去接受处理这个方法，但是这样做法和使用备选的消息接收者做法是等效的，所以一般来说更多是先修改消息内容，再触发消息</li>
+<li>这个方法的如果没有实现，那么就会调用超类的这个方法，类的继承体系中的所有类都有机会处理直到 <code>NSObject</code></li>
+<li><code>NSObject</code> 的 <code>- (void)forwardInvocation:(NSInvocation *)invocation</code> 只是简单的调用 <code>- (void)doesNotRecognizeSelector:</code> 方法抛出异常，所以一般向对象发送他没有实现的方法都会通过这个方法抛出异常</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Tips 13 Method Swizzling（原书叫方法调配技术，看到这个名词，第一句话是什么鬼）</p>
+<ul>
+<li>很多时候，这个技术被大家称为黑魔法，但是其实他做的只是在运行时交换方法的实现而已</li>
+<li>所有的方法都是在对象中是一个 <code>IMP</code> 指针，指针原型 <code>id (*IMP)(id, SEL, ...)</code></li>
+<li>每个类通过一张映射表来映射可相应的 selector 和对应 <code>IMP</code> 指针的关系</li>
+<li>可以做 AOP</li>
+<li>对方法的操作<ul>
+<li>使用 <code>void method_exchangeImplementations(Method m1, Method m2)</code> 来交换两个方法</li>
+<li>使用 <code>Method class_getInstanceMethod(Class aClass, SEL aSelector)</code> 来获取类的实例方法</li>
+<li>常规的 Method Swizzling 做法<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// 在 Category 的定义文件中增加我们将要用来替换的方法</span><br><span class="line">@interface NSString (MethodSwizzling)</span><br><span class="line">- (NSString *)ms_myLowercaseString;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// 在 Category 的实现文件中，进行交换</span><br><span class="line">@implementation NSString (MethodSwizzling)</span><br><span class="line">- (NSString *)ms_myLowercaseString &#123;</span><br><span class="line">    // 在调用原方法前做点其他的事情</span><br><span class="line">    // 注意这里并不是递归调用，而是因为我们交换了 lowercaseString 和 ms_myLowercaseString 的实现，所以这里调用 ms_myLowercaseString 实际上是在调用 lowercaseString 方法</span><br><span class="line">    NSString *s = [self ms_myLowercaseString];</span><br><span class="line"></span><br><span class="line">    // 在调用完原方法后做点其他的事情</span><br><span class="line">    return s;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (void)load &#123;</span><br><span class="line">    Method m1 = class_getInstanceMethod([NSString class], @selector(lowercaseString));</span><br><span class="line">    Method m2 = class_getInstanceMethod([NSString class], @selector(ms_myLowercaseString));</span><br><span class="line">    method_exchangeImplementations(m1, m2);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Tips 14 理解类对象</p>
+<ul>
+<li>每个对象结构体的首个成员变量是 <code>Class</code> 类的变量</li>
+<li><code>Class</code> 对象是一个 <code>objc_class</code> 的结构体，里面保存了类的元数据</li>
+<li><code>Class</code> 类同样有元类（metaclass）</li>
+<li>某个类如果有超类（super class）那么他的 <code>Class</code> 对象的元类，也继承于该类超类的元类</li>
+<li><code>-isMemberOfClass:</code> 可以判断某个对象是否是某个类的实例</li>
+<li><code>-isKindOfClass:</code> 可以判断某个对象是否是某个类或其子类的实例</li>
+<li>使用上面说到的两个方法类判断类型，不要直接比较类对象，因为某些对象可能实现了消息装发功能</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

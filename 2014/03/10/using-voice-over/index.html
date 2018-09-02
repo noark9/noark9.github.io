@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="用起 Voice Over"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">用起 Voice Over</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Mar 10 2014</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/iOS/">#iOS</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>好久木有出现了，大家放心cocoa drawing还在长线更新，最近搬家了，从美丽的彩云之南搬到了高端大气上档次的深圳。于是中间好多天都没有开电脑，好多天就都没有接着写了，以前一直OS X的，今天换换口味来次iOS。</p>
+<p>最近看了一个感觉可能平时大家用的少的东西——Voice Over～就是碰一下屏幕就会说话的东西，神奇吧（魂淡，你就是尽找些没人耍的东西写么XDDD），嗯嗯，很神奇啊，so为啥说用的少呢-，-毕竟为特殊人群考虑的太少了，不过麻花的两个app做的还不错（ps，图形解锁直接废了XDDDDDDD能说这是bug么？），之前说找几个一直没找到合适的应用来看下别人做的效果，昨天不小心点了麻花的应用发现做的效果确实挺不错的。好，接下来我们看看怎么用起来。</p>
+<h1 id="用起Voice-Over"><a href="#用起Voice-Over" class="headerlink" title="用起Voice Over"></a>用起Voice Over</h1><p>平常要是我们用苹果原生的控件的话，那基本上是天生自带Voice Over的，也就是所有的东西都配合的天衣无缝，但是呢，要是某些小按钮啊，神马的，我们没有妥妥的设置好label之类的东西，更甚者用image之类的东西来当按钮的，那就不一定run的好了，那下面我们先讲下怎么处理原生控件的，接着讲下怎么自定义的，再接着讲下一种优化策略，本文一定程度上参考了<em>Accessibility Programming Guide for iOS</em>大家也可以看看这篇Guide了解更多。</p>
+<a id="more"></a>
+<h2 id="对于原生控件"><a href="#对于原生控件" class="headerlink" title="对于原生控件"></a>对于原生控件</h2><p>要用起Voice Over其实并不是很复杂的事情，水果公司的<code>UIView</code>实现了一个叫做<code>UIAccessibility</code>的接口，里面定义了一堆堆的方法，期中最重要的，也就是我们在使用Voice Over时候最常的四个属性如下：</p>
+<ul>
+<li><code>accessibilityLabel</code>：告诉大家这是什么，比如飞行模式</li>
+<li><code>accessibilityTraits</code>：告诉大家这是什么控件，比如按钮</li>
+<li><code>accessibilityValue</code>：告诉大家我的值是什么，常用在文本编辑或者可以修改的东西的地方</li>
+<li><code>accessibilityHint</code>：告诉大家，这是干啥用的，比如点两下开启飞行模式想飞多远就飞多远</li>
+</ul>
+<p>这么一看立马就懂了吧，想要自定义原生控件元素到底说些啥，就改这三样东西就OK了。</p>
+<h2 id="对于自定义的UIView里面的东西"><a href="#对于自定义的UIView里面的东西" class="headerlink" title="对于自定义的UIView里面的东西"></a>对于自定义的<code>UIView</code>里面的东西</h2><p>好，接下来我要讲个高档的东西了，自己创造一个<code>UIAccessibilityElement</code>，神马意思呢，就是说我的View里面可能有很多东西，但是他们都不是控件，但是我又需要他们的位置点击后能够说话，告诉我们的童鞋们他们到底是谁。接下来我们一步一步的看要干些啥。</p>
+<h3 id="S-1-让我们的UIView成为一个UIAccessibilityContainer"><a href="#S-1-让我们的UIView成为一个UIAccessibilityContainer" class="headerlink" title="S.1 让我们的UIView成为一个UIAccessibilityContainer"></a>S.1 让我们的<code>UIView</code>成为一个<code>UIAccessibilityContainer</code></h3><p>神马是<code>UIAccessibilityContainer</code>呢，从名字猜下，那就是装<code>UIAccessibilityElement</code>的容器了。当然成为这个容器也是需要条件的，首先，欲练此功必先自宫XD，这个容器本身不能是<code>UIAccessibilityElement</code>也就是<code>isAccessibilityElement</code>永远为<code>NO</code>。</p>
+<p>其次，需要实现下面几个方法：</p>
+<ol>
+<li><code>accessibilityElementCount</code>告诉大家，我有多少个<code>UIAccessibilityElement</code>元素</li>
+<li><code>accessibilityElementAtIndex:</code>告诉大家，第几号元素是哪个</li>
+<li><code>indexOfAccessibilityElement:</code>告诉大家，某个元素是第几号</li>
+</ol>
+<p>ok，就这么简单，这样就能实现一个容器了，这样当触屏的时候，系统就会问他，这里是啥啊，他要说点啥啊，之类的了，这里具体的做法有点接近TableView的数据源接口就不详细说了。</p>
+<h3 id="S-2-创建UIAccessibilityElement到我们的容器里面"><a href="#S-2-创建UIAccessibilityElement到我们的容器里面" class="headerlink" title="S.2 创建UIAccessibilityElement到我们的容器里面"></a>S.2 创建<code>UIAccessibilityElement</code>到我们的容器里面</h3><p>这一步其实跟上文的<em>对于原生控件</em>差不多，只是需要调用<code>UIAccessibilityElement</code>的<code>initWithAccessibilityContainer:</code>方法，将告诉我们的元素容器到底是谁。接下来还要设置<code>UIAccessibilityElement</code>的<code>accessibilityFrame</code>属性，告诉系统我们这个元素响应的区域，不过这里要注意<code>accessibilityFrame</code>使用的是窗口的坐标系，大家用的时候要转换一下。</p>
+<p>对于在屏幕上会移动的元素，那么需要重写<code>accessibilityFrame</code>的获取方法，每次获取时进行重新转换坐标系，为了方便大家，我把官方例子里面怎么写的也copy过来了:P</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">CGRect</span>)accessibilityFrame</span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// Make sure to report the correct, converted bounds to accessibility</span></span><br><span class="line">	<span class="built_in">CGRect</span> screenBounds = <span class="built_in">CGRectNull</span>;</span><br><span class="line">	<span class="built_in">UIView</span> *view = [<span class="keyword">self</span> accessibilityContainer];</span><br><span class="line">	<span class="keyword">if</span> ( [view isKindOfClass:[<span class="built_in">UIView</span> <span class="keyword">class</span>]] )</span><br><span class="line">	&#123;</span><br><span class="line">		screenBounds = [[view window] convertRect:accessibilityBounds fromView:view];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> screenBounds;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的<code>accessibilityBounds</code>是新加的一个变量，是一个<code>CGRect</code>用来记录我们的元素在容器的坐标系中的位置和大小。</p>
+<p>之后跟原生控件一样，根据应用的实际需求对上面四个属性赋值即可。</p>
+<h3 id="S-3-进一步提升体验使用UIAccessibilityAction接口"><a href="#S-3-进一步提升体验使用UIAccessibilityAction接口" class="headerlink" title="S.3 进一步提升体验使用UIAccessibilityAction接口"></a>S.3 进一步提升体验使用<code>UIAccessibilityAction</code>接口</h3><p>在完成了前两步后，可以说应用已经是完整的支持了Voice Over了，但是为了提升更高的体验，我们需要实现<code>UIAccessibilityAction</code>接口中定义的更高端的方法，例如点两下会发生什么的<code>accessibilityActivate</code>方法，对<code>UISlider</code>控件提供更好支持的<code>accessibilityIncrement</code>和<code>accessibilityDecrement</code>方法，等等等等等……</p>
+<h1 id="调试Voice-Over"><a href="#调试Voice-Over" class="headerlink" title="调试Voice Over"></a>调试Voice Over</h1><p>调试的话大家可以用手机直接调试，这样最直接，当然还有更好的方式是通过iOS模拟器中带的Accessibility Inspector来进行调试，打开后操作和手机打开了Voice Over效果一样，只是不会出声，但是会把<code>UIAccessibilityElement</code>相关信息都显示出来如下图所示：</p>
+<p><img src="/img/ax_textfield_hint.png" alt="Accessibility Inspector"></p>
+<h1 id="一点点建议"><a href="#一点点建议" class="headerlink" title="一点点建议"></a>一点点建议</h1><p>真的只有一点点，为了能够做到更好的体验，其实参考了下麻花的和原生的应用，在一个View很复杂或者有很多操作的时候这时候需要考虑一下如何为特殊人群进行考虑：</p>
+<ul>
+<li>为复杂的操作提供可替代的方法：iMessage中，选中一条消息后，他会提示你，上下滑动选择操作，这时候上下滑动的话，那么会提示你，这时候点两下就删除信息了，解决了特殊人群无法适应复杂的界面的问题。</li>
+<li>优化<code>UIAccessibilityElement</code>的提示信息：复合的一个View，比如聊天窗口，可以让整个窗口成为一个<code>UIAccessibilityElement</code>，这样可以直接让iPhone说“张麻子在十九点三十分说：师爷你给我翻译翻译”，而不是分别点用户，提示张麻子，点内容，提示内容。</li>
+<li>广告：那就仁者见仁智者见智了，建议还是屏蔽了，毕竟人家也不一定能看到你的广告并且如果出现误操作的情况的话，那就不好处理了，某些广告基本都是一个窗口遮住了应用程序主界面。。。不屏蔽，那就是作死了XD，不过有更好的处理办法自然也是不辜负了恩泽的，顺便告诉我下XDDDD</li>
+</ul>
+<p>说了一点点。。。就这么多了。。。其实最重要的就是需要站在这用户的角度上去思考，Voice Over并不是单纯的让屏幕上的东西变成可以读的东西，而是为了降低特殊人群使用应用的障碍，所以更多的是需要真正的考虑如何让用户<strong>Accessibility</strong>而不是单纯的Voice。</p>
+<h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>Oh, YEAH!!我又复活了，哈哈，希望不足之处大家多多指出～～～</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

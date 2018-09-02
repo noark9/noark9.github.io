@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Cocoa Drawing Guide学习part3——颜色AND透明"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Cocoa Drawing Guide学习part3——颜色AND透明</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Jan 28 2014</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/cocoa/">#cocoa</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="Start"><a href="#Start" class="headerlink" title="Start"></a>Start</h1><p>cocoa drawing guide学习第三集～总算是写到第三集了啊，看来drawing guide的学习分享应该是能完成的，不过看了看目录貌似还有第四第五第六第七第八的-,-…慢慢来:)</p>
+<p>上一期想了想，总觉得是自己再笨拙的翻译，不过后来想了想，看了看，想了想，再看了看，再想了想，觉得自己还是吧一些重要的东西找了出来，也顺着把guide走了一遍，要是只是选出重点，或者选出怎么用來，那就是Cookbook了，所以大家别嫌啰嗦啊，我也是跟着学的，哈哈，不罗嗦了，正片开始。</p>
+<p>这一集的故事是颜色和透明的，用好色，用好透，那画出来的界面，肯定杠杠滴。</p>
+<h1 id="颜色和透明基础知识"><a href="#颜色和透明基础知识" class="headerlink" title="颜色和透明基础知识"></a>颜色和透明基础知识</h1><p>Cocoa的颜色支持构建在Quartz的顶层，<code>NSColor</code>类提供了创建和操作颜色的接口，其他的类提供了颜色和颜色空间的管理，以及在UI上选择颜色的控件。</p>
+<p>关于OS X里面的颜色解析，颜色理论和颜色管理，还要看看<em>Color Management Overview</em>和<em>Color Programming Topics</em>，-，-要看的东西真是越来越多了，也不知道看完能不能成cocoa大师啊。</p>
+<a id="more"></a>
+<h2 id="颜色模型和颜色空间"><a href="#颜色模型和颜色空间" class="headerlink" title="颜色模型和颜色空间"></a>颜色模型和颜色空间</h2><p><strong>颜色模型：</strong>用来描述可见色的几何或是数学的方法，每个颜色模型通过一个或多个维度来表示可见光光谱的颜色。维度上的数值使颜色可以通过数值来描述，使用数值为描述、区分、比较、排序颜色提供了方便。</p>
+<p>上面这么长一段话，就是告诉我们，颜色模型是用数值来描述颜色的。</p>
+<p><strong>颜色空间：</strong>颜色空间是用来描述颜色模型的，确定一个颜色模型实际能够表示的色域，颜色空间明确颜色模型的每个维度的值所表示的是什么。Cocoa支持的颜色空间和Quartz 2D的颜色空间一样，<code>NSColor</code>的访问方法支持：RGB、CMYK、Gray（灰度）这几种颜色空间。</p>
+<p>上面这长短话，就是说，颜色空间就是颜色模型里面用的是RGB啦，还是CMYK啦，还是灰度啦之类的。</p>
+<p>Cocoa里面<code>NSColorSpace</code>类保存描述具体颜色空间的信息，我们可以自行创建<code>NSColorSpace</code>的对象来表示独立的颜色空间，Cocoa提供了给我们获取标准颜色空间对象的方法，我们也可以用ColorSync的描述文件或者International Color Consortium (ICC)的描述文件来创建自定义颜色空间。</p>
+<p>更详细的OS X颜色模型和颜色空间参看<em>Color Management Overview</em>。</p>
+<h2 id="颜色对象"><a href="#颜色对象" class="headerlink" title="颜色对象"></a>颜色对象</h2><p><code>NSColor</code>提供了创建管理颜色的接口，并且他是创建颜色对象的工厂类，他的类方法创建的颜色对象都是基于<code>NSColor</code>的子类，并且这些子类都实现了特定颜色空间的行为。</p>
+<p>一个颜色对象只能表示一种颜色空间的颜色，所以不能使用<code>NSColor</code>一个对象的所有方法，只能使用跟他的颜色空间相关的方法，比如在CMYK颜色空间下的一个颜色对象就不能使用<code>getRed:green:blue:alpha:</code>方法获取RGB值，在CMYK颜色空间不支持这个方法，并且会产生异常。</p>
+<p>下面<em>创建颜色</em>会讲怎么创建和使用颜色对象。</p>
+<h2 id="颜色构成的值"><a href="#颜色构成的值" class="headerlink" title="颜色构成的值"></a>颜色构成的值</h2><p>颜色构成使用从0.0到1.0的浮点数表示，使用其他颜色系统的颜色的时候需要进行转换，比如用的颜色值从0到255的话，那么每个值都需要除以255才是Cocoa所使用的值。</p>
+<p>对于已知颜色空间（比如RGB，CMYK，HSV/HSB或者灰度）之类的颜色空间，我们可以通过现成的方法获取颜色成分（比如刚才的<code>getRed:green:blue:alpha:</code>方法），对于颜色成分未知的可以通过<code>numberOfComponents</code>和<code>getComponents:</code>方法获取颜色成分值。</p>
+<h2 id="透明度"><a href="#透明度" class="headerlink" title="透明度"></a>透明度</h2><p>除了表示颜色的成分意外，还有表示透明度的颜色成分。可以使用<code>colorWithAlphaComponent:</code>方法创建一个颜色相同但是透明度不同的颜色。</p>
+<h2 id="图案颜色"><a href="#图案颜色" class="headerlink" title="图案颜色"></a>图案颜色</h2><p>除了单一的颜色以外我们还可以创建图案颜色，图案颜色很多时候用来作为填充色，当然也可以作为描边的颜色。如果图案不够填充整个形状，那么他就会横向和纵向的平铺，如下图：</p>
+<p><img src="/img/CocoaDrawingGuide/part3.pattern_color.jpg" alt="使用图案颜色绘图"></p>
+<p>怎个用？下面<em>创建颜色</em>会讲滴。</p>
+<h2 id="颜色列表"><a href="#颜色列表" class="headerlink" title="颜色列表"></a>颜色列表</h2><p><code>NSColorList</code>对象是一个类似于Dictionary的对象，保存一个按顺序的颜色对象列表，并且使用键值来索引。</p>
+<p>颜色列表可以用来帮助管理文档描述的颜色，也可以用来自定义显示在调色板中的颜色，可以使用<code>NSColorPanel</code>的<code>attachColorList:</code>方法添加颜色到应用程序里面用的调色盘中。</p>
+<p>详情可以看看<em>Color Programming Topics</em>。</p>
+<h2 id="颜色匹配"><a href="#颜色匹配" class="headerlink" title="颜色匹配"></a>颜色匹配</h2><p>在可以使用ColorSync的情况下Cocoa提供了自动的颜色匹配，颜色匹配确保了绘制颜色在不同的设备上保持一致。</p>
+<p>通过<code>NSColorSpace</code>类可以创建或是获取颜色描述，Cocoa支持ColorSync和ICC的颜色描述以及对他们校准后的描述，和设备上RGB，CMYK，灰度颜色空间。颜色匹配是自动的，所以除了使用颜色以外，代码没有任何特殊的地方。</p>
+<p>关于ColorSync可以参考<em>ColorSync Manager Reference</em>，关于ICC可以参考<a href="http://www.color.org/" title="International Color Consortium网站" target="_blank" rel="noopener">http://www.color.org/</a>。</p>
+<h1 id="创建颜色"><a href="#创建颜色" class="headerlink" title="创建颜色"></a>创建颜色</h1><p><code>NSColor</code>支持下面几种方法创建颜色对象：</p>
+<ul>
+<li>通常使用的RGB或者白色度</li>
+<li>系统颜色，例如控件的颜色、高亮的颜色等</li>
+<li>特定颜色空间校准后的颜色</li>
+<li>特定设备颜色空间下的设备颜色</li>
+<li>图案颜色</li>
+</ul>
+<p>大多数颜色对象都可以直接用<code>NSColor</code>中的方法来创建，创建图案颜色可以使用<code>colorWithPatternImage:</code>方法。如何创建加载方法可以看后面part，Image那部分。</p>
+<p><strong>注意：</strong>不要[[NSColor alloc] init]这种方法来创建颜色，因为<code>NSColor</code>至少需要知道具体的颜色信息，否则他就会出异常。</p>
+<p>OS X 10.5后支持使用渐变填充色，10.5之前如果需要使用渐变色，需要使用Quartz，如何使用的话，详看后面的创建渐变填充。</p>
+<h1 id="使用颜色"><a href="#使用颜色" class="headerlink" title="使用颜色"></a>使用颜色</h1><p>使用<code>NSColor</code>对象可以用来作为当前绘图上下文的填充色或是描边色。</p>
+<h2 id="在绘制的内容上使用颜色"><a href="#在绘制的内容上使用颜色" class="headerlink" title="在绘制的内容上使用颜色"></a>在绘制的内容上使用颜色</h2><p>描边色和填充色用来修改所有基于路径的形状，例如<code>NSBezierPath</code>或者<code>NSRectFill</code>，<code>NSColor</code>的下面方法提供了对颜色的设置：</p>
+<ul>
+<li><code>set</code>：设置描边色和填充色</li>
+<li><code>setFill</code>：设置填充色</li>
+<li><code>setStroke</code>：设置描边色</li>
+</ul>
+<p>例如下面的代码用黑色作为描边色，控件背景色作为填充色：</p>
+<pre><code>[[NSColor blackColor] setStroke];
+[[NSColor controlBackgroundColor] setFill];
+</code></pre><p>设置颜色之后所有的绘图操作都会使用，如果你不想要绘制形状的填充色或是描边色的话，可以把他们设为全透明，或者调用<code>NSColor</code>的<code>clearColor</code>方法，也可以创建一个全透明的颜色。</p>
+<p><strong>注意：</strong>这里设置填充色和描边色不会对文字造成影响，文字的颜色需要设置文字所关联的属性。</p>
+<h2 id="在文字上使用颜色"><a href="#在文字上使用颜色" class="headerlink" title="在文字上使用颜色"></a>在文字上使用颜色</h2><p>文字不会使用填充色或是描边色，修改文字的颜色需要调整对应字符串的颜色属性。</p>
+<p>修改<code>NSAttributedString</code>中一部分字符串的颜色，需要对字符串应用<code>NSForegroundColorAttributeName</code>属性，这个属性需要传入一个确定的<code>NSColor</code>对象。对于<code>NSString</code>的话，则是应用到整个字符串，而不是一部分字符串。</p>
+<p>更多的关于字符串属性的东西可以参考<em>AppKit Framework Reference</em>中的<em>NSAttributedString Application Kit Additions Reference</em>和<em>Attributed String Programming Guide</em>中的<em>Changing an Attributed String</em>。更多关于文字绘制的信息，可以看后面几个部分。</p>
+<h2 id="获取颜色的颜色组成"><a href="#获取颜色的颜色组成" class="headerlink" title="获取颜色的颜色组成"></a>获取颜色的颜色组成</h2><p><code>NSColor</code>除了提供获取单独部分颜色组成的方法，也提供下面的方法获取颜色组成：</p>
+<ul>
+<li><code>numberOfComponents</code></li>
+<li><code>getComponents:</code></li>
+<li><code>getRed:green:blue:alpha:</code></li>
+<li><code>getCyan:magenta:yellow:black:alpha:</code></li>
+<li><code>getHue:saturation:brightness:alpha:</code></li>
+<li><code>getWhite:alpha:</code></li>
+</ul>
+<p><strong>注意：</strong>使用<code>NSColor</code>对象的方法获取非颜色对象所在颜色空间的颜色组成是不可以的，如果要用，必须使用<code>colorUsingColorSpaceName:</code>方法先进行颜色空间转换，详看下面的在颜色空间中相互转换。</p>
+<h2 id="选择颜色"><a href="#选择颜色" class="headerlink" title="选择颜色"></a>选择颜色</h2><p>可以使用Color Well或者Color Panel提供给用户选择颜色，一个Color Well显示一个颜色可以用来放在窗体上显示当前所选的颜色，单击Color Well的时候显示系统的Color Panel作为选取颜色的界面。也可以只使用Color Panel提供给用户选取颜色。</p>
+<p>详情参考<em>Color Programming Topics</em>。</p>
+<h1 id="使用颜色空间"><a href="#使用颜色空间" class="headerlink" title="使用颜色空间"></a>使用颜色空间</h1><p>颜色空间可以让我们能够在创建和渲染的过程中精确控制颜色，尽管大多数的应用基本上不需要关注颜色空间，但是在操作颜色成分之前等一些情况，我们还是需要知道当前的颜色空间的。</p>
+<h2 id="在颜色空间中相互转换"><a href="#在颜色空间中相互转换" class="headerlink" title="在颜色空间中相互转换"></a>在颜色空间中相互转换</h2><p>可以使用<code>NSColor</code>的<code>colorUsingColorSpaceName:</code>方法进行颜色空间的转换，下面代码把RGB颜色空间的颜色转换到了CMYK颜色空间。</p>
+<pre><code>NSColor* rgbColor = [NSColor colorWithCalibratedRed:1.0 green: 0.5  blue: 0.5  alpha:0.75];
+
+NSColor* cmykColor = [rgbColor colorUsingColorSpace:[NSColorSpace  genericCMYKColorSpace]];
+</code></pre><h2 id="将物理颜色映射到颜色空间"><a href="#将物理颜色映射到颜色空间" class="headerlink" title="将物理颜色映射到颜色空间"></a>将物理颜色映射到颜色空间</h2><p>不同的设备显示颜色范围是不同的，渲染的时候，cocoa将尽可能的根据你的代码匹配颜色到具体的设备上。有时候尽管为了强调一个颜色的不同部分而使用不同的方法映射颜色，那么那个颜色的衍生就非常的重要。（其实这句我看的翻译的感觉都不是太好，莺语没学好啊，附原文Sometimes, though, it maps colors in a different way so as to emphasize different aspects of a color that might be more important when reproducing that color.）颜色的映射也就是如何渲染，这个对大多数开发人员来说是基本不会去修改的，因此，我们也不能直接通过cocoa来修改，只能通过Quartz，下面是Quartz提供的方法：</p>
+<ul>
+<li><code>kCGRenderingIntentDefault</code></li>
+<li><code>kCGRenderingIntentAbsoluteColorimetric</code></li>
+<li><code>kCGRenderingIntentRelativeColorimetric</code></li>
+<li><code>kCGRenderingIntentPerceptual</code></li>
+<li><code>kCGRenderingIntentSaturation</code></li>
+</ul>
+<p>基本用不到具体不详看了，偷下懒:P，不过下面我们还是来看看具体怎么来改变渲染方式，通过<code>CGContextSetRenderingIntent</code>方法：</p>
+<pre><code>- (void) drawRect:(NSRect)rect
+{
+    CGContextRef theCG = [[NSGraphicsContext currentContext] graphicsPort];
+
+    // Change the rendering intent.
+    CGContextSetRenderingIntent(theCG, kCGRenderingIntentPerceptual);
+
+    // Draw your content.
+}
+</code></pre><h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>本期结束鸟～～这一期关注点在颜色上，再看果然Apple对于颜色，绘图这些方面是做了苦工的啊，而且确实很强力。</p>
+<p>P.S. 大减价的时候买了个PaintCode发现这货完全就是一个大杀器啊，这几天的博客都白写了，就靠那东西，基本搞定所有绘制的问题了。。。不过还是继续看了，毕竟还是需要知其所以然方能收放自如:P</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

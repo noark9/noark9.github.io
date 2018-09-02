@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="NSTableView滚动太快时导致TableViewCell中的图片不断切换的问题"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">NSTableView滚动太快时导致TableViewCell中的图片不断切换的问题</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Oct 29 2013</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/cocoa/">#cocoa</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h2 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h2><p>最近一个项目，需要使用NSTableView显示一个列表，列表上显示用户头像和用户信息。在用户很少的时候，也就是item很少的时候，没啥问题，但是找了朋友的帐号来测试的时候，他的账号下有八百多个用户，这就让这个程序出现诡异问题了。在快速滚动的时候，出现了一个现象，当滚动停止时，列表上的头像不断的在变化，一直到变化到一段时间后，才会停止。</p>
+<p>初步分析这个问题很奇怪，不过从问题的表象上来看，似乎是图片刷新的问题，Cell的文字部分似乎是不存在这个问题的。当然经过google了一段时间后发现，大家都是搞的UITableView的-，-UI<strong>**</strong>的。。。iOS这么火，Mac开发快成没人爱的孩子了。。。好吧，那还是自己继续研究了。</p>
+<a id="more"></a>
+<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>分析问题，个人比较喜欢的就是观察现象，之后进行思考和分析，那么再次回到表象后，仔细观察后发现图片的刷新那都是有规律的，滑动的越多那么刷新的次数就越多，慢速滑动的时候却不会出现这样的情况。那么再次猜测是否是刷新很慢的问题？因为网络连接很慢，那么会不会是导致了图片在不断的刷新？但是总觉得每一个View应该是独立的，并且每次创建View的时候，我都把图片设为了nil，但是依然存在这个问题，这时候才想起来了NSTableView有一个View重用的机制，如果一个View走出了可视区，并且进入了reuse queue的话，那么他就会被重用，基于上面的观察和思考后，再次分析代码，终于发现了问题的症结所在。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="keyword">void</span>)downloadImageWithURLString:(<span class="built_in">NSString</span> *)urlString onComplate:(<span class="keyword">void</span> (^)(<span class="built_in">NSImage</span> *image))complate</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!urlString) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    AFImageRequestOperation *operation = [AFImageRequestOperation imageRequestOperationWithRequest:[<span class="built_in">NSURLRequest</span> requestWithURL:[<span class="built_in">NSURL</span> URLWithString:urlString]] success:complate];</span><br><span class="line">    [operation start];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用时是这样的</span></span><br><span class="line">- (<span class="keyword">void</span>)initWithObj:(Obj *)obj</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Other init code</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">    [<span class="keyword">self</span>.myImage setImage:<span class="literal">nil</span>];</span><br><span class="line">    [MyTableCellView downloadImageWithURLString:obj.imgurl onComplate:^(<span class="built_in">NSImage</span> *image)&#123;</span><br><span class="line">        [<span class="keyword">self</span>.myImage setImage:image];</span><br><span class="line">    &#125;];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// Other init code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面是获取图片的代码，这样，每次加载的时候都会先将myImage设置为nil，之后通过AFImageRequestOperation异步的获取。这么看似乎是没有问题的，因为每次使用之前我都设置为了nil，之后异步的从网络获取图片并加载。那么结合了NSTableView的View重用机制后，就会是下面这样的情况。</p>
+<p>假设我有很多记录，并且每次都只显示其中的10个记录，并且我的网速不慢不快，那么从1快速滑动到600或者更多，那么在滑动过程中，某个View被重用了，并重新加载了很多次（方便点就认为是10次吧），那么会发生下面现象：</p>
+<ol>
+<li>加载需要显示的东西（文字啊，名字啊，年龄啊之类的东西）</li>
+<li>建立AFImageRequestOperation并启动获取图像的进程。</li>
+<li>滑出显示区外，进入reuse queue。</li>
+<li>再次进入显示区域，进入第一步。</li>
+</ol>
+<p>就这样，每次重用时都发生了上面的过程，如果你的网速非常快（0秒加载），那上面的代码妥妥的。但是肯定很多童鞋跟我一样，在可怜的2M小水管下，并且每个图片都需要穿越这伟大的防火长城，那必须得卡，必须出错。</p>
+<p>上面的过程中，AFImageRequestOperation完成后，就会马上执行complate的代码，马上刷新图片，那么如果已经滑倒600了，我才把图片下载完，那肯定是顺着下载完成的顺序，不断把myImage刷新10次，这样就看到了问题表象，图片象是放幻灯片一样的，不断切换了。</p>
+<h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>问题原因找到了，那就好解决了，借用让子弹飞里面一句话，狠一点“杀人要诛心”啊，不但要把你的图片干掉（设成nil），还要让你断了那个想念（继续从网络加载图片），接下来我们看看怎么做的。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MyTableCellView</span> : <span class="title">NSTableCellView</span></span></span><br><span class="line"><span class="comment">// 先把心留下来，不然没法诛</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) AFImageRequestOperation *myImageDownloadOperation;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 让你有想念的时候，那把想念记下来</span></span><br><span class="line">+ (AFImageRequestOperation *)downloadImageWithURLString:(<span class="built_in">NSString</span> *)urlString onComplate:(<span class="keyword">void</span> (^)(<span class="built_in">NSImage</span> *image))complate</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!urlString) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    AFImageRequestOperation *operation = [AFImageRequestOperation imageRequestOperationWithRequest:[<span class="built_in">NSURLRequest</span> requestWithURL:[<span class="built_in">NSURL</span> URLWithString:urlString]] success:complate];</span><br><span class="line">    <span class="keyword">return</span> operation;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用时是这样的</span></span><br><span class="line">- (<span class="keyword">void</span>)initWithObj:(Obj *)obj</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Other init code</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>.myImageDownloadOperation) &#123;</span><br><span class="line">        <span class="comment">// 杀人</span></span><br><span class="line">        [<span class="keyword">self</span>.myImage setImage:<span class="literal">nil</span>];</span><br><span class="line">        <span class="comment">// 诛心</span></span><br><span class="line">        [<span class="keyword">self</span>.myImageDownloadOperation cancel];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">self</span>.myImageDownloadOperation = [MyTableCellView downloadImageWithURLString:obj.imgurl onComplate:^(<span class="built_in">NSImage</span> *image)&#123;</span><br><span class="line">        [<span class="keyword">self</span>.myImage setImage:image];</span><br><span class="line">    &#125;];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>.myImageDownloadOperation) &#123;</span><br><span class="line">        [<span class="keyword">self</span>.myImageDownloadOperation start];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// Other init code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>嗯嗯，总结下，刚好领导再开XXXXXX检查总结会，我也来总结下分析问题还是要从现象入手，结合平台的资料，再分析代码，才能找到问题的根源，并且也是因为自己对用的东西不是那么熟悉导致的。</p>
+<p>也希望将来在Mac上耕耘的童鞋更多啦~~</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

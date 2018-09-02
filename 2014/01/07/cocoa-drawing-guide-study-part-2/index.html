@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Cocoa Drawing Guide学习part2——坐标系和仿射变换"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Cocoa Drawing Guide学习part2——坐标系和仿射变换</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Jan 7 2014</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/cocoa/">#cocoa</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>cocoa drawing guide学习的第二篇，预览了下，目测是坐标和变换（仿射变换），第一篇里面把coordinate想象成协调了。。。脑内老在用高达Seed里面的协调者（Coordinator）来脑补。。。于是老觉得怪怪的。。。今天终于想了想翻下词典，发现原来这个还有坐标的意思啊。。。。。。2b了啊-，-好了不扯那么多，正片开始了。</p>
+<p>PS：关于啥是仿射变换<a href="http://zh.wikipedia.org/wiki/仿射变换" target="_blank" rel="noopener">→点我点我←</a></p>
+<p>PPS：大家原谅下，其实part1只是想做读书笔记的，后来想了想还是写下记录下分享下，于是part1会比较粗糙。。。其实part2也很粗糙:P</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>mac应用里面窗口提供了一个用来绘图的坐标系，cocoa会把窗口移动、变化的情况处理好。每一个添加到窗口中的view都有一个自己的相对坐标系（原文是Local坐标系。。。难道叫菊部坐标系-，-不要不要XDDD），在绘制的时候只需要用view的相对坐标系，不需要和窗口的坐标系进行转换。当前已经有的坐标系可以用数学变化来修改。下面的内容就是讲cocoa怎么管理坐标系，并且使用仿射变换来处理绘图环境的。<br><a id="more"></a></p>
+<h1 id="坐标系基础"><a href="#坐标系基础" class="headerlink" title="坐标系基础"></a>坐标系基础</h1><p>cocoa和quartz都是用了相同的坐标系模型。所以了解坐标系模型还有如何操作变化它，是灰常重要滴。</p>
+<h2 id="局部相对坐标系"><a href="#局部相对坐标系" class="headerlink" title="局部相对坐标系"></a>局部相对坐标系</h2><p>cocoa的坐标系基于笛卡尔坐标系模型，左下角是原点，x和y轴沿右边（→）和上边（↑）延伸。但是呢，如果要在一个view里面画一堆东西套到另一个view里面的时候，如果只使用一个坐标系就会很麻烦，于是cocoa为每个view都提供了一个相对坐标系，在view上面绘图的时候，都用相对坐标系，画完了后cocoa就把相对坐标系转换为屏幕坐标系之后通过硬件完成绘制。</p>
+<p>屏幕坐标系到相对坐标系之间的映射，cocoa是通过CTM（current transformation matrix）里面完成的。Cocoa给所有的view都创建了这个东西，所以我们可以完全不用担心。</p>
+<ul>
+<li>NOTE：如果有多个屏幕了还用了双屏幕模式的画，每个屏幕都有一个原点。</li>
+</ul>
+<p>下图就是屏幕，窗口和view坐标系的一个图示</p>
+<p><img src="/img/CocoaDrawingGuide/part2.window_coordinate_2x.png" alt="屏幕，窗口和view坐标系"></p>
+<h2 id="点V-S-像素"><a href="#点V-S-像素" class="headerlink" title="点V.S.像素"></a>点V.S.像素</h2><p>OS X的绘图系统是基于PDF的，是矢量模型，绘制到具体设备的时候，cocoa把坐标系映射到像素上，这样就不会出现分辨率问题了，同时为了能准确表达，cocoa坐标系使用浮点数（这个特性NB，觉得直到很久以后了，微软才把这种特性加到了WPF上，win32原生程序一般会被这个问题搞崩溃或者界面在不同分辨率下丑的把用户搞崩溃）。虽然说绘制模式是基于PDF的，但是还是会有处理像素的时候，cocoa也提供了一些方法来处理像素相关的东西。下面会讲下在坐标系里面怎么绘图和渲染，并且也会说一点点怎么使用像素渲染。</p>
+<h3 id="用户空间"><a href="#用户空间" class="headerlink" title="用户空间"></a>用户空间</h3><p>用户空间，也就是cocoa中使用的坐标系了，一般来说开发者只需要关心用户坐标系，用户坐标系中，每个点的大小是1/72英尺，mac屏幕的点一直使用这个标准（怪不得所谓的所见即所得啊，PDF+打印点的大小），系统会完成不同设备上不同dpi的转换。</p>
+<h3 id="设备空间"><a href="#设备空间" class="headerlink" title="设备空间"></a>设备空间</h3><p>设备的坐标空间表示目标设备的实际坐标空间，不同的设备有不同的dpi。在你需要更加清楚的讲用户坐标空间映射到设备坐标空间的时候你就需要关心设备坐标空间了。</p>
+<h3 id="分辨率无关的UI"><a href="#分辨率无关的UI" class="headerlink" title="分辨率无关的UI"></a>分辨率无关的UI</h3><p>在OS X 10.4以前，Quartz和Cocoa都认为屏幕是72dpi的，这样导致了很多界面在不同分辨率下显示的不一致的问题，后来10.4以后引入了分辨率无关的UI，要来测试分辨率无关ui的画，可以用Quartz Debug（xCode中原先没带，需要下载Graphics Tools集合才有这个功能），打开后设置UI Resolution，选择Enable GiDPI d<br>isplay modes以后重新登陆，在显示设置里面就可以看到缩放的分辨率了。</p>
+<p><img src="/img/CocoaDrawingGuide/part2.display.setting.png" alt="分辨率设置"></p>
+<p>之后我们用Pixie（Graphics Tools里面带的工具，才发现这东西很好用啊，随意缩放，可以取色）来看看HiDPI和LowDPI啥区别了。</p>
+<p><img src="/img/CocoaDrawingGuide/part2.highDPI.png" alt="HiDPI"><br><img src="/img/CocoaDrawingGuide/part2.lowDPI.png" alt="LowDPI"></p>
+<p>可以明显的看到，HiDPI下面每一个点所用的像素数量变多了（其实一开始点了HiDPI的时候，震惊了，让我感受到了MacBook with Retina Screen的感觉）。</p>
+<p>回到正题，大多数情况下cocoa应用不需要去做分辨率无关的UI处理，使用cocoa提供的窗口和view的时候，cocoa会自动的处理好缩放这些问题的，对于图片那么就还需要提供高解析度版本的图片来支持。</p>
+<h1 id="仿射变换基础"><a href="#仿射变换基础" class="headerlink" title="仿射变换基础"></a>仿射变换基础</h1><p>仿射变换是一个二维数学矩阵，用来表示点从一个坐标系怎么映射到另一个坐标系的。可以简单的实现2维空间中东西的自由缩放，旋转和移动。Cocoa提供了<code>NSAffineTransform</code>类来实现仿射变换，下面就具体内容了。</p>
+<h2 id="原始的变形矩阵（The-Identity-Transform）"><a href="#原始的变形矩阵（The-Identity-Transform）" class="headerlink" title="原始的变形矩阵（The Identity Transform）"></a>原始的变形矩阵（The Identity Transform）</h2><p>一般来说，我们都是基于最原始的变形矩阵来添加仿射变换达到我们的效果，原始的变形矩阵，通过下面的代码来创建。</p>
+<pre><code>NSAffineTransform* identityXform = [NSAffineTransform transform];
+</code></pre><h2 id="有哪些仿射变换"><a href="#有哪些仿射变换" class="headerlink" title="有哪些仿射变换"></a>有哪些仿射变换</h2><p>2维绘图有移动，缩放和旋转，坐标系的修改将会影响现在的绘画和之后的绘画操作，建议在变化之前先保存当前的图形状态。</p>
+<h3 id="移动"><a href="#移动" class="headerlink" title="移动"></a>移动</h3><p>原点的平移，个人理解就是坐标系平移了。</p>
+<p><img src="/img/CocoaDrawingGuide/part2.translation.png" alt="移动"></p>
+<p>使用<code>NSAffineTransform</code>对象的<code>translateXBy:yBy:</code>方法实现。例如，如果要用(0, 0)移动到(50, 20)需要下面的操作。</p>
+<pre><code>NSAffineTransform* xform = [NSAffineTransform transform];
+[xform translateXBy:50.0 yBy:20.0];
+[xform concat];
+</code></pre><h3 id="缩放"><a href="#缩放" class="headerlink" title="缩放"></a>缩放</h3><p>沿着x轴或者y轴缩放对象，x轴和y轴缩放的比例可以不一致，注意的是，默认情况下，一个单位是1/72 inch，如果向x方向放大两倍后，那么一个单位就变成了2/72 inch了，<code>NSAffineTransform</code>提供了<code>scaleBy:</code>和<code>scaleXBy:yBy:</code>方法来实现缩放的。</p>
+<p><img src="/img/CocoaDrawingGuide/part2.scaling_2x.png" alt="缩放"></p>
+<p>如上面画的图片，x轴缩放2倍y轴缩放1.5被需要下面的操作。</p>
+<pre><code>NSAffineTransform* xform = [NSAffineTransform transform];
+[xform scaleXBy:2.0 yBy:1.5];
+[xform concat];
+</code></pre><h3 id="旋转"><a href="#旋转" class="headerlink" title="旋转"></a>旋转</h3><p>将坐标系沿着原点旋转一定的角度，<code>NSAffineTransform</code>提供了<code>rotateByDegrees:</code>和<code>rotateByRadians:</code>方法来实现旋转，正值是逆时针旋转。</p>
+<p><img src="/img/CocoaDrawingGuide/part2.rotation_2x.png" alt="旋转"></p>
+<p>上图逆时针旋转了45°，要进行下面的操作。</p>
+<pre><code>NSAffineTransform* xform = [NSAffineTransform transform];
+[xform rotateByDegrees:45];
+[xform concat];
+</code></pre><p><strong>NOTE：</strong>配合旋转和缩放，可以实现类似倾斜的效果。</p>
+<h2 id="操作顺序"><a href="#操作顺序" class="headerlink" title="操作顺序"></a>操作顺序</h2><p>不同的操作顺序将会产生不同的结果，下面就是先平移再旋转和先旋转再平移的比较。</p>
+<p><img src="/img/CocoaDrawingGuide/part2.transform_multiple_2x.png" alt="操作顺序"></p>
+<p>##仿射变换的数学基础</p>
+<p>仿射变换是通过构造一个变换矩阵，之后图形系统基于变换矩阵进行运算然后得到结果。<code>NSAffineTransform</code>使用一个3×3的矩阵，下面表示的m11, m12, m21, m22的值分别表示缩放和旋转的因子，t_x和t_y用来控制移动。</p>
+<p><img src="/img/CocoaDrawingGuide/part2.equation01_2x.png" alt="变换矩阵"></p>
+<p>经过下面的数学转换（线性代数大家还记得不-，-）就能得到新的坐标系，要是大家对变换矩阵很熟的话，也可以用<code>setTransformStruct:</code>方法直接设置变换矩阵。</p>
+<p><img src="/img/CocoaDrawingGuide/part2.equation02_2x.png" alt="坐标系的数学转换"></p>
+<p>想要了解更多矩阵变换操作后面的数学知识的童鞋，可以看看<em>Quartz 2D Programming Guide</em></p>
+<h1 id="在代码里面来用仿射变换"><a href="#在代码里面来用仿射变换" class="headerlink" title="在代码里面来用仿射变换"></a>在代码里面来用仿射变换</h1><p>哎呀呀，背景知识结束，总算到正题了。View里面的<code>drawRect:</code>方法决定了哪些东西应该怎么绘制，简单的图片啊方框啊神马的就很容易的能确定位置之类，但是比如路径这些复杂的东西就要用仿射变换来确定了。</p>
+<h2 id="创建和使用仿射变换"><a href="#创建和使用仿射变换" class="headerlink" title="创建和使用仿射变换"></a>创建和使用仿射变换</h2><p><code>NSAffineTransform</code>类的类方法<code>transform</code>可以根据原始有的变形矩阵创建一个仿射变换对象，在添加完所有的变化后，通过<code>concat</code>方法将变化应用到当前的上下文中，也就是加到现在的CTM中，变化会一直生效除非你撤销这个操作（下一节会讲撤销），比如下面就创建一个仿射变换。</p>
+<pre><code>NSAffineTransform* xform = [NSAffineTransform transform];
+// 设置变换
+[xform translateXBy:50.0 yBy:20.0];
+[xform rotateByDegrees:90.0]; // counterclockwise rotation
+[xform scaleXBy:1.0 yBy:2.0];
+// 应用到CTM
+[xform concat];
+</code></pre><h2 id="撤销一个仿射变换"><a href="#撤销一个仿射变换" class="headerlink" title="撤销一个仿射变换"></a>撤销一个仿射变换</h2><p>撤销有两种方法，一种是恢复上一个图形状态，另一种是通过对象的<code>invert</code>方法，恢复图形状态的话会导致包括变换以外的东西都撤销，<code>invert</code>方法只对当前的仿射变换起效，例如下面代码先创建了一系列的变换，绘制完成后，再回复。</p>
+<pre><code>NSAffineTransform* xform = [NSAffineTransform transform];
+// 设置变换
+[xform translateXBy:50.0 yBy:20.0];
+[xform rotateByDegrees:90.0]; // counterclockwise rotation
+[xform scaleXBy:1.0 yBy:2.0];
+// 应用到CTM
+[xform concat];
+// 画东西
+
+// 画完了回复变换
+[xform invert];
+[xform concat];
+</code></pre><p>另外如果想要在一个地方花点东西，在另一个地方画点东西，也可以不断的变换并且绘制。但是这个技术是用来防止你直接修改需要绘制的东西的，Cocoa提供了另外一种方法在不影响CTM的情况下直接修改绘制元素的几何坐标系（下一节就是）。</p>
+<p>另外一个需要关心的事情是，<code>invert</code>操作的有效性是受限于数学精度的，如果变换之后的结果无法精确的撤销回来（比如各种运算四舍五入了）那么撤销的结果也就不准确了，这种时候就只能回复图形状态了。</p>
+<h2 id="变换坐标系"><a href="#变换坐标系" class="headerlink" title="变换坐标系"></a>变换坐标系</h2><p>在不影响当前上下文的CTM的情况下，我们想要改变一个对象的位置，原点啊之类的东西，可以用<code>NSAffineTransform</code>类的<code>transformPoint:</code>和<code>transformSize:</code>方法直接修改对象的坐标系。也可以通过<code>transformBezierPath:</code>方法按照一个路径进行变换，并且<code>NSBezierPath</code>直接提供了<code>transformUsingAffineTransform:</code>完成按照路径变换的操作。</p>
+<h2 id="View和窗口之间坐标系的转换"><a href="#View和窗口之间坐标系的转换" class="headerlink" title="View和窗口之间坐标系的转换"></a>View和窗口之间坐标系的转换</h2><p>事件发送到操作系统时候用的是窗口的坐标系，之后在view使用事件参数之前将窗口坐标系转换为view的坐标系。<code>NSView</code>提供了一些方法来对<code>NSPoint</code>，<code>NSSize</code>和<code>NSRect</code>的转换，<code>convertPoint:fromView:</code>和<code>convertPoint:toView:</code>方法完成view坐标系的相互转换。大家可以去<em>NSView Class Reference</em>里面看看全部的转换函数。</p>
+<p><strong>注意：</strong>cocoa事件返回的y坐标系是从1开始的，也就是说你点一下窗口或者view的左下角的话，得到的结果是点(0, 1)而不是(0, 0)。</p>
+<p>下面是一个将窗口坐标系的点转换到一个view的坐标系的例子，第二个参数表示要转换的点现在在的坐标系，nil表示是窗口。</p>
+<pre><code>NSPoint  mouseLoc = [theView convertPoint:[theEvent locationInWindow] fromView:nil];
+</code></pre><h1 id="翻转坐标系"><a href="#翻转坐标系" class="headerlink" title="翻转坐标系"></a>翻转坐标系</h1><p>顾名思义，就是翻转一下，用的多的是正常的笛卡尔坐标系，但是又有时候翻转一下更美好，比如文字系统里面，就经常用翻转坐标系来放Text Lines（这个真心不知道是啥了，文本线？？）。。。下图示意了下什么是翻转：</p>
+<p><img src="/img/CocoaDrawingGuide/part2.flipped_coordinates_2x.png" alt="翻转"></p>
+<p>翻转只对直接画在那个view上的东西有用，不会影响到子view，下面的内容主要讲翻转的用法，还有会有些啥坑。</p>
+<p>##让你的view使用翻转坐标系</p>
+<p>首先在使用翻转之前，必须要确定view的默认原点，绘图之前使用翻转坐标系有两种方法：</p>
+<ul>
+<li>重写view的<code>isFlipped</code>方法，并且返回<code>YES</code></li>
+<li>渲染之前，直接进行翻转变换</li>
+</ul>
+<p>如果啊，你打算所有的view都用翻转的坐标系，那就考虑重写<code>isFlipped</code>方法，重写可以让cocoa知道你的view默认使用翻转坐标系，并且在<code>isFlipped</code>方法返回<code>YES</code>的时候cocoa在调用<code>drawRect:</code>之前会将这个变化应用到CTM上，这样就不需要每次去应用变化了，并且cocoa考虑翻转坐标系会自动的调整绘图代码。</p>
+<p>如果只是需要用翻转坐标系画一小部分东西，那么可以考虑使用翻转变换，而不是重写<code>isFlipped</code>方法，来手工修改坐标系。翻转变换可以让你临时的调整坐标系，并且不需要的时候就可以把他undo掉。详情看后面小节。</p>
+<h2 id="在翻转坐标系里面画东西"><a href="#在翻转坐标系里面画东西" class="headerlink" title="在翻转坐标系里面画东西"></a>在翻转坐标系里面画东西</h2><p>好吧，guide上说了好长一段。。。就是告诉大家，翻转的坐标系很好使的，大家不要慌，我们下面来说一下。</p>
+<h3 id="基本图形"><a href="#基本图形" class="headerlink" title="基本图形"></a>基本图形</h3><p>基本图形肯定是妥妥的，方的，圆的，高端大气的贝塞尔曲线都没问题的，唯一区别就是翻转了的坐标系，需要更多考虑纵向翻转的布局啊神马的东西。</p>
+<h3 id="用AppKit函数绘图的东西"><a href="#用AppKit函数绘图的东西" class="headerlink" title="用AppKit函数绘图的东西"></a>用AppKit函数绘图的东西</h3><p>Application Kit Framework提供了一堆函数<code>NSRectFill</code>, <code>NSFrameRect</code>, <code>NSDrawGroove</code>, <code>NSDrawLightBezel</code>等等等等等……当然，我们也不用瞎操心，在翻转的坐标系下面cocoa还是帮我们搞定了一切。</p>
+<h3 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h3><p>真正要操心的主在这儿呢，还是图片小主更让人操心点啊。好吧，如果直接<code>drawInRect:fromRect:operation:fraction:</code>这么画。。。包跪，画出来肯定是倒的，那要咋整呢，官方给了三个建议：</p>
+<ul>
+<li>画图之前应用一个翻转变换</li>
+<li>用<code>NSImage</code>的一种<code>compositeToPoint</code>方法绘图</li>
+<li>自己翻转下图片的<strong>DATA</strong>（为啥我要加粗呢，强调下这个是原数据。。。其实这里啊。。。apple都说这个不科学了）</li>
+</ul>
+<p>画图之前应用一个翻转，可以保证画的图到处看都渲染的妥妥的，这样做也保留了之前对坐标系的所有影响，特别是要用<code>NSImage</code>的<code>drawInRect:fromRect:operation:fraction:</code>方法画图的童鞋一定要优先考虑这个方法，这个方法你可以缩放图片到合适的大小，然后也是大家用的比较多的一种画法。</p>
+<p>用<code>compositeToPoint</code>方法绘图呢，也是一种不太好使的方法，主要是比较复杂。用这个方法，将可以无视之前你的代码或者cocoa对CTM的所有的旋转和缩放操作（you are right，移动操作被保留下来了，翻转也保留了）。当然这个方法不会影响对应分辨率的拉伸，不然用RMBP的童鞋就会觉得好糊了。。。但是自己做的这些变换还是保留在CTM的。这个方法是设计了确保图片不会超出view的边界，但是如果童鞋们自己没有做点确保的事情的话，那还是会超的。</p>
+<p>下面这个图，就是在正常的（不翻转），翻转的结果下，使用<code>compositeToPoint:fromRect:operation:</code>绘图的一个结果。</p>
+<p>一看，不翻的的肯定是我们要的那个效果，第二个果断是超过边界了的，为了不超过边界，需要手动修复y轴的高度，得到第三个图的效果（这个例子纯属没事儿瞎折腾啊-，-）。</p>
+<p>P.S.（其实这里是正片） 这里修正的方法是图片的Y减去边界的高度。</p>
+<p><img src="/img/CocoaDrawingGuide/part2.flipped_views_2x.png" alt="在翻转的View里面合成图片"></p>
+<p>这个问题也就是你把图片画在翻转的坐标系会出现了，跟怎么把这些图片画出来是没啥关系的。图片呢，用了他自己的坐标系，一旦加载，买定离手，那就不会变了，后面要做的就是跟上面一样，针对绘制的坐标系，做些合适的调整了。</p>
+<p><strong>注意注意：</strong><code>NSImage</code>里面有个淡腾的方法叫<code>setFlipped:</code>，这个貌似是可以直接设置图片翻转的啊，实际上呢，这个是在调用<code>lockFocus</code>前指定图片原点的东西，要是在这些情况用啊，貌似可以，但是实际上是不可控的，而且也是高度不科学的。</p>
+<p><strong>注意注意2：</strong>另外啊，如果无视图片原来的样子，那么我们大多数情况下就是根据现在绘图的坐标系设置下位置和大小了。</p>
+<p>You wanna know more? 看看<em>Image Coordinate System</em>吧。</p>
+<h3 id="画文字"><a href="#画文字" class="headerlink" title="画文字"></a>画文字</h3><p>文字的绘制，cocoa也基本能帮你搞定了，如果你的view的<code>isFlipped</code>方法返回的是<code>YES</code>的话cocoa就会自动的翻转来适应view的翻转坐标系。如果你用翻转变换来做的话，那cocoa就不知道怎么适应了，那文字画出来可能就是反着的了。</p>
+<p>另外如果在一个图像里面绘制文字的话，cocoa使用的是图像内部的坐标系，并成为图像的一部分。</p>
+<p>更多就看<em>Text</em>节的内容了（这部分目测要到Part6了）</p>
+<h2 id="创建翻转变换"><a href="#创建翻转变换" class="headerlink" title="创建翻转变换"></a>创建翻转变换</h2><p>如果只是临时用用翻转坐标系，那么可以创建一个翻转变换应用到当前的图形上下文，一个翻转变换就是一个包含了一个缩放变化和一个移动变化的<code>NSAffineTransform</code>对象，完成了翻转Y轴和移动原点的操作。</p>
+<p>like this：</p>
+<pre><code>- (void)drawRect:(NSRect)rect
+{
+    NSRect frameRect = [self bounds];
+    NSAffineTransform* xform = [NSAffineTransform transform];
+    [xform translateXBy:0.0 yBy:frameRect.size.height];
+    [xform scaleXBy:1.0 yBy:-1.0];
+    [xform concat];
+
+    // Draw flipped content.
+}
+</code></pre><p>P.S. 目测这样可以Easy的搞出根据X轴翻转的坐标系啊，这个叫啥呢？镜像坐标系？</p>
+<p>不过如果你的view的<code>isFlipped</code>方法返回已经是<code>YES</code>的话，那这个应用上去得到的结果，那就是翻转再翻转，负负得正，将得到一个正常的图了。</p>
+<h2 id="Cocoa里面用到翻转坐标系的地方"><a href="#Cocoa里面用到翻转坐标系的地方" class="headerlink" title="Cocoa里面用到翻转坐标系的地方"></a>Cocoa里面用到翻转坐标系的地方</h2><p>Cocoa里面还是好些地方用了翻转坐标系，如果直接用，那随意了，如果你要创建子类，那就要考虑坐标系的问题了，下面是用到的控件们～</p>
+<p><code>NSButton</code>, <code>NSMatrix</code>, <code>NSProgressIndicator</code>, <code>NSScrollView</code>, <code>NSSlider</code>, <code>NSSplitView</code>, <code>NSTabView</code>, <code>NSTableHeaderView</code>, <code>NSTableView</code>, <code>NSTextField</code>, <code>NSTextView</code></p>
+<p>有些cocoa的类支持翻转坐标系但是并不是所有时间都在用翻转的坐标系，下面就是已知的情况：</p>
+<ul>
+<li>图像（Image）默认情况下，使用正常坐标系。我们可以使用<code>setFlipped:</code>方法设置图像内部坐标系为翻转的，这样图像所有的表示对象都会用一样的坐标系，详情，估计后面几期会讲吧。</li>
+<li>Cocoa的文字系统本身已经具备了确保文字再当前上下文中是否需要翻转的能力。文字在<code>NSTextView</code>显示时，文字系统的对象也会使用翻转的坐标系确保文字正常的渲染。</li>
+<li><code>NSClipView</code>对象的坐标系基于他的文档view。</li>
+<li><code>NSGraphics.h</code>中的绘图辅助函数再使用的时候也会考虑到翻转坐标系，详看<em>AppKit Functions Reference</em></li>
+</ul>
+<p>Cocoa里面新加的控件和视图的话，参考下参考之类的，也可以在运行时用<code>isFlipped</code>方法判断是否使用了翻转坐标系。</p>
+<h1 id="基于像素的绘图"><a href="#基于像素的绘图" class="headerlink" title="基于像素的绘图"></a>基于像素的绘图</h1><p>虽然说cocoa里面提供了方法处理布局等东西，但是在一些情况下（位图绘制到高分辨率的设备上的时候）也需要进行调整。下面讲下高分辨率绘图的一些需要注意的东西。</p>
+<h2 id="Cocoa中进行高分辨率绘图需要注意的"><a href="#Cocoa中进行高分辨率绘图需要注意的" class="headerlink" title="Cocoa中进行高分辨率绘图需要注意的"></a>Cocoa中进行高分辨率绘图需要注意的</h2><ul>
+<li>使用高分辨率的图像</li>
+<li>布局的时候，需要确保View和图像都放置在整数的像素边界上</li>
+<li>在自定义控件的背景上贴图的时候，尽量不要自己绘制，最好用<code>NSDrawThreePartImage</code>或者<code>NSDrawNinePartImage</code>方法</li>
+<li>在非整数缩放的情况下，使用抗锯齿的文字渲染模式，保证文字在像素边界上</li>
+<li>在非整数缩放的情况下测试程序（1.5倍或者1.25倍之类的），来看是否存在像素裂缝之类的，因为这些缩放情况下会产生奇数像素点</li>
+</ul>
+<p>用OpenGL的时候，因为<code>NSOpenGLContext</code>使用像素，所以需要使用<code>NSView</code>的方法转换坐标系。下面的代码保证了得到的结果是OpenCL所需要的。</p>
+<pre><code>NSSize boundsInPixelUnits = [self convertRect:[self bounds] toView:nil];
+glViewport(0, 0, boundsInPixelUnits.size.width, boundsInPixelUnits.size.height);
+</code></pre><h2 id="获取当前的缩放系数"><a href="#获取当前的缩放系数" class="headerlink" title="获取当前的缩放系数"></a>获取当前的缩放系数</h2><p>在<code>NSWindow</code>和<code>NSScreen</code>类中都有<code>userSpaceScaleFactor</code>方法获取当前的缩放影子，10.5以前的话，这个方法返回1.0表示用户坐标系和设备坐标系是一样的，现在也有些情况表示设备的dpi，2.0表示屏幕分辨率是144dpi的。</p>
+<p>使用<code>NSScreen</code>类中的<code>deviceDescription</code>方法获取设备描述字典，可以获取实际分辨率。</p>
+<h2 id="调整内容的布局"><a href="#调整内容的布局" class="headerlink" title="调整内容的布局"></a>调整内容的布局</h2><p>因为屏幕是低分辨率设备，而打印机神马的都是高分辨率设备的，所以一般来说肯定会出现像素布局问题的。</p>
+<p>如果图像和形状要是绘制的有问题了，并且有像素的裂痕了，那可以通过调整坐标值绘图来解决大部分这些问题。下面是在缩放系数不是1.0时可以参考的步骤：</p>
+<ol>
+<li>转换用户坐标系的点，尺寸，或者矩形的值到设备坐标系</li>
+<li>规范化设备坐标系的值，保证放在了合适的坐标边界上</li>
+<li>将值转换回用户坐标系</li>
+<li>使用修正了的值绘图。</li>
+</ol>
+<p>最好修正设备坐标系矩形的方法是用<code>NSView</code>的<code>centerScanRect:</code>方法。这个方法在用户空间获取一个矩形之后基于缩放系数进行计算得到修正的矩形。</p>
+<p>如果需要在设备坐标系中更精确的控制布局，OSX提供了一些方法来规范化这些值，比如<code>NSIntegralRect</code>和<code>CGRectIntegral</code>方法，也可以使用<code>ceil</code>或者<code>floor</code>来做必要的四舍五入。</p>
+<h2 id="转换坐标值"><a href="#转换坐标值" class="headerlink" title="转换坐标值"></a>转换坐标值</h2><p>OSX10.5提供<code>convertPointToBase:</code>, <code>convertSizeToBase:</code>, <code>convertRectToBase:</code>, <code>convertPointFromBase:</code>, <code>convertSizeFromBase:</code>, <code>convertRectFromBase:</code><br>这些方法实现用户坐标系到设备坐标的转换。</p>
+<p>例如，要实现一个<code>NSPoint</code>结构体的转换，<code>drawRect:</code>方法一开始，就要做下面的事情：</p>
+<pre><code>- (void)drawRect:(NSRect)rect
+{
+    NSPoint myPoint = NSMakePoint(1.0, 2.0);
+    CGFloat scaleFactor = [[self window] userSpaceScaleFactor];
+    if (scaleFactor != 1.0)
+    {
+        NSPoint    tempPoint = [self convertPointToBase:myPoint];
+        tempPoint.x = floor(tempPoint.x);
+        tempPoint.y = floor(tempPoint.y);
+        myPoint = [self convertPointFromBase:tempPoint];
+    }
+    // Draw the content at myPoint
+}
+</code></pre><p>具体用什么东西来转换，去适应，去修正还是取决于大家了。</p>
+<h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>呀，一写发现又好长了。。。另外发现总觉得像是在粗糙的翻译apple的guide，不过随意了，主要写的过程中发现自己还是学到好多东西了，特别是基础理论方面的东西还是挺重要的，所谓内功心法吧。。。</p>
+<p>不过总觉得在翻译还是不太好，后面要想想怎么能更好的记录下学的内容，而不是让大家看我口水话了:P</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

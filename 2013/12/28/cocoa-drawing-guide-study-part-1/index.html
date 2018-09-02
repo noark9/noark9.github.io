@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Cocoa Drawing Guide学习part1——基础和图形上下文"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Cocoa Drawing Guide学习part1——基础和图形上下文</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Dec 28 2013</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/cocoa/">#cocoa</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>开篇先简单说下，想要在blog中开主线把apple的一些自己感兴趣的guide好好学习一遍，最近在用的时候，发现绘图和动画方面确实缺了很多东西啊，但是不能像以前一样的半残的看看例子就开始用，还是想好好了解下例子。</p>
+<p>这是cocoa drawing guide的第一篇，主要讲了cocoa drawing的基础知识和绘图上下文（Graphics Context，图形上下文）的基础知识。</p>
+<p>文章的内容基于Cocoa Drawing Guide的内容以及自己对Cocoa Drawing Guide的一些翻译。</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>cocoa drawing由AppKit提供并且也兼容其他的模式：<br>Quartz，OpenGL，Core Image，Core Video，Quartz Composer，PDF Kit，QuickTime<br><a id="more"></a><br>基于Quartz，所以AppKit提供了Quartz相关的功能</p>
+<ul>
+<li>基于path的绘图</li>
+<li>创建，加载，显示图片</li>
+<li>布局和显示文本</li>
+<li>创建，显示PDF</li>
+<li>半透明</li>
+<li>阴影</li>
+<li>色彩管理</li>
+<li>变形</li>
+<li>打印</li>
+<li>抗锯齿渲染</li>
+<li>OpenGL</li>
+</ul>
+<p>cocoa drawin基于Quartz可以利用硬件资源进行渲染，并且使用的是打印机的模式。因此不同的绘图顺序也会得到不同的结果。</p>
+<h2 id="绘图环境"><a href="#绘图环境" class="headerlink" title="绘图环境"></a>绘图环境</h2><p>绘图环境决定了绘图最终的结果，canvas决定了绘图内容在哪里，绘图设置控制绘图的大小，颜色，质量，方向等。</p>
+<h2 id="Graphics-Context-绘图上下文"><a href="#Graphics-Context-绘图上下文" class="headerlink" title="Graphics Context - 绘图上下文"></a>Graphics Context - 绘图上下文</h2><p>绘图上下文可以说是绘制的位置，封装了绘图所需要的各种信息。<br>那么绘图的目标可以是下面的东西</p>
+<ul>
+<li>Window（或者View）</li>
+<li>图片，包括了所有类型的Bitmap图片</li>
+<li>打印机</li>
+<li>PDF，EPS文件</li>
+<li>OpenGL界面</li>
+</ul>
+<p>NSGraphicsContext也管理了绘图目标的状态，这些状态会影响如何绘图，比如闲的宽度，颜色，填充色，绘图状态可以保存在当前图形上下文的栈上，所有的改变都可以通过回滚绘图状态来撤销。<br>cocoa管理的一些属性和Quartz不同，比如颜色使用NSColor，大部分的基于路径的绘图使用NSBezierPath</p>
+<h2 id="Coordinate-System-坐标系统"><a href="#Coordinate-System-坐标系统" class="headerlink" title="Coordinate System - 坐标系统"></a>Coordinate System - 坐标系统</h2><p>Coordinate System是cocoa支持使用Quartz应用的，使用浮点数，绘图代码绘制在用户的协调空间，在渲染到具体设备的时候，转换到设备的Coordinate Space。Coordinate System</p>
+<p>User Coordinate Space使用具体的值，每一个单位是1/72英寸，但并不代表是72dpi。不使用像素或是dpi，你只需要考虑大小，而显示由cocoa去关心。Device Coordinate Space使用设备的解析度单位，cocoa负责Device Coordinate Space和User Coordinate Space的转换。</p>
+<h2 id="变形"><a href="#变形" class="headerlink" title="变形"></a>变形</h2><p>变形操作2d协调空间，变形使用一个变形的数学矩阵，获取变形属性如何修改协调，cocoa中变形是<code>NSAffineTransform</code>类<br>那么包括下面的东西：</p>
+<ul>
+<li>移动</li>
+<li>缩放</li>
+<li>旋转</li>
+</ul>
+<p>可以用各种各样的效果组合得到有趣的结果，另外使用变形操作比你直接操作原数据要快</p>
+<h2 id="颜色和颜色空间"><a href="#颜色和颜色空间" class="headerlink" title="颜色和颜色空间"></a>颜色和颜色空间</h2><p>绘图之前需要指定颜色和颜色空间，<code>NSColor</code>和<code>NSColorSpace</code></p>
+<h2 id="基础的绘图元素"><a href="#基础的绘图元素" class="headerlink" title="基础的绘图元素"></a>基础的绘图元素</h2><p><code>NSPoint</code>，点，有一个x，y坐标<br><code>NSSize</code>，size包含宽，高<br><code>NSRect</code>，矩形包含一个叫<code>origin</code>的<code>NSPoint</code>和一个叫<code>size</code>的<code>NSSize</code>，<code>origin</code>是左上角的点位置，<code>size</code>是宽和高</p>
+<h2 id="形状基本？（primitives）"><a href="#形状基本？（primitives）" class="headerlink" title="形状基本？（primitives）"></a>形状基本？（primitives）</h2><p>可以用<code>NSBezierPath</code>画一些基本形状</p>
+<ul>
+<li>线</li>
+<li>矩形</li>
+<li>圆</li>
+<li>曲线</li>
+<li>贝塞尔曲线？</li>
+</ul>
+<p><img src="/img/CocoaDrawingGuide/part1.primitives.png" alt="primitives"></p>
+<p>贝塞尔路径对象，保存着矢量的路径信息，保证数据小并且分辨率独立。你可以使用简单形状创建路径或是与其他基本形状组合更复杂的路径。</p>
+<h2 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h2><p>由<code>NSImage</code>提供图片，NSImageRep是图片的表示类，图片可以从文件加载或者在线（on the fly？），支持BMP,GIF,JPEG,JPEG2000,PNG,TIFF,从EPS，PDF，PICT数据得到的图片和CoreImage图片</p>
+<h2 id="文字"><a href="#文字" class="headerlink" title="文字"></a>文字</h2><p>cocoa提供了先进的文件系统绘制文字，例如：</p>
+<p><img src="/img/CocoaDrawingGuide/part1.text.png" alt="text"></p>
+<h2 id="View和Drawing"><a href="#View和Drawing" class="headerlink" title="View和Drawing"></a>View和Drawing</h2><p>cocoa中基本上所有的绘图都在view里面完成，View对象表示一个窗口上可视的一部分。一个视图用来显示一些可视的内容，也可以包括多个子视图。</p>
+<p><code>NSView</code>是所有视图的基础，cocoa有一些基础的视图，text view，split view等，cocoa控件也是基于<code>NSView</code>的。</p>
+<p>可以基于基础的视图和控件创建自定义的视图，cocoa通过<code>drawRect:</code>消息告诉你视图需要如何绘制，实现<code>drawRect:</code>方法实现自定义绘图。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)drawRect:(<span class="built_in">NSRect</span>)rect</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Custome draw code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>drawRect:</code>调用时，cocoa将绘画焦点锁定到你的view，保存绘图转贴，调整当前的变形矩阵适应你的视图的方向，调整从view中截取的矩形，我们只需要完成绘制就可以了。</p>
+<h2 id="一些常用的绘图任务"><a href="#一些常用的绘图任务" class="headerlink" title="一些常用的绘图任务"></a>一些常用的绘图任务</h2><p>打印和创建PDF，EPS的话，在这里就不看了，实际用到的时候看吧。</p>
+<h3 id="绘制自定义视图"><a href="#绘制自定义视图" class="headerlink" title="绘制自定义视图"></a>绘制自定义视图</h3><p>在自定义视图中实现<code>drawRect:</code>方法可以使用路径，文字，图形或者Cocoa，Quartz，OpenGL等东西</p>
+<h3 id="响应内容变化，更新视图"><a href="#响应内容变化，更新视图" class="headerlink" title="响应内容变化，更新视图"></a>响应内容变化，更新视图</h3><p>向View发送<code>setNeedsDisplayInRect:</code>或者<code>setNeedsDisplay:</code>消息，告诉View部分或者全部的内容已经失效并且需要更新，在下一个更新循环的时候cocoa会响应后发送一个<code>drawRect:</code>消息给View进行更新。</p>
+<h3 id="让一些东西发生动画"><a href="#让一些东西发生动画" class="headerlink" title="让一些东西发生动画"></a>让一些东西发生动画</h3><p>使用Core Animation，设置Timer，或者使用NSAnimation或者NSViewAnimation类时在一定帧率产生的通知。接收到消息时，让view中部分或者全部失效来进行强制更新。可以参考Core Animation Programming Guide，以及后面会说道的NSTimer和使用Core Animation Objects。</p>
+<h3 id="改变大小"><a href="#改变大小" class="headerlink" title="改变大小"></a>改变大小</h3><p>NSView中的inLiveResize方法判断是否正在发生改变大小的事件。为了保证你的View能够如预期一样，那么尽量少的进行绘制，可以参考Drawing Performance Guidelines。</p>
+<h1 id="Graphics-Context——图形上下文"><a href="#Graphics-Context——图形上下文" class="headerlink" title="Graphics Context——图形上下文"></a>Graphics Context——图形上下文</h1><p>标识当前绘图的上下文是设备，屏幕，还是文件，Coordinate System，边界等一些图形属性。基本上不需要人工创建一个图形上下文。Cocoa应用中基本上所有的画布都使用NSGraphicsContext。（OpenGL的话，使用NSOpenGLContext）</p>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><p><code>drawRect:</code>调用的之前，cocoa就会对当前的绘图上下文先有一定的处理：</p>
+<p>1 保存当前图形状态，保证可以undo<br>1 添加一个适当的变形，保证方向跟现在View的方向是一致的<br>1 在可视范围内截取区域，防止内容被其他的视图（Straying into other views）渲染</p>
+<p>你的绘图将会发送到Quartz Compositor和其他在窗口中的视图合并起来。</p>
+<p>在你的<code>drawRect:</code>结束后，cocoa回复绘图上下文为下一个view绘制做准备。</p>
+<h2 id="当前的图形上下文"><a href="#当前的图形上下文" class="headerlink" title="当前的图形上下文"></a>当前的图形上下文</h2><p>可以这样获取</p>
+<pre><code>NSGraphicsContext *context = [NSGraphicsContext currentContext];
+</code></pre><p>使用<code>saveGraphicsState</code>保存当前的图形状态<br>使用<code>restoreGraphicsState</code>弹出当前的状态并恢复到上一个保存的状态<br>这两个方法，调用需要成对</p>
+<p>这两个方法的类方法，作用于当前的图形上下文<br>这两个方法的实例方法，作用于特定的图形上下文</p>
+<h2 id="图形状态信息"><a href="#图形状态信息" class="headerlink" title="图形状态信息"></a>图形状态信息</h2><ul>
+<li>Current transformation matrix（CTM）</li>
+</ul>
+<p>映射view的Coordinate System和目标设备的Coordinate System用的。cocoa在调用<code>drawRect:</code>之前会修改CTM，可以使用一个<code>NSAffineTransform</code>对象修改CTM的朝向，缩放，旋转当前的Coordinate System。</p>
+<ul>
+<li>Clipping areas</li>
+</ul>
+<p>截取区域描述了用于调用绘制函数的画布区域，cocoa在调用<code>drawRect:</code>之前会修改截取区域为可视区域，可以使用<code>NSBezierPath</code>对象来进一步设置可视区域。</p>
+<ul>
+<li>Line width</li>
+</ul>
+<p>设置路径的宽度，默认是1.0，可以使用<code>NSBezierPath</code>对象修改这个值。</p>
+<ul>
+<li>Line join style</li>
+</ul>
+<p>线合并描述了线是如何合并的，默认是<code>NSMiterLineJoinStyle</code>，可以使用<code>NSBezierPath</code>对象修改这个值。</p>
+<ul>
+<li>Line cap style</li>
+</ul>
+<p>描述一个路径的开闭，默认是<code>NSButtLineCapStyle</code>，可以使用<code>NSBezierPath</code>对象修改这个值。</p>
+<ul>
+<li>Line dash style</li>
+</ul>
+<p>描述线的断开模式，也包括开始的模式，这个属性没有默认值，表示是实线，可以修改<code>NSBezierPath</code>对象的这个样式。</p>
+<ul>
+<li>Line miter limit</li>
+</ul>
+<p>定义线在什么时候合并成一个。只有Line join style使用了<code>NSMiterLineJoinStyle</code>的时候起效。miter的长度已经被线的宽度除后，如果超过了miter limit的话，那么就用斜面，默认是10.0，可以使用<code>NSBezierPath</code>对象修改这个值。</p>
+<ul>
+<li>Flatness value</li>
+</ul>
+<p>描述了实际上是那一部分曲线被渲染了。数值越小，那么曲线越平滑，也会有跟复杂的运算，这个值在不同的设备渲染时影响非常小。默认值是0.6，可以使用<code>NSBezierPath</code>对象修改这个值。</p>
+<ul>
+<li>Stroke color</li>
+</ul>
+<p>使用NSColor设置，渲染路径的颜色。</p>
+<ul>
+<li>Fill color</li>
+</ul>
+<p>使用NSColor设置，渲染路径所包含区域的颜色（填充色）。</p>
+<ul>
+<li>Shadow</li>
+</ul>
+<p>使用NSShadow描述所渲染内容的阴影。</p>
+<ul>
+<li>Rendering intent</li>
+</ul>
+<p>描述颜色映射，cocoa不支持，需要使用Quartz。</p>
+<ul>
+<li>Font name，Font Size</li>
+</ul>
+<p>使用NSFont设置</p>
+<ul>
+<li>Font character spacing</li>
+</ul>
+<p>描述文字的字符空间。</p>
+<ul>
+<li>Text drawing mode</li>
+</ul>
+<p>描述文字如何进行渲染（这个属性并不是由Cocoa直接支持的）</p>
+<ul>
+<li>Image interpolation quality</li>
+</ul>
+<p>描述渲染时图形插值处理，使用<code>NSGraphicsContext</code>类进行设置。</p>
+<ul>
+<li>Compositing operation</li>
+</ul>
+<p>描述合成过程（cocoa中基于Quartz blend模式来进行支持，但是使用了不要同的使用方法和行为），使用<code>NSGraphicsContext</code>类进行设置，一些渲染方法能够提供额外的设置。</p>
+<ul>
+<li>Global alpha</li>
+</ul>
+<p>设置一个全局的alpha值，用于叠加在使用的颜色的alpha值上。cocoa不直接支持这个属性，通过Quartz中的<code>CGContextSetAlpha</code>函数设置。</p>
+<ul>
+<li>Anti-aliasing setting</li>
+</ul>
+<p>设置抗锯齿，使用<code>NSGraphicsContext</code>设置。</p>
+<h2 id="屏幕画布和打印画布"><a href="#屏幕画布和打印画布" class="headerlink" title="屏幕画布和打印画布"></a>屏幕画布和打印画布</h2><p>打印本来是不考虑了，不过既然这里单独提到了一节，那我也就顺便一起看下了。</p>
+<p>一般啊，cocoa的绘图上下文，有两种画布，屏幕上的和打印的。在屏幕上的cocoa提供一个绘图上下文作给有view更新绘制或者响应用户打印文档时使用。但是下面几种情况是需要手工创建图形上下文的：</p>
+<ul>
+<li>使用OpenGL渲染View的内容</li>
+<li>绘制屏幕外的位图</li>
+<li>创建PDF和EPS</li>
+<li>通过程序开始一个打印job</li>
+</ul>
+<p>使用<code>NSGraphicContext</code>的类方法，可以创建使用屏幕作为画布的图形上下文对象，这些方法无法创建打印的画布，cocoa把所有的打印都通过cocoa printing system（cocoa 打印系统）来处理这些任务并为你提供绘图上下文。因此，我们需要使用<code>NSPrintOperation</code>创建打印任务，并且你的view至少要提供最少的打印支持。</p>
+<p>可以用示例方法<code>isDrawingToScreen</code>或者类方法<code>currentContextDrawingToScreen</code>判断画布的类型。打印类型的画布可以用<code>attributes</code>方法获取画布的更多信息。</p>
+<h2 id="绘图上下文和Quartz"><a href="#绘图上下文和Quartz" class="headerlink" title="绘图上下文和Quartz"></a>绘图上下文和Quartz</h2><p><code>NSGraphicsContext</code>在cocoa里面是Quartz绘图上下文<code>CGContextRef</code>数据的一个转化。转化和使用很容易。</p>
+<h2 id="修改当前的绘图上下文状态"><a href="#修改当前的绘图上下文状态" class="headerlink" title="修改当前的绘图上下文状态"></a>修改当前的绘图上下文状态</h2><p>在<code>drawRect:</code>方法中可以用<code>NSGraphicsContext</code>的方法直接修改大部分绘图状态属性，但是还有一些属性需要借助其他的一些对象。</p>
+<p>保存和回复当前绘图状态是消耗非常大的动作，尽量在要马上撤销一些操作的时候，或者没有修改的时候用，比如重置截取区域的时候。</p>
+<h3 id="设置颜色和模式"><a href="#设置颜色和模式" class="headerlink" title="设置颜色和模式"></a>设置颜色和模式</h3><p>cocoa提供了很多的颜色空间，NSColor默认支持RGB，CMYK，灰度，也可以用ICC和ColorSync描述来支持自定义颜色空间。使用NSColor对象的<code>setStroke</code>和<code>setFill</code>方法来设置描边和填充的颜色。文字的颜色不使用Fill或是Storke的，需要对文字专门进行设置。</p>
+<h3 id="设置路径（Path）属性"><a href="#设置路径（Path）属性" class="headerlink" title="设置路径（Path）属性"></a>设置路径（Path）属性</h3><p>路径属性包括了很多，上面提过一些，这里说下设置路径属性有两种，一种是全局的属性通过<code>NSBezierPath</code>类的类方法来设置，例如<code>setDefaultLineWidth:</code>，另一种是为某个路径对象设置，使用类方法设置，例如<code>setLineWidth:</code>。</p>
+<h3 id="设置文字属性"><a href="#设置文字属性" class="headerlink" title="设置文字属性"></a>设置文字属性</h3><p>cocoa的字符串对象和core text系统都支持，使用属性修改字符串的表现。<code>NSAttributedString</code>对象通过选择部分范围进行设置属性，<code>NSString</code>直接设置整个字符串的属性。</p>
+<p>用<code>NSFont</code>对象的set font family和size方法可以设置图形状态中的全局字体设置，可以在Quartz绘制字符串的时候使用。</p>
+<h3 id="设置图形合成选项"><a href="#设置图形合成选项" class="headerlink" title="设置图形合成选项"></a>设置图形合成选项</h3><p>嘛，这个么，用官方的图最好说明问题了</p>
+<p><img src="/img/CocoaDrawingGuide/part1.compositing.png" alt="Compositing operations in Cocoa"></p>
+<p>嗯，上面一堆图，基本能说明问题了设置的名字基本都是<code>NSCompositeXXXXXXXXXX</code>之类的</p>
+<p>接下来是这些模式的一个数学模型（我还是懒惰的截图了），R是结果，S是源，D是目标，Sa是源的alpha值，Da是目标的alpha值，alpha值的范围是0～1。</p>
+<p><img src="/img/CocoaDrawingGuide/part1.compositingMath.jpeg" alt="Mathematical equations for compositing colors"></p>
+<h3 id="设置截取区域"><a href="#设置截取区域" class="headerlink" title="设置截取区域"></a>设置截取区域</h3><p>截取区域是用来确定对view中的那一部分进行修改，调用<code>drawRect:</code>之前cocoa会根据可视范围设置截取区域，可以用<code>NSBezierPath</code>重新限制绘图区域。简单点的矩形可以用<code>NSRectClip</code>函数创建，<code>NSRectClipList</code>创建一组矩形，<code>NSBezierPath</code>用来创建更复杂的图形。使用<code>addClip</code>方法添加结果形状到当前的截取区域。</p>
+<p>根据不同的环绕规则，创建出来的截取区域也将不同，如下：</p>
+<p><img src="/img/CocoaDrawingGuide/part1.clipping.png" alt="Clipping paths and winding rules"></p>
+<p>下面代码创建上面图形的截取区域</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// If you plan to do more drawing later, it's a good idea</span></span><br><span class="line"><span class="comment">// to save the graphics state before clipping.</span></span><br><span class="line">[<span class="built_in">NSGraphicsContext</span> saveGraphicsState];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Create the path and add the shapes</span></span><br><span class="line"><span class="built_in">NSBezierPath</span>* clipPath = [<span class="built_in">NSBezierPath</span> bezierPath];</span><br><span class="line">[clipPath appendBezierPathWithRect:<span class="built_in">NSMakeRect</span>(<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">100.0</span>, <span class="number">100.0</span>)];</span><br><span class="line">[clipPath appendBezierPathWithOvalInRect:<span class="built_in">NSMakeRect</span>(<span class="number">50.0</span>, <span class="number">50.0</span>, <span class="number">100.0</span>,  <span class="number">100.0</span>)];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Add the path to the clip shape.</span></span><br><span class="line">[clipPath addClip];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Draw the image.</span></span><br><span class="line"></span><br><span class="line">[<span class="built_in">NSGraphicsContext</span> restoreGraphicsState];</span><br></pre></td></tr></table></figure>
+<p>可以使用<code>setClip</code>方法设置截取区域，但是这个方法将会替换原来的截取区域，</p>
+<h3 id="设置抗锯齿选项"><a href="#设置抗锯齿选项" class="headerlink" title="设置抗锯齿选项"></a>设置抗锯齿选项</h3><p>这个效果么，大家应该都知道了，可以用<code>NSGraphicContext</code>中的<code>setShouldAntialias:</code>方法设置。</p>
+<h2 id="创建绘图上下文"><a href="#创建绘图上下文" class="headerlink" title="创建绘图上下文"></a>创建绘图上下文</h2><p>如果在view和打印的画布，可以用cocoa提供的绘图上下文。不过如果你要做其他类型的绘图，那么就需要自己创建了。</p>
+<h3 id="创建一个基于屏幕的绘图上下文"><a href="#创建一个基于屏幕的绘图上下文" class="headerlink" title="创建一个基于屏幕的绘图上下文"></a>创建一个基于屏幕的绘图上下文</h3><p>如果需要在常规的更新周期之外绘制图形，那么需要单独的创建一个图形上下文。这样可以在另外一个线程中，在一个屏幕外的窗口或是位图上进行绘图，之后再拷贝结果，使用<code>NSGraphicsContext</code>类中的方法可以为特定的窗口或是位图创建绘图上下文。</p>
+<h4 id="在window上绘图"><a href="#在window上绘图" class="headerlink" title="在window上绘图"></a>在window上绘图</h4><p>使用<code>graphicsContextWithWindow:</code>方法为一个特定的窗口创建绘图上下文，当时如果那个窗口有很多子视图，那就很麻烦了，你需要一个一个的去设置，这个建议使用在创建屏幕外的缓冲区的时候用。</p>
+<p>这里说下，OSX的大部分窗口已经使用了双缓冲机制，不需要淡腾的再去用屏幕外的窗口和位图去刷新ui，费时费力。</p>
+<h4 id="在位图上绘图"><a href="#在位图上绘图" class="headerlink" title="在位图上绘图"></a>在位图上绘图</h4><p>在10.4以前， 需要通过截取view或是window，来实现位图绘制。10.4以后可以通过<code>graphicsContextWithBitmapImageRep:</code>方法为一个<code>NSBitmapImageRep</code>对象设置绘图上下文，绘图将会直接渲染到位图上。</p>
+<h3 id="创建一个PDF或是PostScript的绘图上下文"><a href="#创建一个PDF或是PostScript的绘图上下文" class="headerlink" title="创建一个PDF或是PostScript的绘图上下文"></a>创建一个PDF或是PostScript的绘图上下文</h3><p>不同与之前的那个PDF和PostScript不能那么直接的创建，他们都要通过cocoa打印系统。<br>最快捷的方法是用NSView对象的<code>dataWithPDFInsideRect:</code>和<code>dataWithEPSInsideRect:</code>方法自动的用view中的绘图代码创建打印任务，输出PDF和EPS。可以使用<code>NSPrintOperation</code>类手工创建打印任务，用<code>runOperation</code>方法开始打印队列。</p>
+<p>打印过程中，cocoa调用view上的一些方法来处理布局和绘制，实现这些方法可以支持PDF和EPS的打印。</p>
+<h2 id="线程和绘图上下文"><a href="#线程和绘图上下文" class="headerlink" title="线程和绘图上下文"></a>线程和绘图上下文</h2><p>AppKit为所有窗口和线程的合并管理一个绘图上下文。对应一个窗口，每个线程都有一个绘图上下文，也可以使用另一个线程来进行绘图，但是这样会有一些警告。</p>
+<p>正常的窗口更新循环中，所以的绘图请求都会发送到应用程序的主线程中。可以通过调用<code>setNeedsDisplay:</code>或者<code>setNeedsDisplayInRect:</code>方法触发重绘事件，这些方法不能在非主线程中调用。</p>
+<p>如果一定要在非主线程中更新窗口那么需要自己创建，配置那个窗口的绘图上下文。</p>
+<p>创建位图是另一种多线程绘图的方式，因为位图的画，是自己作为容器的，所以可以安全的在非主线程中创建。</p>
+<h1 id="end"><a href="#end" class="headerlink" title="end"></a>end</h1><p>总算cocoa drawing guide的第一期结束了，还是写了很长时间的啊，这一期主要只是讲基础的东西和绘图上下文的一些介绍，算是入门的基础知识了，要是翻译和讲的不对的地方，还是请大家指出来啊。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

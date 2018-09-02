@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="noark9 的开发小笔记"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">noark9 的开发小笔记</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Home Page Post List -->
+<div class="container">
+  <div class="row">
+    <div class="col-lg-10 col-md-10 col-md-offset-1">
+      
+        <div class="post-item-wrapper">
+  <a href="/2013/12/28/cocoa-drawing-guide-study-part-1/" class="post-title">
+      Cocoa Drawing Guide学习part1——基础和图形上下文
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Dec 28 2013</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>开篇先简单说下，想要在blog中开主线把apple的一些自己感兴趣的guide好好学习一遍，最近在用的时候，发现绘图和动画方面确实缺了很多东西啊，但是不能像以前一样的半残的看看例子就开始用，还是想好好了解下例子。</p>
+<p>这是cocoa drawing guide的第一篇，主要讲了cocoa drawing的基础知识和绘图上下文（Graphics Context，图形上下文）的基础知识。</p>
+<p>文章的内容基于Cocoa Drawing Guide的内容以及自己对Cocoa Drawing Guide的一些翻译。</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>cocoa drawing由AppKit提供并且也兼容其他的模式：<br>Quartz，OpenGL，Core Image，Core Video，Quartz Composer，PDF Kit，QuickTime<br></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/cocoa/">cocoa</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2013/12/24/nstextfield-with-round-rect/" class="post-title">
+      在NSTextField外面画个圆角矩形做背景
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Dec 24 2013</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><p>一直看qq之类的高大上的应用里面，他们的TableView上面右边消息数量总有个小红色的椭圆在外面，一直觉得这个高端大气上档次啊，如图：</p>
+<p><img src="/img/QQInforImage.png" alt="QQ消息数量"></p>
+<h1 id="怎么画"><a href="#怎么画" class="headerlink" title="怎么画"></a>怎么画</h1><p>而且觉得挺好看的，一直想要弄了来试试看，结果一直没实现，google也似乎没得结果，总以为是字体啊，神马的设置，后来最近开始慢慢看Cocoa Drawing Guide的时候（后面补个学习笔记or心得or读后感XDDD），想了想有招了。<br></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/cocoa/">cocoa</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2013/11/20/warnings-on-delegate-using/" class="post-title">
+      解决使用Delegate时编译的Warning
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Nov 20 2013</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><p>最近项目时间比较紧，加上最近工作也有点忙，结果blog又开始长草了-，-。。。现在分享一下记下最近cocoa 开发时近遇到的一个小问题</p>
+<h1 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h1><p>Protocol和Delegate是cocoa里面比较常用的设计模式，多用在对象之间进行数据交互，但是最近在我的项目中，发现，使用<code>self.xxxdelegate = xxxdelegate</code>时运行没有任何问题，但是在编译时会出现类型不匹配的警告<br></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/cocoa/">cocoa</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2013/10/29/image-refresh-problem-while-nstableview-scrolling-too-fast/" class="post-title">
+      NSTableView滚动太快时导致TableViewCell中的图片不断切换的问题
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Oct 29 2013</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h2 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h2><p>最近一个项目，需要使用NSTableView显示一个列表，列表上显示用户头像和用户信息。在用户很少的时候，也就是item很少的时候，没啥问题，但是找了朋友的帐号来测试的时候，他的账号下有八百多个用户，这就让这个程序出现诡异问题了。在快速滚动的时候，出现了一个现象，当滚动停止时，列表上的头像不断的在变化，一直到变化到一段时间后，才会停止。</p>
+<p>初步分析这个问题很奇怪，不过从问题的表象上来看，似乎是图片刷新的问题，Cell的文字部分似乎是不存在这个问题的。当然经过google了一段时间后发现，大家都是搞的UITableView的-，-UI<strong>**</strong>的。。。iOS这么火，Mac开发快成没人爱的孩子了。。。好吧，那还是自己继续研究了。</p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/cocoa/">cocoa</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2013/09/25/oh-my-awk-and-sed-cookbook/" class="post-title">
+      Oh My Sed and Awk Cookbook
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Sep 25 2013</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="为啥写这个"><a href="#为啥写这个" class="headerlink" title="为啥写这个"></a>为啥写这个</h1><p>最近的工作里面，因为需要处理很多类似CSV之类的文本文件，让我突然想到了sed和awk这两个上古神器。并且在这两个神器的帮助之下，很多尝试性的工作减少了实际的代码编写量，毕竟脚本和C代码的代码量来看，脚本的编写要更加容易以及快速，在做一些探索性的尝试和对文本文件的处理上，是非常有帮助的。这一篇会随着我的使用慢慢的增多，我会慢慢给大家分享这两个神器以及其他的一些linux或是unix下一些工具的使用，所以潮一点就叫Cookbook了，这里面的命令很多是可以解决实际问题的，我也会对这些命令进行分析，告诉大家什么时候可以用、以及怎样用，同时也希望大家能对这些问题有更新更加优美的解决方法。</p>
+<h1 id="关于Awk的"><a href="#关于Awk的" class="headerlink" title="关于Awk的"></a>关于Awk的</h1><h2 id="awk拼接命令"><a href="#awk拼接命令" class="headerlink" title="awk拼接命令"></a>awk拼接命令</h2><p>awk是一个文本流处理的工具，但是结合了awk，grep，sh以及一些常规的linux命令后，也可以实现通过awk输出shell的脚本，达到自动生成一些命令并执行的效果。</p>
+<h3 id="ipc资源清理"><a href="#ipc资源清理" class="headerlink" title="ipc资源清理"></a>ipc资源清理</h3><p>公司用的后台服务是tuxedo的，用过的人大概知道，服务配置太多了或者挂了的服务太多了等各种原因会导致整个tuxedo服务器挂掉，这时候<code>tmshutdown</code>和<code>tmipcrm</code>都已经失效了，那这时候怎么办呢——杀掉所有tuxedo用户下的ipc资源，那这样一个一个的清除会很麻烦，经过一段时间的Google发现了下面三条命令解决了这个问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ipcs|grep user_name|awk &apos;&#123;print &quot;ipcrm -m &quot; $2&#125;&apos;|sh;</span><br><span class="line"></span><br><span class="line">ipcs|grep user_name|awk &apos;&#123;print &quot;ipcrm -q &quot; $2&#125;&apos;|sh;</span><br><span class="line"></span><br><span class="line">ipcs|grep user_name|awk &apos;&#123;print &quot;ipcrm -s &quot; $2&#125;&apos;|sh;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/linux/">linux</a> <a class="tag" href="/tags/awk/">awk</a> <a class="tag" href="/tags/sed/">sed</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2013/09/17/play-with-nstableview/" class="post-title">
+      简单用起NSTableView
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Sep 17 2013</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>本文不是单独讲NSTableView如何使用，或是如何拖拽，或是其他的，我在参考了Apple的Guide以及一些资料整理后，综合运用NSTableView，NSPasetboard等一些基础技术，来告诉大家如何最简单最快捷的开始用起NSTableView，让新入门的童鞋们能够快速的吧自己的项目run起来，而不是再去花一两周去慢慢看文档了，当然要好好用文档还是少不了滴。</p>
+<h1 id="Mac上的TableView"><a href="#Mac上的TableView" class="headerlink" title="Mac上的TableView"></a>Mac上的TableView</h1><p>经过一段时间在iOS上的探索后，用自己在cocoa touch开发上半残的经验开始了cocoa开发的历险。在尝试了Button，TextField等基础的东西后，也基于最近在尝试的东西，决定试试当初在iOS开发上卡了好几天才想通怎么弄的TableView了。但是总觉得目前网上关于Mac app开发的资料非常少，主要是iOS太火了吧把Mac的光芒都掩盖了。参考了下Apple关于TableView，OutlineView（为啥是OutlineView，他两是一家子的）的Guide和TableViewPlayground的例子后，不敢说对NSTableView有多少了解，起码怎么用起来是知道了。</p>
+<p>在Mac app的开发和iOS app的开发以及使用非常的相似，所以对应iOS上UITableView自然有一个NSTableView为Mac服务。而且其中的使用方法和使用的思想也是非常相似的。因此用过iOS上UITableView的童鞋们，对NSTableView肯定轻松上手了。</p>
+<p><img src="/img/myTV.png" alt="成品"></p>
+<p>上面的图就是今天打算弄的Mac app的成品了，左边是分类，右边是分类下的东西，需要实现的功能包括了，左边选择左边分类的时候，右边显示分类下的东西，右边分类下的东西可以拖拽到左边其他分类中，右边分类下的东西可以拖拽到其他应用中（文本的方式），Add按钮实现在左边分类中添加一个分类并可以编辑名称。会弄的童鞋们肯定觉得这些功能小儿科了，嘛，这个还是挣扎了好几天才能有此结果啊，大家见笑了。</p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/cocoa/">cocoa</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2013/08/15/understanding-nodejs/" class="post-title">
+      Understanding node.js（翻译）
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Aug 15 2013</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><p>本文是对<a href="http://debuggable.com/felix" target="_blank" rel="noopener">Felix Geisendörfer</a>大神的<a href="http://debuggable.com/posts/understanding-node-js:4bd98440-45e4-4a9a-8ef7-0f7ecbdd56cb" target="_blank" rel="noopener">Understanding node.js</a>的一个翻译，主要是最近发现node.js这个东西似乎确实很强力，虽然不知道自己理解对不对，但是感觉，node.js和go里面最方便的一点就是把多线程以及web后端开发搞的更加容易了。下面正文开始，顺便说下本文主要自己学习的以及标题取得都挺洋气的就保留了，翻译水平不好，见谅啊=_,=，顺便说下，想学的同学可以去这里看看<a href="http://www.nodebeginner.org" target="_blank" rel="noopener">The Node Beginner Book</a></p>
+<p>在我将<a href="http://nodejs.org/" target="_blank" rel="noopener">node.js</a>介绍给别人后，他们大多数有两种反应，一种是马上就了解了，另一种则觉得非常的疑惑。如果你是第二种人，那么我将试图这样来解释node.js是什么</p>
+<ul>
+<li>node.js是一种命令行工具，你下载tar包，编译，安装源代码</li>
+<li>node.js可以让你在终端直接一句<code>node my_app.js</code>直接运行你的JavaScript程序</li>
+<li>node.js使用<a href="http://code.google.com/p/v8/" target="_blank" rel="noopener">V8引擎</a>（就是那个让Google的Chrome能run的飞快的东西）解析执行JS脚本</li>
+<li>node.js提供了通过JavaScript访问网络和文件系统的API</li>
+</ul></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/node/">node</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2012/02/07/install-octopress-on-heroku-for-windows-users/" class="post-title">
+      install octopress on heroku for windows users
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Feb 7 2012</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="为啥搞这个"><a href="#为啥搞这个" class="headerlink" title="为啥搞这个"></a>为啥搞这个</h1><p>最近一个同学开始写博客了,给我介绍了下可以用octopress和heroku,让我看了下他的博客的效果和一个使用教程,看了下发觉还算是不错的东西,并且也是装B专用的啊,哈哈,于是顺便自己也学学怎么用,刚好也想开始试试写写博客,但是发现一个问题,他用的是linux和mac而我用的是windows,windows从根本上没有提供shell和较好的ruby支持,现在来写下自己在windows上使用octopress的经验.不过我也没写过博客…这个文章最主要的目的是给自己记录下以后才知道要怎么用.</p>
+<h1 id="开始安装吧"><a href="#开始安装吧" class="headerlink" title="开始安装吧"></a>开始安装吧</h1><p>既然是for windows users那么自然就只有windows部分的安装方法了,而windows先天没有shell和ruby的环境自然不好安装,那么下一步先安装ruby,windows下有<a href="http://rubyinstaller.org/" target="_blank" rel="noopener">RubyInstall</a>比较好用,可以直接下载最新的<a href="http://rubyinstaller.org/news/2011/10/31/rubyinstaller-1-9-3-p0-released/" target="_blank" rel="noopener">1.9.3</a>来安装,安装完成后还需要一个编译环境,否则无法安装octopress所需要的gem,那么我们还需要一个可以编译的环境这里我用的是MinGW大家可以自行到<a href="http://www.mingw.org/" target="_blank" rel="noopener">http://www.mingw.org/</a>下载安装配置使用,这里就不详述怎么用了.</p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/blog/">blog</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+  </div>
+</div>
+
+<!-- Pagination -->
+<div class="container">
+  <div class="row">
+    <div class="col-lg-10 col-md-10 col-md-offset-1">
+      <ul class="pagination">
+          
+              <li class="previous">
+                <a href="/page/2/">
+                  <span class="symbol-left">&lt;</span>
+                  <span>PREV</span>
+                </a>
+              </li>
+          
+          
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

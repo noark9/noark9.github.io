@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="noark9">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Oh My Sed and Awk Cookbook"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="noark9 的开发小笔记"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://blog.noark9.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>noark9 的开发小笔记</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.dark.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Oh My Sed and Awk Cookbook</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/noark9">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:noark9@gmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By noark9</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">Sep 25 2013</span>
+            <span class="time">21:00:11</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/linux/">#linux</a> <a class="tag" href="/tags/awk/">#awk</a> <a class="tag" href="/tags/sed/">#sed</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="为啥写这个"><a href="#为啥写这个" class="headerlink" title="为啥写这个"></a>为啥写这个</h1><p>最近的工作里面，因为需要处理很多类似CSV之类的文本文件，让我突然想到了sed和awk这两个上古神器。并且在这两个神器的帮助之下，很多尝试性的工作减少了实际的代码编写量，毕竟脚本和C代码的代码量来看，脚本的编写要更加容易以及快速，在做一些探索性的尝试和对文本文件的处理上，是非常有帮助的。这一篇会随着我的使用慢慢的增多，我会慢慢给大家分享这两个神器以及其他的一些linux或是unix下一些工具的使用，所以潮一点就叫Cookbook了，这里面的命令很多是可以解决实际问题的，我也会对这些命令进行分析，告诉大家什么时候可以用、以及怎样用，同时也希望大家能对这些问题有更新更加优美的解决方法。</p>
+<h1 id="关于Awk的"><a href="#关于Awk的" class="headerlink" title="关于Awk的"></a>关于Awk的</h1><h2 id="awk拼接命令"><a href="#awk拼接命令" class="headerlink" title="awk拼接命令"></a>awk拼接命令</h2><p>awk是一个文本流处理的工具，但是结合了awk，grep，sh以及一些常规的linux命令后，也可以实现通过awk输出shell的脚本，达到自动生成一些命令并执行的效果。</p>
+<h3 id="ipc资源清理"><a href="#ipc资源清理" class="headerlink" title="ipc资源清理"></a>ipc资源清理</h3><p>公司用的后台服务是tuxedo的，用过的人大概知道，服务配置太多了或者挂了的服务太多了等各种原因会导致整个tuxedo服务器挂掉，这时候<code>tmshutdown</code>和<code>tmipcrm</code>都已经失效了，那这时候怎么办呢——杀掉所有tuxedo用户下的ipc资源，那这样一个一个的清除会很麻烦，经过一段时间的Google发现了下面三条命令解决了这个问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ipcs|grep user_name|awk &apos;&#123;print &quot;ipcrm -m &quot; $2&#125;&apos;|sh;</span><br><span class="line"></span><br><span class="line">ipcs|grep user_name|awk &apos;&#123;print &quot;ipcrm -q &quot; $2&#125;&apos;|sh;</span><br><span class="line"></span><br><span class="line">ipcs|grep user_name|awk &apos;&#123;print &quot;ipcrm -s &quot; $2&#125;&apos;|sh;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>乍一看去，似乎很复杂，ipcs喽，grep喽，awk喽各种$号之类的，不过这个应该是我们要处理的较简单的命里了，我们来一步一步的解析这个命令是个什么意思。</p>
+<ol>
+<li><p><code>ipcs</code>获取所有的系统ipc资源，之后通过管道输出给grep</p>
+</li>
+<li><p><code>grep user_name</code>这里是通过grep过滤所有不是user_name的ipc资源，把所有属于user_name这个用户的ipc资源的结果输出给awk继续处理</p>
+</li>
+<li><p><code>awk &#39;{print &quot;ipcrm -m &quot; $2}&#39;</code>或者<code>awk &#39;{print &quot;ipcrm -q &quot; $2}&#39;</code>或者<code>awk &#39;{print &quot;ipcrm -s &quot; $2}&#39;</code>这句应该是整个核心处理的内容，他做这几个事情，从上一步获取的数据，将每行第二列的内容和<code>ipctm -m/s/q</code>进行拼接，ipcs输出的第二列就是ipc资源的ID，这样我们就会得到这样的输出<code>ipcrm -m XXXX</code>等多行的输出但是这样还不够，awk的处理结果是将所有的东西通过流输出，那还是达不到执行的结果，这样再通过管道将输出的文本，发送给sh，sh也就是shell的命令行，并且他可以接受一个字符流的参数执行命令。</p>
+</li>
+</ol>
+<p>这样便很简单的通过三个命令拼接了很多条命令，将所需要干掉的东西全都干掉了。</p>
+<p>接下来我们来看一个延伸，假设我有很多个路径，每个路径下面都有很多要编译的代码，现在我要用一条命令去执行每个路径下makefile的clean命令，清理所有编译的结果，那么我们就写出了下面的命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ls -1 -d */ | awk &apos;&#123;print &quot;make -f &quot; $1 &quot;makefile clean&quot;&#125;&apos; | sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这里通过awk拼接ls出来的结果，将ls出来的所有路径拼接上我们要执行的make命令，传给sh去执行，将所有路径下的make clean执行一次</p>
+<p>技巧：这里有一个个人觉得的技巧，在<code>|sh</code>之前可以先将命令打印到终端看是否正确，再通过<code>|sh</code>执行。</p>
+<h1 id="关于Sed的"><a href="#关于Sed的" class="headerlink" title="关于Sed的"></a>关于Sed的</h1><h2 id="Pattern-Place和Hold-Place"><a href="#Pattern-Place和Hold-Place" class="headerlink" title="Pattern Place和Hold Place"></a>Pattern Place和Hold Place</h2><p>在这里想先说下Hold Place和Pattern Place了，因为在很多有用的，而又诡异的场景里面，我们需要通过Pattern Place和Hold Place来解决我们的问题，顺便也解说下sed是怎么run的，原文可以参考下<a href="http://www.gnu.org/software/sed/manual/sed.html#Execution-Cycle" target="_blank" rel="noopener">sed官方文档中——3.1 How sed Works</a>。下面我来给大家解释（雾，其实是翻译）下是怎个回事儿。</p>
+<p>Hold Place和Pattern Place是由Sed管理的两个缓冲区。为了下面说的简单点，我就叫他们HP和PP了。PP是每次的活动缓冲区，HP是PP的助手，一开始他们都是空的，接下来我们来看sed到底怎么工作的</p>
+<ol>
+<li>从输入流中获取一行，把空行都去掉</li>
+<li>把它放到PP里面</li>
+<li>执行sed命令</li>
+<li>如果没用-n参数，那么就把结果打印出来，并且把去掉的空行也加回去</li>
+<li>回到第1步继续下一行输入的处理（就这样不断的往复）</li>
+</ol>
+<p>嗯嗯，上面一看，我们的HP呢？咋没用到他啊，其实如果没有用一些特殊的命令的话，是不会用到H的，H，h，G，g，x这几个命令将会在循环过程中改变上面对PP和HP中的数据。在<a href="http://www.gnu.org/software/sed/manual/sed.html#Other-Commands" target="_blank" rel="noopener">sed官方文档说少用的命令里面</a>提到了这些命令，我们来看看他们是干啥的。</p>
+<ul>
+<li>H：<code>HP = HP + &quot;\n&quot; + PP</code></li>
+<li>h：<code>HP = PP</code></li>
+<li>G：<code>PP = PP + &quot;\n&quot; + HP</code></li>
+<li>g：<code>PP = HP</code></li>
+<li>x：交换HP和PP的内容</li>
+</ul>
+<h2 id="多行操作的"><a href="#多行操作的" class="headerlink" title="多行操作的"></a>多行操作的</h2><p>我们都知道sed是按照行进行处理的，那么一些可以做跨行操作和处理的脚本都会比较麻烦，很多会用到Sed中的hold place之类的东西。挺复杂的，所以在这里把我遇到的这类问题都集中起来，也顺便分析下。</p>
+<h3 id="实现多行合并，并且用’-’分隔"><a href="#实现多行合并，并且用’-’分隔" class="headerlink" title="实现多行合并，并且用’|’分隔"></a>实现多行合并，并且用’|’分隔</h3><p>我这里用的最多的应该是将一个有多行的文件合并成一个只有一行的输出，有时候还需要使用一些字符来进行分隔。我们先来看这个命令到底长个啥样：</p>
+<p><code>&#39;H;$!d;$g;s/\n/|/g&#39;</code></p>
+<p>看了上面的命令…特别是第一次看的童鞋一定觉得很逆天，或者这个命令肯定是反人类的-，-其实好多sed的命令都挺反人类的</p>
+<p>其实这个命令是很简单的，每个;表示一段命令的结束。那么我们来看上面到底做了什么。</p>
+<ol>
+<li>H =&gt; HP = HP + “\n” + PP</li>
+<li>$!d =&gt; 除了最后一行都执行d命令，就是清除PP中的内容</li>
+<li>$g =&gt; 在最后一行执行g命令，就是最后一行把HP中的内容放到PP里面去</li>
+<li>s/\n/|/g =&gt; 把换行替换成|</li>
+</ol>
+<p>这么一分解下，那大家就明白了吧，很多跨行操作以及复杂操作都可以用这种类似的方法的。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+
