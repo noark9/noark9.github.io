@@ -12,7 +12,7 @@
   <meta property="og:description" content="" />
   <meta property="og:site_name" content="noark9 的开发小笔记"/>
   <meta property="og:type" content="article" />
-  <meta property="og:image" content="http://blog.noark9.com"/>
+  <meta property="og:image" content="https://blog.noark9.com"/>
   
     <link rel="alternate" href="/atom.xml" title="noark9 的开发小笔记" type="application/atom+xml">
   
@@ -100,7 +100,7 @@
           <!-- Date -->
           <span class="date-time info">On
             <span class="date">Sep 3 2014</span>
-            <span class="time">21:00:11</span>
+            <span class="time">22:21:33</span>
           </span>
           
         </div>
@@ -116,6 +116,7 @@
         
         <!-- Post Main Content -->
         <div class="post-content">
+          <div><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png" /></a>本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可。本文仅作为个人学习记录使用，欢迎在许可协议范围内转载或使用，请尊重版权并且保留原文链接，谢谢您的理解合作。如果您觉得本站对您能有帮助，您可以使用<a href='http://noark9.github.io/atom.xml'>RSS</a>方式订阅本站，这样您将能在第一时间获取本站信息。</div>
           <h1 id="start"><a href="#start" class="headerlink" title="start"></a>start</h1><p>冒个泡，体现下存在感，哈哈哈哈，最近发现iOS自带的动画效果总是困扰着我-，-比如，iOS7上返回时，会自动加一个半透明的层做渐变感，比如返回的时候，总是整个view一起动的，动画过程中，我需要隐藏和显示导航栏等这些要求，原生的动画总是无法满足这些小小的要求!(ﾉ｀□´)ﾉ⌒┻┻</p>
 <p>经过数小时上网找资料，发现大神们要不就是一笔带过，要不就是懒得讲很多，于是，发现还是自己写比较科学啊┓(￣∇￣)┏，下面我们来尝试做一个</p>
 <h1 id="做的方法"><a href="#做的方法" class="headerlink" title="做的方法"></a>做的方法</h1><p>制作方法还是按照古法炮制，继承一个<code>NSNavigationController</code>然后重写其中的pop和push方法以达到我们的目的，在我的理解，导航控件他的pop和push方法，实现了在他自己的控制器栈中实现不断的出栈和入栈的操作，然后播放一小段动画，愉悦下大家，那么我们要做的事情就是去掉原来的动画，做pop，push的动作，然后播放我们自己的动画</p>
