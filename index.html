@@ -94,6 +94,49 @@
     <div class="col-lg-10 col-md-10 col-md-offset-1">
       
         <div class="post-item-wrapper">
+  <a href="/2018/10/07/EffectiveObjectiveCNote3/" class="post-title">
+      Effective Objective-C 2.0 Tips 总结 Chapter 5，6，7
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">Oct 7 2018</div>
+      <div class="categories">
+        
+          Uncategorized
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h1 id="Effective-Objective-C-2-0-Tips-总结-Chapter-5，6，7"><a href="#Effective-Objective-C-2-0-Tips-总结-Chapter-5，6，7" class="headerlink" title="Effective Objective-C 2.0 Tips 总结 Chapter 5，6，7"></a>Effective Objective-C 2.0 Tips 总结 Chapter 5，6，7</h1><h2 id="Chapter-5-内存管理"><a href="#Chapter-5-内存管理" class="headerlink" title="Chapter 5 内存管理"></a>Chapter 5 内存管理</h2><ul>
+<li>Tips 29 理解引用计数<ul>
+<li>引用计数是 Objective-C 内存管理的基础，包括 ARC 也是建立在引用计数的基础之上，理解引用计数机制，能更好的帮你使用 ARC</li>
+<li>引用计数的基本原理是每个对象都有一个当前有多少对象希望他存活的计数器，当这个计数器归零那么这个对象就会被释放</li>
+<li>查看引用计数的方法叫做 <code>retainCount</code> 但是实际并不建议使用这个方法调试代码</li>
+<li>如果对象 A 需要对象 B 存活，那么 A 需要调用 B 的 <code>retain</code> 方法，如果对象 A 不再需要对象 B 存活了，那么需要调用对象 B 的 <code>release</code> 方法或者 <code>autorelease</code> 方法</li>
+<li>调用 <code>release</code> 并不会使对象被释放，对象释放被释放取决于引用计数是否为 0</li>
+<li>所有的对象最终都间接或直接的被一个根对象所引用，macOS 应用是 <code>NSApplication</code> 对象，iOS 则是 <code>UIApplication</code> 对象，这两个对象都是应用启动时创建的单例</li>
+<li>对象的 <code>alloc</code> 方法返回的对象由调用者持有</li>
+<li><code>autorelease</code> 并不会马上减少对象的引用计数，而是在下一次 Event Loop（事件循环）时减少，以达到延迟释放对象的效果</li>
+<li><code>autorelease</code> 通常用在函数返回对象的情况，保证对象跨越函数调用边界</li>
+</ul>
+</li>
+</ul></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/iOS/">iOS</a> <a class="tag" href="/tags/Objective-C/">Objective-C</a> <a class="tag" href="/tags/Effective-Objective-C/">Effective Objective-C</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
   <a href="/2017/07/21/EffectiveObjectiveCNote2/" class="post-title">
       Effective Objective-C 2.0 Tips 总结 Chapter 3 &amp; Chapter 4
   </a>
@@ -409,36 +452,6 @@
         
 
 <a class="tag" href="/tags/iOS/">iOS</a> <a class="tag" href="/tags/设计/">设计</a>
-
-
-      
-    </div>
-  </div>
-</div>
-
-      
-        <div class="post-item-wrapper">
-  <a href="/2015/02/18/rac-scheduler-from-rcdpio/" class="post-title">
-      ReactiveCocoa 模式 —— RACScheduler
-  </a>
-  <div class="post-excerpt">
-    <!-- Post Date and Categories -->
-    <div class="date-and-category">
-      <div class="date">Feb 18 2015</div>
-      <div class="categories">
-        
-          Uncategorized
-        
-      </div>
-    </div>
-    <!-- Post Excerpt -->
-    <div class="excerpt typo">No Post Excerpt</div>
-    <!-- Post Tags -->
-    <div class="tags">
-      
-        
-
-<a class="tag" href="/tags/iOS/">iOS</a> <a class="tag" href="/tags/RAC/">RAC</a>
 
 
       
