@@ -100,7 +100,7 @@
           <!-- Date -->
           <span class="date-time info">On
             <span class="date">Jun 25 2016</span>
-            <span class="time">21:43:36</span>
+            <span class="time">21:50:31</span>
           </span>
           
         </div>
@@ -137,6 +137,14 @@
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)layoutSubviews &#123;</span><br><span class="line">    [<span class="keyword">super</span> layoutSubviews];</span><br><span class="line">    <span class="keyword">self</span>.showAllButtonContainerView.top = <span class="number">8.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.showAllButtonContainerView.right = <span class="keyword">self</span>.width;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)loadShowAllButton &#123;</span><br><span class="line">    <span class="keyword">self</span>.showAllButtonContainerView = [[<span class="built_in">UIView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0.0</span>f, <span class="number">0.0</span>f, <span class="number">36.0</span>f, <span class="number">36.0</span>f)];</span><br><span class="line">    [<span class="keyword">self</span> addSubview:<span class="keyword">self</span>.showAllButtonContainerView];</span><br><span class="line">    <span class="keyword">self</span>.showAllButton = [[<span class="built_in">UIButton</span> alloc] init];</span><br><span class="line">    [<span class="keyword">self</span>.showAllButtonContainerView addSubview:<span class="keyword">self</span>.showAllButton];</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.width = <span class="number">36.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.height = <span class="number">36.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.left = <span class="number">0.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.top = <span class="number">0.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.showAllButton.contentMode = <span class="built_in">UIViewContentModeCenter</span>;</span><br><span class="line">    [<span class="keyword">self</span>.showAllButton setImage:[<span class="built_in">UIImage</span> imageNamed:<span class="string">@"default-show-more-arrow"</span>] forState:<span class="built_in">UIControlStateNormal</span>];</span><br><span class="line">    [<span class="keyword">self</span>.showAllButton addTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(showAllButtonPushed:) forControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>其实问题的原因还是没有好好阅读官方文档</p>
 
+          <p>最后欢迎大家订阅我的微信公众号 Little Code</p>
+          <p><img src="/img/mp.qr.v1.jpg" alt="公众号"></p>
+          <ul>
+            <li>公众号主要发一些开发相关的技术文章</li>
+            <li>谈谈自己对技术的理解，经验</li>
+            <li>也许会谈谈人生的感悟</li>
+            <li>本人不是很高产，但是力求保证质量和原创</li>
+          </ul>
         </div>
       </div>
     </div>

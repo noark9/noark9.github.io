@@ -100,7 +100,7 @@
           <!-- Date -->
           <span class="date-time info">On
             <span class="date">Jul 21 2017</span>
-            <span class="time">21:43:36</span>
+            <span class="time">21:50:31</span>
           </span>
           
         </div>
@@ -253,6 +253,14 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">@implementation XXXConstantNotificationNames</span><br><span class="line"></span><br><span class="line">- (NSString *)XXXUserDidLoginNotificationName &#123;</span><br><span class="line">    return @&quot;XXXUserDidLoginNotificationName&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation XXXConstant</span><br><span class="line">static XXXConstantNotificationNames *_notificationNames = nil;</span><br><span class="line"></span><br><span class="line">+ (void)load &#123;</span><br><span class="line">    _notificationNames = [[XXXConstantNotificationNames alloc] init];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (XXXConstantNotificationNames *) &#123;</span><br><span class="line">    reutrn _notificationNames;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
 <p>看上去比定义一个 <code>kXXXUserDidLoginNotificationName</code> 字符串常量，麻烦了非常多，但是相信在项目代码量不断增加，以及工程变得越来越复杂以后，这样的做法对于代码管理上是非常有帮助的</p>
 
+          <p>最后欢迎大家订阅我的微信公众号 Little Code</p>
+          <p><img src="/img/mp.qr.v1.jpg" alt="公众号"></p>
+          <ul>
+            <li>公众号主要发一些开发相关的技术文章</li>
+            <li>谈谈自己对技术的理解，经验</li>
+            <li>也许会谈谈人生的感悟</li>
+            <li>本人不是很高产，但是力求保证质量和原创</li>
+          </ul>
         </div>
       </div>
     </div>
